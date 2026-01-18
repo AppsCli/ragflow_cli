@@ -11,15 +11,13 @@ class ChatService {
 
   static Future<List<Dialog>> getDialogList() async {
     final response = await ApiClient.get(dialogListEndpoint);
+    print(response.data);
     if (response.success && response.data != null) {
-      final data = response.data!['data'] as Map<String, dynamic>?;
-      if (data != null) {
-        final dialogs = data['dialogs'] as List<dynamic>?;
-        if (dialogs != null) {
+      final dialogs = response.data!['data'] as List<dynamic>?;
+      if (dialogs != null) {
           return dialogs
               .map((e) => Dialog.fromJson(e as Map<String, dynamic>))
               .toList();
-        }
       }
     }
     return [];

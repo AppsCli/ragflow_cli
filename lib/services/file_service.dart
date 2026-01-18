@@ -19,8 +19,9 @@ class FileService {
 
     if (response.success && response.data != null) {
       final data = response.data!['data'] as Map<String, dynamic>?;
+      print(data);
       if (data != null) {
-        final items = data['items'] as List<dynamic>?;
+        final items = data['files'] as List<dynamic>?;
         if (items != null) {
           return items.cast<Map<String, dynamic>>();
         }

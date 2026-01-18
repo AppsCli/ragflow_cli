@@ -19,11 +19,11 @@ class KnowledgeService {
         'page_size': pageSize,
       },
     );
-
+    print(response.data);
     if (response.success && response.data != null) {
       final data = response.data!['data'] as Map<String, dynamic>?;
       if (data != null) {
-        final items = data['items'] as List<dynamic>?;
+        final items = data['kbs'] as List<dynamic>?;
         if (items != null) {
           return items
               .map((e) => KnowledgeBase.fromJson(e as Map<String, dynamic>))

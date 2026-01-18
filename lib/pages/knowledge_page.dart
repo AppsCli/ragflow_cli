@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../models/knowledge_base.dart';
 import '../services/knowledge_service.dart';
@@ -26,6 +28,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
 
     try {
       final list = await KnowledgeService.getKnowledgeBaseList();
+      print(list);
       setState(() {
         _knowledgeBases = list;
         _isLoading = false;
@@ -73,14 +76,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
                           vertical: 4,
                         ),
                         child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: kb.avatar != null
-                                ? NetworkImage(kb.avatar!)
-                                : null,
-                            child: kb.avatar == null
-                                ? const Icon(Icons.library_books)
-                                : null,
-                          ),
+                          leading: _buildAvatar(kb.avatar),
                           title: Text(kb.name),
                           subtitle: Text(
                             '文档: ${kb.documentNum} | 片段: ${kb.chunkNum}',
@@ -101,5 +97,59 @@ class _KnowledgePageState extends State<KnowledgePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  /// 构建头像 Widget
+  /// 支持 URL 和 base64 格式
+  Widget _buildAvatar(String? avatar) {
+    if (avatar == null || avatar.isEmpty) {
+      return const CircleAvatar(
+        child: Icon(Icons.library_books),
+      );
+    }
+
+    // 检查是否是有效的 URL（以 http:// 或 https:// 开头）
+    if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+      try {
+        return CircleAvatar(
+          backgroundImage: NetworkImage(avatar),
+          onBackgroundImageError: (exception, stackTrace) {
+            // 如果网络图片加载失败，显示默认图标
+          },
+          child: null,
+        );
+      } catch (e) {
+        return const CircleAvatar(
+          child: Icon(Icons.library_books),
+        );
+      }
+    }
+
+    // 尝试作为 base64 图片处理
+    try {
+      String base64String = avatar;
+      
+      // 如果是 data URL 格式（如 data:image/png;base64,xxx），提取 base64 部分
+      if (base64String.contains(',')) {
+        base64String = base64String.split(',').last;
+      }
+
+      // 解码 base64 字符串为 Uint8List
+      final Uint8List imageBytes = base64Decode(base64String);
+
+      // 使用 Image.memory 显示图片
+      return CircleAvatar(
+        backgroundImage: MemoryImage(imageBytes),
+        onBackgroundImageError: (exception, stackTrace) {
+          // 如果图片加载失败，显示默认图标
+        },
+        child: null,
+      );
+    } catch (e) {
+      // base64 解码失败，显示默认图标
+      return const CircleAvatar(
+        child: Icon(Icons.library_books),
+      );
+    }
   }
 }

@@ -41,11 +41,29 @@ class UserService {
 
     try {
       final user = User.fromJson(data);
-      final accessToken = data['access_token'] as String?;
-      if (accessToken != null) {
-        ApiClient.setToken(accessToken);
-        user.accessToken = accessToken;
+      
+      // 从响应headers中提取Authorization header（与web前端保持一致）
+      // web前端使用: response.headers.get(Authorization)
+      final authHeader = response.headers?['authorization'] ?? 
+                        response.headers?['Authorization'];
+      
+      if (authHeader != null && authHeader.isNotEmpty) {
+        // 直接使用从响应headers中获取的Authorization header
+        // 这个值应该已经是服务器返回的完整格式（可能包含Bearer前缀）
+        ApiClient.setToken(authHeader);
+      } else {
+        // 如果没有Authorization header，使用access_token（添加Bearer前缀）
+        final accessToken = data['access_token'] as String?;
+        if (accessToken != null) {
+          // 确保token有Bearer前缀
+          final token = accessToken.startsWith('Bearer ') 
+              ? accessToken 
+              : 'Bearer $accessToken';
+          ApiClient.setToken(token);
+          user.accessToken = accessToken;
+        }
       }
+      
       return LoginResult.success(user);
     } catch (e) {
       return LoginResult.failure('解析用户数据失败: $e');

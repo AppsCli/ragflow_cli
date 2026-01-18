@@ -50,6 +50,14 @@ class Storage {
     return prefs.getString(_tokenKey);
   }
 
+  /// 清除用户相关数据（保留服务器配置）
+  static Future<void> clearUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userKey);
+    await prefs.remove(_tokenKey);
+  }
+
+  /// 清除所有数据（包括服务器配置）- 仅用于完全重置
   static Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_serverConfigKey);

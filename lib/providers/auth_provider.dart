@@ -16,13 +16,9 @@ class AuthProvider with ChangeNotifier {
   bool get isAuthenticated => _user != null;
 
   AuthProvider() {
-    _loadUser();
+    // 只加载服务器配置，不自动加载用户信息
+    // 这样每次打开APP都会显示登录界面
     _loadServerConfig();
-  }
-
-  Future<void> _loadUser() async {
-    _user = await Storage.getUser();
-    notifyListeners();
   }
 
   Future<void> _loadServerConfig() async {
@@ -78,9 +74,11 @@ class AuthProvider with ChangeNotifier {
         await Storage.saveUser(result.user!);
         
         // Update server config with token
-        if (_serverConfig != null) {
+        // 使用 ApiClient 中当前保存的 token（从响应headers中获取的完整Authorization值）
+        final currentToken = ApiClient.getToken();
+        if (_serverConfig != null && currentToken != null) {
           final updatedConfig = _serverConfig!.copyWith(
-            token: result.user!.accessToken,
+            token: currentToken, // 这个值应该已经是完整的Authorization header值
             lastUpdated: DateTime.now(),
           );
           await Storage.saveServerConfig(updatedConfig);
@@ -108,8 +106,18 @@ class AuthProvider with ChangeNotifier {
   Future<void> logout() async {
     await UserService.logout();
     _user = null;
-    await Storage.clear();
-    _serverConfig = null;
+    // 只清除用户信息和token，保留服务器配置
+    await Storage.clearUser();
+    // 清除token但保留服务器地址
+    if (_serverConfig != null) {
+      final updatedConfig = _serverConfig!.copyWith(
+        token: null,
+        lastUpdated: DateTime.now(),
+      );
+      await Storage.saveServerConfig(updatedConfig);
+      _serverConfig = updatedConfig;
+    }
+    ApiClient.setToken(null);
     notifyListeners();
   }
 }

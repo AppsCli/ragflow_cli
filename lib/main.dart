@@ -27,14 +27,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),
-        home: Consumer<AuthProvider>(
-          builder: (context, authProvider, _) {
-            if (authProvider.isAuthenticated) {
-              return const HomePage();
-            }
-            return const LoginPage();
-          },
-        ),
+        // 始终显示登录界面，不自动登录
+        // 即使用户已保存，也需要重新登录
+        home: const LoginPage(),
         routes: {
           '/login': (context) => const LoginPage(),
           '/home': (context) => const HomePage(),
