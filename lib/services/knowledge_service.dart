@@ -19,7 +19,6 @@ class KnowledgeService {
         'page_size': pageSize,
       },
     );
-    print(response.data);
     if (response.success && response.data != null) {
       final data = response.data!['data'] as Map<String, dynamic>?;
       if (data != null) {
@@ -63,13 +62,19 @@ class KnowledgeService {
     required String id,
     String? name,
     String? description,
+    String? parserId,
   }) async {
+    // API 要求使用 kb_id，并且 parser_id 是必填的
+    // 如果没有提供 parser_id，默认为 'naive'
+    final currentParserId = parserId ?? 'naive';
+
     final response = await ApiClient.post(
       updateKbEndpoint,
       body: {
-        'id': id,
-        if (name != null) 'name': name,
-        if (description != null) 'description': description,
+        'kb_id': id, // API 要求使用 kb_id 而不是 id
+        'name': name ?? '',
+        'description': description ?? '',
+        'parser_id': currentParserId,
       },
     );
     return response.success;
@@ -84,7 +89,7 @@ class KnowledgeService {
   }
 
   static Future<KnowledgeBase?> getKnowledgeBaseDetail(String id) async {
-    final response = await ApiClient.get('$kbDetailEndpoint?id=$id');
+    final response = await ApiClient.get('$kbDetailEndpoint?kb_id=$id');
     if (response.success && response.data != null) {
       final data = response.data!['data'] as Map<String, dynamic>?;
       if (data != null) {

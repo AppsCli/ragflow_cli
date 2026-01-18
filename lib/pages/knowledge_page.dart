@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../models/knowledge_base.dart';
 import '../services/knowledge_service.dart';
+import 'knowledge_detail_page.dart';
 
 class KnowledgePage extends StatefulWidget {
   const KnowledgePage({super.key});
@@ -78,12 +79,32 @@ class _KnowledgePageState extends State<KnowledgePage> {
                         child: ListTile(
                           leading: _buildAvatar(kb.avatar),
                           title: Text(kb.name),
-                          subtitle: Text(
-                            '文档: ${kb.documentNum} | 片段: ${kb.chunkNum}',
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '文档: ${kb.documentNum} | 片段: ${kb.chunkNum}',
+                              ),
+                              if (kb.updateTime != null)
+                                Text(
+                                  '更新: ${_formatDateTime(kb.updateTime!)}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                            ],
                           ),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {
-                            // TODO: Navigate to knowledge base detail
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => KnowledgeDetailPage(
+                                  knowledgeBaseId: kb.id,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       );
@@ -151,5 +172,12 @@ class _KnowledgePageState extends State<KnowledgePage> {
         child: Icon(Icons.library_books),
       );
     }
+  }
+
+  /// 格式化日期时间
+  /// 显示完整的年月日时分秒
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} '
+        '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
   }
 }

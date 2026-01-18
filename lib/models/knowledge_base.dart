@@ -35,14 +35,29 @@ class KnowledgeBase {
       embeddingModel: json['embedding_model'] ?? '',
       status: json['status'],
       chunkNum: json['chunk_num'] ?? 0,
-      documentNum: json['document_num'] ?? 0,
+      documentNum: json['document_num'] ?? json['doc_num'] ?? 0,
       createTime: json['create_time'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(json['create_time'] * 1000)
+          ? _parseTimestamp(json['create_time'])
           : null,
       updateTime: json['update_time'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(json['update_time'] * 1000)
+          ? _parseTimestamp(json['update_time'])
           : null,
     );
+  }
+
+  /// 解析时间戳（支持秒级和毫秒级）
+  /// 如果时间戳大于 10^10（10000000000），说明是毫秒级，直接使用
+  /// 否则是秒级，需要乘以 1000 转换为毫秒
+  static DateTime? _parseTimestamp(dynamic timestamp) {
+    if (timestamp == null) return null;
+    
+    final ts = timestamp is int ? timestamp : int.tryParse(timestamp.toString());
+    if (ts == null) return null;
+    
+    // 如果时间戳大于 10^10（10000000000），说明是毫秒级
+    // 否则是秒级，需要乘以 1000
+    final milliseconds = ts > 10000000000 ? ts : ts * 1000;
+    return DateTime.fromMillisecondsSinceEpoch(milliseconds);
   }
 
   Map<String, dynamic> toJson() {
