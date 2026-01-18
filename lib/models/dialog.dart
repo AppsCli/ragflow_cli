@@ -74,14 +74,23 @@ class Conversation {
               ?.map((e) => Message.fromJson(e))
               .toList() ??
           [],
-      createTime: json['create_time'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(json['create_time'] * 1000)
-          : null,
-      updateTime: json['update_time'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(json['update_time'] * 1000)
-          : null,
+      createTime: _parseTimestamp(json['create_time']),
+      updateTime: _parseTimestamp(json['update_time']),
       isNew: json['is_new'] ?? false,
     );
+  }
+
+  /// 解析时间戳（支持秒级和毫秒级）
+  static DateTime? _parseTimestamp(dynamic timestamp) {
+    if (timestamp == null) return null;
+    
+    final ts = timestamp is int ? timestamp : int.tryParse(timestamp.toString());
+    if (ts == null) return null;
+    
+    // 如果时间戳大于 10^10（10000000000），说明是毫秒级
+    // 否则是秒级，需要乘以 1000
+    final milliseconds = ts > 10000000000 ? ts : ts * 1000;
+    return DateTime.fromMillisecondsSinceEpoch(milliseconds);
   }
 }
 

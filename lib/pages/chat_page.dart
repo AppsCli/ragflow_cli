@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../models/dialog.dart' as models;
 import '../services/chat_service.dart';
+import 'dialog_detail_page.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -40,6 +41,88 @@ class _ChatPageState extends State<ChatPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('加载失败: $e')),
         );
+      }
+    }
+  }
+
+  Future<void> _showCreateDialog() async {
+    final nameController = TextEditingController();
+    final descriptionController = TextEditingController();
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('创建新对话'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: '对话名称',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: descriptionController,
+              decoration: const InputDecoration(
+                labelText: '描述（可选）',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('创建'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && nameController.text.trim().isNotEmpty) {
+      try {
+        final dialog = await ChatService.createDialog(
+          name: nameController.text.trim(),
+          description: descriptionController.text.trim().isEmpty
+              ? null
+              : descriptionController.text.trim(),
+        );
+
+        if (dialog != null && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('创建成功')),
+          );
+          _loadDialogs();
+          
+          // 自动跳转到新创建的对话
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => DialogDetailPage(
+                dialogId: dialog.id,
+                dialogName: dialog.name,
+              ),
+            ),
+          );
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('创建失败')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('创建失败: $e')),
+          );
+        }
       }
     }
   }
@@ -84,7 +167,15 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {
-                            // TODO: Navigate to chat detail
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => DialogDetailPage(
+                                  dialogId: dialog.id,
+                                  dialogName: dialog.name,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       );
@@ -92,9 +183,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Show create dialog dialog
-        },
+        onPressed: _showCreateDialog,
         child: const Icon(Icons.add),
       ),
     );
