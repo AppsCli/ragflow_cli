@@ -4,5 +4,8 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<!-- 网络客户端权限（必需，用于连接服务器） -->
+	<key>com.apple.security.network.client</key>
+	<true/>
 </dict>
 </plist>

@@ -77,22 +77,49 @@ class ApiClient {
 
   static ApiResponse _handleResponse(http.Response response) {
     try {
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        // Extract token from headers if present
-        final authHeader = response.headers['authorization'];
-        if (authHeader != null) {
-          _token = authHeader;
+      Map<String, dynamic>? data;
+      
+      // 尝试解析响应体
+      try {
+        if (response.body.isNotEmpty) {
+          data = jsonDecode(response.body) as Map<String, dynamic>;
         }
-        return ApiResponse.success(data);
-      } else {
+      } catch (e) {
+        // 如果响应体无法解析，返回错误
         return ApiResponse.error(
-          data['message'] ?? 'Request failed with status ${response.statusCode}',
-          code: data['code'] ?? response.statusCode,
+          'Failed to parse response body: ${response.body}',
+          code: response.statusCode,
         );
       }
+
+      // 检查 HTTP 状态码
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        return ApiResponse.error(
+          data?['message'] ?? 'Request failed with status ${response.statusCode}',
+          code: data?['code'] ?? response.statusCode,
+        );
+      }
+
+      // RAGFlow API 使用响应体中的 code 字段来判断成功/失败
+      // code === 0 表示成功，其他值表示失败
+      final responseCode = data?['code'] as int?;
+      if (responseCode != null && responseCode != 0) {
+        return ApiResponse.error(
+          data?['message'] ?? 'Request failed with code $responseCode',
+          code: responseCode,
+        );
+      }
+
+      // 提取 Authorization header (不区分大小写)
+      final authHeader = response.headers['authorization'] ?? 
+                        response.headers['Authorization'];
+      if (authHeader != null) {
+        _token = authHeader;
+      }
+
+      return ApiResponse.success(data ?? {});
     } catch (e) {
-      return ApiResponse.error('Failed to parse response: $e');
+      return ApiResponse.error('Failed to handle response: $e');
     }
   }
 }

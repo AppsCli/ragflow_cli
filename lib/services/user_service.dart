@@ -1,5 +1,6 @@
 import '../models/user.dart';
 import 'api_client.dart';
+import 'login_result.dart';
 
 class UserService {
   static const String loginEndpoint = '/v1/user/login';
@@ -7,7 +8,7 @@ class UserService {
   static const String userInfoEndpoint = '/v1/user/info';
   static const String registerEndpoint = '/v1/user/register';
 
-  static Future<User?> login(String email, String password) async {
+  static Future<LoginResult> login(String email, String password) async {
     final response = await ApiClient.post(
       loginEndpoint,
       body: {
@@ -16,15 +17,35 @@ class UserService {
       },
     );
 
-    if (response.success && response.data != null) {
-      final data = response.data!['data'] as Map<String, dynamic>?;
-      if (data != null) {
-        final user = User.fromJson(data);
-        ApiClient.setToken(data['access_token'] as String?);
-        return user;
-      }
+    if (!response.success) {
+      return LoginResult.failure(
+        response.error ?? '登录失败',
+        code: response.code,
+      );
     }
-    return null;
+
+    if (response.data == null) {
+      return LoginResult.failure('服务器返回空响应');
+    }
+
+    final data = response.data!['data'] as Map<String, dynamic>?;
+    if (data == null) {
+      return LoginResult.failure(
+        response.data!['message'] as String? ?? '登录响应数据格式错误',
+      );
+    }
+
+    try {
+      final user = User.fromJson(data);
+      final accessToken = data['access_token'] as String?;
+      if (accessToken != null) {
+        ApiClient.setToken(accessToken);
+        user.accessToken = accessToken;
+      }
+      return LoginResult.success(user);
+    } catch (e) {
+      return LoginResult.failure('解析用户数据失败: $e');
+    }
   }
 
   static Future<bool> logout() async {

@@ -61,20 +61,26 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  String? _lastLoginError;
+
+  String? get lastLoginError => _lastLoginError;
+
   Future<bool> login(String email, String password) async {
     _isLoading = true;
+    _lastLoginError = null;
     notifyListeners();
 
     try {
-      final user = await UserService.login(email, password);
-      if (user != null) {
-        _user = user;
-        await Storage.saveUser(user);
+      final result = await UserService.login(email, password);
+      
+      if (result.success && result.user != null) {
+        _user = result.user;
+        await Storage.saveUser(result.user!);
         
         // Update server config with token
         if (_serverConfig != null) {
           final updatedConfig = _serverConfig!.copyWith(
-            token: user.accessToken,
+            token: result.user!.accessToken,
             lastUpdated: DateTime.now(),
           );
           await Storage.saveServerConfig(updatedConfig);
@@ -82,13 +88,17 @@ class AuthProvider with ChangeNotifier {
         }
         
         _isLoading = false;
+        _lastLoginError = null;
         notifyListeners();
         return true;
+      } else {
+        _lastLoginError = result.error ?? '登录失败';
+        _isLoading = false;
+        notifyListeners();
+        return false;
       }
-      _isLoading = false;
-      notifyListeners();
-      return false;
     } catch (e) {
+      _lastLoginError = '登录异常: $e';
       _isLoading = false;
       notifyListeners();
       return false;

@@ -2,7 +2,7 @@ class User {
   final String email;
   final String nickname;
   final String? avatar;
-  final String? accessToken;
+  String? accessToken;
 
   User({
     required this.email,

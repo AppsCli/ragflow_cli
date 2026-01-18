@@ -45,8 +45,12 @@ class _LoginPageState extends State<LoginPage> {
       if (success) {
         Navigator.of(context).pushReplacementNamed('/home');
       } else {
+        final errorMessage = authProvider.lastLoginError ?? '登录失败，请检查邮箱和密码';
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('登录失败，请检查邮箱和密码')),
+          SnackBar(
+            content: Text(errorMessage),
+            duration: const Duration(seconds: 3),
+          ),
         );
       }
     }

@@ -6,7 +6,11 @@
 	<true/>
 	<key>com.apple.security.cs.allow-jit</key>
 	<true/>
+	<!-- 网络服务器权限（如果需要） -->
 	<key>com.apple.security.network.server</key>
+	<true/>
+	<!-- 网络客户端权限（必需，用于连接服务器） -->
+	<key>com.apple.security.network.client</key>
 	<true/>
 </dict>
 </plist>

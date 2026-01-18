@@ -17,6 +17,20 @@
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
+**网络安全配置**: `android/app/src/main/res/xml/network_security_config.xml`
+
+已配置网络安全策略，允许 HTTP (明文) 流量，这对于连接本地开发的服务器是必需的。Android 9 (API 28) 及以上版本默认禁止 HTTP 流量。
+
+```xml
+<base-config cleartextTrafficPermitted="true">
+    <trust-anchors>
+        <certificates src="system" />
+    </trust-anchors>
+</base-config>
+```
+
+该配置已在 `AndroidManifest.xml` 中通过 `android:networkSecurityConfig="@xml/network_security_config"` 引用。
+
 ### ✅ iOS
 
 **文件**: `ios/Runner/Info.plist`
@@ -34,6 +48,13 @@
 
 已配置与 iOS 相同的网络传输安全设置：
 - `NSAllowsArbitraryLoads: true` - 允许任意 HTTP 连接
+
+**Entitlements 文件**: `macos/Runner/DebugProfile.entitlements` 和 `macos/Runner/Release.entitlements`
+
+macOS 应用启用了 App Sandbox，需要网络客户端权限才能连接服务器：
+- `com.apple.security.network.client: true` - 允许应用作为客户端连接到网络服务器
+
+**重要**: 如果没有此权限，应用会显示 "Operation not permitted" 错误，无法连接到 localhost 或其他服务器。
 
 ### ✅ Windows
 
@@ -80,9 +101,9 @@ Web 平台由浏览器处理网络请求，但需要注意：
 
 | 平台 | 配置文件 | 状态 |
 |------|---------|------|
-| Android | `android/app/src/main/AndroidManifest.xml` | ✅ 已配置 |
+| Android | `android/app/src/main/AndroidManifest.xml` + `network_security_config.xml` | ✅ 已配置 |
 | iOS | `ios/Runner/Info.plist` | ✅ 已配置 |
-| macOS | `macos/Runner/Info.plist` | ✅ 已配置 |
+| macOS | `macos/Runner/Info.plist` + `DebugProfile.entitlements` + `Release.entitlements` | ✅ 已配置 |
 | Windows | 无需配置 | ✅ 默认支持 |
 | Linux | 无需配置 | ✅ 默认支持 |
 | Web | 浏览器处理 | ⚠️ 需注意 CORS |
@@ -93,6 +114,21 @@ Web 平台由浏览器处理网络请求，但需要注意：
 
 - ✅ iOS Info.plist 格式正确
 - ✅ macOS Info.plist 格式正确
+- ✅ macOS Entitlements 文件格式正确
 - ✅ Android Manifest 格式正确
+- ✅ Android 网络安全配置格式正确
 
 配置完成后，应用可以在所有支持的平台上正常访问网络资源。
+
+## macOS 特殊说明
+
+如果遇到 "Operation not permitted" 错误：
+
+1. **检查 Entitlements**: 确保 `com.apple.security.network.client` 权限已添加到 entitlements 文件
+2. **重新构建**: 修改 entitlements 后需要重新构建应用
+3. **清理构建**: 如果问题仍然存在，尝试清理并重新构建：
+   ```bash
+   flutter clean
+   flutter pub get
+   flutter run -d macos
+   ```
