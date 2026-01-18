@@ -1,4 +1,5 @@
 import '../models/user.dart';
+import '../utils/rsa_encrypt.dart';
 import 'api_client.dart';
 import 'login_result.dart';
 
@@ -9,11 +10,14 @@ class UserService {
   static const String registerEndpoint = '/v1/user/register';
 
   static Future<LoginResult> login(String email, String password) async {
+    // 使用 RSA 加密密码（与 web 前端保持一致）
+    final encryptedPassword = rsaEncryptPassword(password);
+    
     final response = await ApiClient.post(
       loginEndpoint,
       body: {
         'email': email,
-        'password': password,
+        'password': encryptedPassword,
       },
     );
 
@@ -65,11 +69,14 @@ class UserService {
   }
 
   static Future<bool> register(String email, String password, String nickname) async {
+    // 注册时也需要加密密码
+    final encryptedPassword = rsaEncryptPassword(password);
+    
     final response = await ApiClient.post(
       registerEndpoint,
       body: {
         'email': email,
-        'password': password,
+        'password': encryptedPassword,
         'nickname': nickname,
       },
     );
