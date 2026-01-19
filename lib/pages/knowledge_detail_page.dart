@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -92,23 +93,61 @@ class _DocumentListTabState extends State<DocumentListTab> {
   int _total = 0;
   String _searchKeywords = '';
   final TextEditingController _searchController = TextEditingController();
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
     _loadDocuments();
+    _startAutoRefresh();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _refreshTimer?.cancel();
     super.dispose();
   }
 
-  Future<void> _loadDocuments() async {
-    setState(() {
-      _isLoading = true;
-    });
+  /// 检查是否有文档正在解析中
+  bool _hasRunningDocuments() {
+    return _documents.any((doc) => 
+      doc.run == '1' || doc.run == 'RUNNING'
+    );
+  }
+
+  /// 启动自动刷新定时器
+  void _startAutoRefresh() {
+    _refreshTimer?.cancel();
+    if (_hasRunningDocuments()) {
+      _refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+        // 静默刷新，不显示加载状态
+        _loadDocuments(silent: true).then((_) {
+          // 刷新后检查是否还有正在解析的文档
+          if (mounted && !_hasRunningDocuments()) {
+            timer.cancel();
+          }
+        });
+      });
+    }
+  }
+
+  /// 停止自动刷新定时器
+  void _stopAutoRefresh() {
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
+  }
+
+  Future<void> _loadDocuments({bool silent = false}) async {
+    if (!silent) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
 
     try {
       final result = await DocumentService.getDocumentList(
@@ -118,16 +157,35 @@ class _DocumentListTabState extends State<DocumentListTab> {
         pageSize: _pageSize,
       );
 
+      // 在更新前检查是否有正在解析的文档
+      final hadRunningDocuments = _hasRunningDocuments();
+
       setState(() {
         _documents = result.documents;
         _total = result.total;
         _isLoading = false;
       });
+
+      // 在更新后检查是否有正在解析的文档
+      final hasRunningNow = _hasRunningDocuments();
+      if (hasRunningNow && !hadRunningDocuments) {
+        // 有新的文档开始解析，启动定时刷新
+        _startAutoRefresh();
+      } else if (!hasRunningNow && hadRunningDocuments) {
+        // 所有文档都解析完成，停止定时刷新
+        _stopAutoRefresh();
+      } else if (hasRunningNow) {
+        // 继续刷新（确保定时器在运行）
+        _startAutoRefresh();
+      } else {
+        // 没有正在解析的文档，确保停止定时器
+        _stopAutoRefresh();
+      }
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
-      if (mounted) {
+      if (mounted && !silent) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('加载文档失败: $e')),
         );
