@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 import 'api_client.dart';
 
 class FileService {
@@ -8,6 +11,7 @@ class FileService {
   static const String createFolderEndpoint = '/v1/file/create';
   static const String moveFileEndpoint = '/v1/file/mv';
   static const String getAllParentFolderEndpoint = '/v1/file/all_parent_folder';
+  static const String getFileEndpoint = '/v1/file/get';
 
   /// 获取文件列表
   /// [parentId] - 父文件夹ID，如果为null则获取根目录
@@ -68,25 +72,94 @@ class FileService {
     return [];
   }
 
-  static Future<bool> uploadFile(String filePath, {String? parentId}) async {
-    // Note: File upload requires multipart/form-data
-    // This is a simplified version - in production, use http.MultipartRequest
+  /// 上传文件（multipart/form-data）
+  /// [file] - 要上传的文件
+  /// [parentId] - 父文件夹ID
+  static Future<bool> uploadFile(File file, {String? parentId}) async {
+    try {
+      final url = Uri.parse('${ApiClient.baseUrl}$uploadFileEndpoint');
+      
+      // 构建请求头
+      final headers = <String, String>{};
+      final token = ApiClient.getToken();
+      if (token != null && token.isNotEmpty) {
+        headers['Authorization'] = token;
+      }
+      
+      // 创建 multipart 请求
+      final request = http.MultipartRequest('POST', url);
+      request.headers.addAll(headers);
+      
+      // 添加文件
+      request.files.add(
+        await http.MultipartFile.fromPath('file', file.path),
+      );
+      
+      // 添加 parent_id（如果提供）
+      if (parentId != null) {
+        request.fields['parent_id'] = parentId;
+      }
+      
+      // 发送请求
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      
+      // 解析响应
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// 删除文件
+  /// [fileIds] - 文件ID列表
+  static Future<bool> deleteFile(List<String> fileIds) async {
     final response = await ApiClient.post(
-      uploadFileEndpoint,
-      body: {
-        'file_path': filePath,
-        if (parentId != null) 'parent_id': parentId,
-      },
+      deleteFileEndpoint,
+      body: {'file_ids': fileIds},
     );
     return response.success;
   }
 
-  static Future<bool> deleteFile(String id) async {
-    final response = await ApiClient.post(
-      deleteFileEndpoint,
-      body: {'id': id},
-    );
-    return response.success;
+  /// 下载文件
+  /// [fileId] - 文件ID
+  /// 返回文件的字节数据
+  static Future<Uint8List?> downloadFile(String fileId) async {
+    try {
+      final url = Uri.parse('${ApiClient.baseUrl}$getFileEndpoint/$fileId');
+      
+      // 构建请求头
+      final headers = <String, String>{};
+      final token = ApiClient.getToken();
+      if (token != null && token.isNotEmpty) {
+        headers['Authorization'] = token;
+      }
+      
+      final response = await http.get(url, headers: headers);
+      
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return response.bodyBytes;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 获取文件预览URL
+  /// [fileId] - 文件ID（也是 document ID）
+  /// [fileName] - 文件名（用于提取扩展名）
+  static String getFilePreviewUrl(String fileId, String fileName) {
+    // 提取文件扩展名
+    final extension = fileName.contains('.') 
+        ? fileName.split('.').last.toLowerCase()
+        : 'pdf'; // 默认扩展名
+    // 预览URL格式: /document/<doc_id>?ext=<extension>&prefix=file
+    // web 前端使用相对路径 /document/...，但实际API路径是 /document/...
+    return '${ApiClient.baseUrl}/document/$fileId?ext=$extension&prefix=file';
   }
 
   static Future<bool> renameFile(String id, String newName) async {

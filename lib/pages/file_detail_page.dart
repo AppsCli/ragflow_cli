@@ -1,5 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:path_provider/path_provider.dart';
 import '../services/file_service.dart';
+import '../services/api_client.dart';
 
 class FileDetailPage extends StatefulWidget {
   final String? parentId;
@@ -179,6 +184,166 @@ class _FileDetailPageState extends State<FileDetailPage> {
     }
   }
 
+  Future<void> _previewFile(Map<String, dynamic> file) async {
+    final fileId = file['id'] as String?;
+    final fileName = file['name'] as String? ?? '';
+    if (fileId == null) return;
+
+    try {
+      final previewUrl = FileService.getFilePreviewUrl(fileId, fileName);
+      final uri = Uri.parse(previewUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('无法打开预览: $previewUrl')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('预览失败: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _downloadFile(Map<String, dynamic> file) async {
+    final fileId = file['id'] as String?;
+    final fileName = file['name'] as String? ?? 'file';
+    if (fileId == null) return;
+
+    try {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('正在下载...')),
+        );
+      }
+
+      final fileBytes = await FileService.downloadFile(fileId);
+      if (fileBytes == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('下载失败')),
+          );
+        }
+        return;
+      }
+
+      // 保存文件到下载目录
+      final directory = await getApplicationDocumentsDirectory();
+      final filePath = '${directory.path}/$fileName';
+      final savedFile = File(filePath);
+      await savedFile.writeAsBytes(fileBytes);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('下载成功: $filePath')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('下载失败: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _deleteFile(Map<String, dynamic> file) async {
+    final fileId = file['id'] as String?;
+    final fileName = file['name'] as String? ?? '未命名';
+    if (fileId == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('确认删除'),
+        content: Text('确定要删除 "$fileName" 吗？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('删除', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        final success = await FileService.deleteFile([fileId]);
+        if (success && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('删除成功')),
+          );
+          _loadFiles(); // 刷新列表
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('删除失败')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('删除失败: $e')),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _uploadFile() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('正在上传...')),
+          );
+        }
+
+        bool allSuccess = true;
+        for (final platformFile in result.files) {
+          if (platformFile.path != null) {
+            final file = File(platformFile.path!);
+            final success = await FileService.uploadFile(
+              file,
+              parentId: widget.parentId,
+            );
+            if (!success) {
+              allSuccess = false;
+            }
+          }
+        }
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(allSuccess ? '上传成功' : '部分文件上传失败'),
+            ),
+          );
+          _loadFiles(); // 刷新列表
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('上传失败: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -319,7 +484,63 @@ class _FileDetailPageState extends State<FileDetailPage> {
                                     : Text(
                                         '大小: ${_formatFileSize(file['size'] ?? 0)}',
                                       ),
-                                trailing: const Icon(Icons.chevron_right),
+                                trailing: isFolder
+                                    ? const Icon(Icons.chevron_right)
+                                    : PopupMenuButton<String>(
+                                        onSelected: (value) {
+                                          if (value == 'preview') {
+                                            _previewFile(file);
+                                          } else if (value == 'download') {
+                                            _downloadFile(file);
+                                          } else if (value == 'delete') {
+                                            _deleteFile(file);
+                                          } else if (value == 'detail') {
+                                            _showFileDetail(file);
+                                          }
+                                        },
+                                        itemBuilder: (context) => [
+                                          const PopupMenuItem(
+                                            value: 'preview',
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.preview, size: 20),
+                                                SizedBox(width: 8),
+                                                Text('预览'),
+                                              ],
+                                            ),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 'download',
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.download, size: 20),
+                                                SizedBox(width: 8),
+                                                Text('下载'),
+                                              ],
+                                            ),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 'detail',
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.info, size: 20),
+                                                SizedBox(width: 8),
+                                                Text('详情'),
+                                              ],
+                                            ),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 'delete',
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.delete, color: Colors.red, size: 20),
+                                                SizedBox(width: 8),
+                                                Text('删除', style: TextStyle(color: Colors.red)),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                 onTap: () {
                                   if (isFolder) {
                                     // 进入文件夹
@@ -366,6 +587,11 @@ class _FileDetailPageState extends State<FileDetailPage> {
               ),
             ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _uploadFile,
+        child: const Icon(Icons.upload),
+        tooltip: '上传文件',
       ),
     );
   }

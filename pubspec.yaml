@@ -55,6 +55,9 @@ dependencies:
   
   # RSA encryption for password
   encrypt: ^5.0.3
+  
+  # URL launcher for opening URLs
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
