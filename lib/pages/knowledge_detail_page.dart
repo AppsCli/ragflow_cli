@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import '../models/knowledge_base.dart';
 import '../models/document.dart';
 import '../models/search_result.dart';
@@ -168,12 +171,14 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        // 搜索框
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
+        Column(
+          children: [
+            // 搜索框
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
               hintText: '搜索文档...',
@@ -237,7 +242,26 @@ class _DocumentListTabState extends State<DocumentListTab> {
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('片段: ${doc.chunkNum} | Token: ${doc.tokenNum}'),
+                                  Row(
+                                    children: [
+                                      Text('片段: ${doc.chunkNum} | Token: ${doc.tokenNum}'),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: _getStatusColor(doc.run ?? doc.status),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: Text(
+                                          _getStatusText(doc.run ?? doc.status),
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   if (doc.updateTime != null)
                                     Text(
                                       '更新: ${_formatDateTime(doc.updateTime!)}',
@@ -270,6 +294,36 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                       ],
                                     ),
                                   ),
+                                  // 显示"解析"选项：未开始、已取消、失败状态
+                                  if (doc.run == '0' || 
+                                      doc.run == 'UNSTART' || 
+                                      doc.run == null ||
+                                      doc.run == '2' ||
+                                      doc.run == 'CANCEL' ||
+                                      doc.run == '4' ||
+                                      doc.run == 'FAIL')
+                                    const PopupMenuItem(
+                                      value: 'parse',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.play_arrow, size: 20),
+                                          SizedBox(width: 8),
+                                          Text('解析'),
+                                        ],
+                                      ),
+                                    ),
+                                  // 显示"取消解析"选项：解析中状态
+                                  if (doc.run == '1' || doc.run == 'RUNNING')
+                                    const PopupMenuItem(
+                                      value: 'cancel',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.stop, size: 20, color: Colors.orange),
+                                          SizedBox(width: 8),
+                                          Text('取消解析', style: TextStyle(color: Colors.orange)),
+                                        ],
+                                      ),
+                                    ),
                                   const PopupMenuItem(
                                     value: 'delete',
                                     child: Row(
@@ -283,46 +337,20 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                 ],
                                 onSelected: (value) {
                                   if (value == 'detail') {
-                                    // TODO: 显示文档详情
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: Text(doc.name),
-                                        content: SingleChildScrollView(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text('ID: ${doc.id}'),
-                                              Text('后缀: ${doc.suffix}'),
-                                              Text('大小: ${_formatFileSize(doc.size)}'),
-                                              Text('片段数: ${doc.chunkNum}'),
-                                              Text('Token数: ${doc.tokenNum}'),
-                                              if (doc.description != null)
-                                                Text('描述: ${doc.description}'),
-                                            ],
-                                          ),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(context),
-                                            child: const Text('关闭'),
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                                    _showDocumentDetail(doc);
                                   } else if (value == 'download') {
-                                    // TODO: 下载文档
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('下载功能待实现')),
-                                    );
+                                    _downloadDocument(doc);
+                                  } else if (value == 'parse') {
+                                    _parseDocument(doc);
+                                  } else if (value == 'cancel') {
+                                    _cancelParseDocument(doc);
                                   } else if (value == 'delete') {
                                     _deleteDocument(doc.id);
                                   }
                                 },
                               ),
                               onTap: () {
-                                // TODO: 显示文档详情
+                                _showDocumentDetail(doc);
                               },
                             ),
                           );
@@ -367,8 +395,288 @@ class _DocumentListTabState extends State<DocumentListTab> {
               ],
             ),
           ),
+          ],
+        ),
+        // 上传按钮
+        Positioned(
+          bottom: 16,
+          right: 16,
+          child: FloatingActionButton(
+            onPressed: _uploadDocument,
+            child: const Icon(Icons.upload),
+            tooltip: '上传文件',
+          ),
+        ),
       ],
     );
+  }
+
+  void _showDocumentDetail(Document doc) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(doc.name),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('ID: ${doc.id}'),
+              Text('后缀: ${doc.suffix}'),
+              Text('大小: ${_formatFileSize(doc.size)}'),
+              Text('片段数: ${doc.chunkNum}'),
+              Text('Token数: ${doc.tokenNum}'),
+              Text('状态: ${_getStatusText(doc.run ?? doc.status)}'),
+              if (doc.description != null)
+                Text('描述: ${doc.description}'),
+              if (doc.createTime != null)
+                Text('创建时间: ${_formatDateTime(doc.createTime!)}'),
+              if (doc.updateTime != null)
+                Text('更新时间: ${_formatDateTime(doc.updateTime!)}'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('关闭'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getStatusText(String? status) {
+    if (status == null) return '未知';
+    switch (status) {
+      case '0':
+      case 'UNSTART':
+        return '未开始';
+      case '1':
+      case 'RUNNING':
+        return '解析中';
+      case '2':
+      case 'CANCEL':
+        return '已取消';
+      case '3':
+      case 'DONE':
+        return '已完成';
+      case '4':
+      case 'FAIL':
+        return '失败';
+      default:
+        return status;
+    }
+  }
+
+  Color _getStatusColor(String? status) {
+    if (status == null) return Colors.grey;
+    switch (status) {
+      case '0':
+      case 'UNSTART':
+        return Colors.grey;
+      case '1':
+      case 'RUNNING':
+        return Colors.blue;
+      case '2':
+      case 'CANCEL':
+        return Colors.orange;
+      case '3':
+      case 'DONE':
+        return Colors.green;
+      case '4':
+      case 'FAIL':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  Future<void> _downloadDocument(Document doc) async {
+    try {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('正在下载...')),
+        );
+      }
+
+      final fileBytes = await DocumentService.downloadDocument(doc.id);
+      if (fileBytes == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('下载失败')),
+          );
+        }
+        return;
+      }
+
+      // 保存文件到下载目录
+      final directory = await getApplicationDocumentsDirectory();
+      final fileName = doc.name;
+      final filePath = '${directory.path}/$fileName';
+      final savedFile = File(filePath);
+      await savedFile.writeAsBytes(fileBytes);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('下载成功: $filePath')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('下载失败: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _parseDocument(Document doc) async {
+    try {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('正在启动解析...')),
+        );
+      }
+
+      final success = await DocumentService.runDocument(
+        docIds: [doc.id],
+        run: 1,
+        shouldDelete: false,
+      );
+
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('解析已启动')),
+        );
+        _loadDocuments(); // 刷新列表
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('启动解析失败')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('启动解析失败: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _cancelParseDocument(Document doc) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('确认取消'),
+        content: Text('确定要取消解析文档 "${doc.name}" 吗？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('确定', style: TextStyle(color: Colors.orange)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('正在取消解析...')),
+          );
+        }
+
+        final success = await DocumentService.runDocument(
+          docIds: [doc.id],
+          run: 2, // 2 表示取消（CANCEL）
+          shouldDelete: false,
+        );
+
+        if (success && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('已取消解析')),
+          );
+          _loadDocuments(); // 刷新列表
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('取消解析失败')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('取消解析失败: $e')),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _uploadDocument() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('正在上传...')),
+          );
+        }
+
+        bool allSuccess = true;
+        List<String> uploadedDocIds = [];
+
+        for (final platformFile in result.files) {
+          if (platformFile.path != null) {
+            final file = File(platformFile.path!);
+            final documents = await DocumentService.uploadDocument(widget.kbId, file);
+            if (documents != null && documents.isNotEmpty) {
+              uploadedDocIds.addAll(documents.map((d) => d.id));
+            } else {
+              allSuccess = false;
+            }
+          }
+        }
+
+        if (mounted) {
+          if (allSuccess && uploadedDocIds.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('上传成功，正在启动解析...')),
+            );
+            // 自动启动解析
+            await DocumentService.runDocument(
+              docIds: uploadedDocIds,
+              run: 1,
+              shouldDelete: false,
+            );
+            _loadDocuments(); // 刷新列表
+          } else if (uploadedDocIds.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('部分文件上传失败')),
+            );
+            _loadDocuments(); // 刷新列表
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('上传失败')),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('上传失败: $e')),
+        );
+      }
+    }
   }
 
   String _formatDateTime(DateTime dateTime) {
