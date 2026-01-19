@@ -45,7 +45,7 @@ class DocumentService {
   static Future<bool> deleteDocument(String id) async {
     final response = await ApiClient.post(
       documentDeleteEndpoint,
-      body: {'id': id},
+      body: {'doc_id': id},
     );
     return response.success;
   }
