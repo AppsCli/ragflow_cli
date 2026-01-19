@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/file_service.dart';
+import 'file_detail_page.dart';
 
 class FilePage extends StatefulWidget {
   const FilePage({super.key});
@@ -24,9 +25,9 @@ class _FilePageState extends State<FilePage> {
     });
 
     try {
-      final list = await FileService.getFileList();
+      final result = await FileService.getFileList();
       setState(() {
-        _files = list;
+        _files = result.files;
         _isLoading = false;
       });
     } catch (e) {
@@ -82,7 +83,41 @@ class _FilePageState extends State<FilePage> {
                                 ),
                           trailing: const Icon(Icons.chevron_right),
                           onTap: () {
-                            // TODO: Handle file/folder tap
+                            if (isFolder) {
+                              // 进入文件夹
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => FileDetailPage(
+                                    parentId: file['id'],
+                                    folderName: file['name'],
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // 查看文件详情
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text(file['name'] ?? '未命名'),
+                                  content: SingleChildScrollView(
+                                    child: ListBody(
+                                      children: [
+                                        Text('ID: ${file['id']}'),
+                                        Text('类型: ${file['type'] ?? '未知'}'),
+                                        Text('大小: ${_formatFileSize(file['size'] ?? 0)}'),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('关闭'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
                           },
                         ),
                       );

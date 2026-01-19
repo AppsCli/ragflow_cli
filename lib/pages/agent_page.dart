@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../services/agent_service.dart';
+import 'agent_detail_page.dart';
 
 class AgentPage extends StatefulWidget {
   const AgentPage({super.key});
@@ -148,7 +149,15 @@ class _AgentPageState extends State<AgentPage> {
                                 ),
                                 trailing: const Icon(Icons.chevron_right),
                                 onTap: () {
-                                  // TODO: Navigate to agent detail
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => AgentDetailPage(
+                                        agentId: agent['id'] ?? '',
+                                        agentName: agent['title'] ?? '未命名',
+                                      ),
+                                    ),
+                                  );
                                 },
                               ),
                             );
