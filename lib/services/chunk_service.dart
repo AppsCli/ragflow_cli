@@ -26,7 +26,7 @@ class ChunkService {
         if (searchId != null) 'search_id': searchId,
       },
     );
-
+    print("${response.code}, ${response.success},${response.data}");
     if (response.success && response.data != null) {
       final data = response.data!['data'] as Map<String, dynamic>?;
       if (data != null) {

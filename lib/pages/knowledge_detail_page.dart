@@ -786,8 +786,10 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
     });
 
     try {
+      // 知识库详情页的检索测试只传入当前知识库 ID
+      // ChunkService 会将单个 ID 的数组转换为字符串传给 API
       final result = await ChunkService.retrievalTest(
-        kbIds: [widget.kbId],
+        kbIds: [widget.kbId], // 只传入当前知识库 ID
         question: question,
         page: 1,
         size: 30,
