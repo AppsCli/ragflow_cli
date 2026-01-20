@@ -91,6 +91,32 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
       return;
     }
 
+    // 显示确认对话框
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('确认保存'),
+        content: const Text(
+          '保存服务器地址后需要重新登录，确定要继续吗？',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('确定'),
+          ),
+        ],
+      ),
+    );
+
+    // 如果用户取消，不做任何操作
+    if (confirmed != true) {
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -104,14 +130,22 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
       });
 
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('服务器地址保存成功')),
-        );
-        Navigator.pop(context);
+        // 清除用户信息（登出）
+        await authProvider.logout();
+        
+        // 跳转到登录界面
+        if (mounted) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/login',
+            (route) => false, // 清除所有路由栈
+          );
+        }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('保存失败，请检查地址格式')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('保存失败，请检查地址格式')),
+          );
+        }
       }
     }
   }
