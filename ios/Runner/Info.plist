@@ -72,5 +72,10 @@
 		</dict>
 		-->
 	</dict>
+	<!-- 图片选择器权限 -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>需要访问照片库以选择知识库图片</string>
+	<key>NSCameraUsageDescription</key>
+	<string>需要访问相机以拍摄知识库图片</string>
 </dict>
 </plist>

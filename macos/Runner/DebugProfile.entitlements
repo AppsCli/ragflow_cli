@@ -12,5 +12,8 @@
 	<!-- 网络客户端权限（必需，用于连接服务器） -->
 	<key>com.apple.security.network.client</key>
 	<true/>
+	<!-- 文件选择权限（用于图片选择器） -->
+	<key>com.apple.security.files.user-selected.read-only</key>
+	<true/>
 </dict>
 </plist>

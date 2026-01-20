@@ -63,19 +63,46 @@ class KnowledgeService {
     String? name,
     String? description,
     String? parserId,
+    String? permission,
+    String? embdId,
+    String? language,
+    String? avatar,
+    Map<String, dynamic>? parserConfig,
+    int? pagerank,
+    List<String>? tagKbIds,
   }) async {
-    // API 要求使用 kb_id，并且 parser_id 是必填的
-    // 如果没有提供 parser_id，默认为 'naive'
-    final currentParserId = parserId ?? 'naive';
+    final body = <String, dynamic>{
+      'kb_id': id, // API 要求使用 kb_id 而不是 id
+      'name': name ?? '',
+      'description': description ?? '',
+      'parser_id': parserId ?? 'naive', // parser_id 是必填的
+    };
+
+    if (permission != null) {
+      body['permission'] = permission;
+    }
+    if (embdId != null) {
+      body['embd_id'] = embdId;
+    }
+    if (language != null) {
+      body['language'] = language;
+    }
+    if (avatar != null) {
+      body['avatar'] = avatar;
+    }
+    if (parserConfig != null) {
+      body['parser_config'] = parserConfig;
+    }
+    if (pagerank != null) {
+      body['pagerank'] = pagerank;
+    }
+    if (tagKbIds != null) {
+      body['tag_kb_ids'] = tagKbIds;
+    }
 
     final response = await ApiClient.post(
       updateKbEndpoint,
-      body: {
-        'kb_id': id, // API 要求使用 kb_id 而不是 id
-        'name': name ?? '',
-        'description': description ?? '',
-        'parser_id': currentParserId,
-      },
+      body: body,
     );
     return response.success;
   }

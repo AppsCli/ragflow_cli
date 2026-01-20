@@ -53,6 +53,9 @@ dependencies:
   # File picker for file uploads
   file_picker: ^6.1.1
   
+  # Image picker for avatar upload
+  image_picker: ^1.0.7
+  
   # RSA encryption for password
   encrypt: ^5.0.3
   

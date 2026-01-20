@@ -10,6 +10,13 @@ class KnowledgeBase {
   final int documentNum;
   final DateTime? createTime;
   final DateTime? updateTime;
+  
+  // 配置字段
+  final String? permission; // 'me' | 'team'
+  final String? parserId; // 解析器ID
+  final Map<String, dynamic>? parserConfig; // 解析器配置
+  final int? pagerank; // 页面排名
+  final List<String>? tagKbIds; // 标签集
 
   KnowledgeBase({
     required this.id,
@@ -23,6 +30,11 @@ class KnowledgeBase {
     this.documentNum = 0,
     this.createTime,
     this.updateTime,
+    this.permission,
+    this.parserId,
+    this.parserConfig,
+    this.pagerank,
+    this.tagKbIds,
   });
 
   factory KnowledgeBase.fromJson(Map<String, dynamic> json) {
@@ -32,7 +44,7 @@ class KnowledgeBase {
       description: json['description'],
       avatar: json['avatar'] ?? json['icon'],
       language: json['language'] ?? 'Chinese',
-      embeddingModel: json['embedding_model'] ?? '',
+      embeddingModel: json['embedding_model'] ?? json['embd_id'] ?? '',
       status: json['status'],
       chunkNum: json['chunk_num'] ?? 0,
       documentNum: json['document_num'] ?? json['doc_num'] ?? 0,
@@ -41,6 +53,13 @@ class KnowledgeBase {
           : null,
       updateTime: json['update_time'] != null
           ? _parseTimestamp(json['update_time'])
+          : null,
+      permission: json['permission'],
+      parserId: json['parser_id'] ?? json['chunk_method'],
+      parserConfig: json['parser_config'] as Map<String, dynamic>?,
+      pagerank: json['pagerank'] as int?,
+      tagKbIds: json['tag_kb_ids'] != null
+          ? (json['tag_kb_ids'] as List<dynamic>?)?.map((e) => e.toString()).toList()
           : null,
     );
   }
@@ -73,6 +92,11 @@ class KnowledgeBase {
       'document_num': documentNum,
       'create_time': createTime?.millisecondsSinceEpoch,
       'update_time': updateTime?.millisecondsSinceEpoch,
+      'permission': permission,
+      'parser_id': parserId,
+      'parser_config': parserConfig,
+      'pagerank': pagerank,
+      'tag_kb_ids': tagKbIds,
     };
   }
 }

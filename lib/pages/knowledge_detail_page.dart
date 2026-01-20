@@ -1,14 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/knowledge_base.dart';
 import '../models/document.dart';
 import '../models/search_result.dart';
 import '../services/knowledge_service.dart';
 import '../services/document_service.dart';
 import '../services/chunk_service.dart';
+import '../services/llm_service.dart';
+import '../constants/knowledge.dart';
 
 class KnowledgeDetailPage extends StatefulWidget {
   final String knowledgeBaseId;
@@ -926,7 +931,29 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
+  late TextEditingController _chunkTokenNumController;
+  late TextEditingController _delimiterController;
+  late TextEditingController _autoKeywordsController;
+  late TextEditingController _autoQuestionsController;
+  
   bool _isSaving = false;
+  bool _isLoadingModels = false;
+  bool _isLoadingKb = false;
+  
+  // 配置状态
+  String? _avatarBase64;
+  PermissionType _permission = PermissionType.me;
+  LanguageType _language = LanguageType.chinese;
+  DocumentParserType _parserId = DocumentParserType.naive;
+  String? _selectedEmbeddingModel;
+  List<LLMModel> _embeddingModels = [];
+  String _layoutRecognize = 'DeepDOC';
+  bool _html4excel = false;
+  bool _useRaptor = false;
+  bool _useGraphrag = false;
+  int _pagerank = 0;
+  
+  KnowledgeBase? _currentKb;
 
   @override
   void initState() {
@@ -935,13 +962,223 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
     _descriptionController = TextEditingController(
       text: widget.knowledgeBase?.description ?? '',
     );
+    
+    final parserConfig = widget.knowledgeBase?.parserConfig ?? {};
+    _chunkTokenNumController = TextEditingController(
+      text: (parserConfig['chunk_token_num'] ?? 512).toString(),
+    );
+    _delimiterController = TextEditingController(
+      text: parserConfig['delimiter'] ?? '\n',
+    );
+    _autoKeywordsController = TextEditingController(
+      text: (parserConfig['auto_keywords'] ?? 0).toString(),
+    );
+    _autoQuestionsController = TextEditingController(
+      text: (parserConfig['auto_questions'] ?? 0).toString(),
+    );
+    
+    // 初始化配置值
+    _permission = PermissionType.fromString(widget.knowledgeBase?.permission);
+    _language = LanguageType.fromString(widget.knowledgeBase?.language);
+    _parserId = DocumentParserType.fromString(widget.knowledgeBase?.parserId) ?? DocumentParserType.naive;
+    _selectedEmbeddingModel = widget.knowledgeBase?.embeddingModel;
+    _avatarBase64 = widget.knowledgeBase?.avatar;
+    _layoutRecognize = parserConfig['layout_recognize'] ?? 'DeepDOC';
+    _html4excel = parserConfig['html4excel'] ?? false;
+    _pagerank = widget.knowledgeBase?.pagerank ?? 0;
+    
+    final raptorConfig = parserConfig['raptor'] as Map<String, dynamic>?;
+    _useRaptor = raptorConfig?['use_raptor'] ?? false;
+    
+    final graphragConfig = parserConfig['graphrag'] as Map<String, dynamic>?;
+    _useGraphrag = graphragConfig?['use_graphrag'] ?? false;
+    
+    _loadKnowledgeBase();
+    _loadEmbeddingModels();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
+    _chunkTokenNumController.dispose();
+    _delimiterController.dispose();
+    _autoKeywordsController.dispose();
+    _autoQuestionsController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadKnowledgeBase() async {
+    setState(() {
+      _isLoadingKb = true;
+    });
+    
+    try {
+      final kb = await KnowledgeService.getKnowledgeBaseDetail(widget.kbId);
+      if (kb != null && mounted) {
+        setState(() {
+          _currentKb = kb;
+          _isLoadingKb = false;
+          // 更新表单值
+          _nameController.text = kb.name;
+          _descriptionController.text = kb.description ?? '';
+          _permission = PermissionType.fromString(kb.permission);
+          _language = LanguageType.fromString(kb.language);
+          _parserId = DocumentParserType.fromString(kb.parserId) ?? DocumentParserType.naive;
+          _selectedEmbeddingModel = kb.embeddingModel;
+          _avatarBase64 = kb.avatar;
+          _pagerank = kb.pagerank ?? 0;
+          
+          final parserConfig = kb.parserConfig ?? {};
+          _chunkTokenNumController.text = (parserConfig['chunk_token_num'] ?? 512).toString();
+          _delimiterController.text = parserConfig['delimiter'] ?? '\n';
+          _autoKeywordsController.text = (parserConfig['auto_keywords'] ?? 0).toString();
+          _autoQuestionsController.text = (parserConfig['auto_questions'] ?? 0).toString();
+          _layoutRecognize = parserConfig['layout_recognize'] ?? 'DeepDOC';
+          _html4excel = parserConfig['html4excel'] ?? false;
+          
+          final raptorConfig = parserConfig['raptor'] as Map<String, dynamic>?;
+          _useRaptor = raptorConfig?['use_raptor'] ?? false;
+          
+          final graphragConfig = parserConfig['graphrag'] as Map<String, dynamic>?;
+          _useGraphrag = graphragConfig?['use_graphrag'] ?? false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingKb = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _loadEmbeddingModels() async {
+    setState(() {
+      _isLoadingModels = true;
+    });
+    
+    try {
+      final models = await LLMService.getEmbeddingModels();
+      if (mounted) {
+        setState(() {
+          _embeddingModels = models;
+          _isLoadingModels = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoadingModels = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _pickAvatar() async {
+    try {
+      final picker = ImagePicker();
+      
+      // 显示选择来源对话框
+      final ImageSource? source = await showDialog<ImageSource>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('选择图片来源'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('从相册选择'),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('拍照'),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+            ],
+          ),
+        ),
+      );
+      
+      if (source == null) {
+        return; // 用户取消了选择
+      }
+      
+      // 在 macOS 上，ImagePicker 使用文件选择对话框，不支持 maxWidth/maxHeight/imageQuality
+      // 所以我们需要根据平台来决定是否传递这些参数
+      XFile? pickedFile;
+      try {
+        if (Platform.isMacOS) {
+          // macOS 上直接调用，不传递压缩参数
+          pickedFile = await picker.pickImage(source: source);
+        } else {
+          // 其他平台可以使用压缩参数
+          pickedFile = await picker.pickImage(
+            source: source,
+            maxWidth: 512,
+            maxHeight: 512,
+            imageQuality: 85,
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('打开图片选择器失败: $e')),
+          );
+        }
+        return;
+      }
+      
+      if (pickedFile != null) {
+        final file = File(pickedFile.path);
+        if (await file.exists()) {
+          final bytes = await file.readAsBytes();
+          
+          // 检查文件大小（限制为 4MB）
+          if (bytes.length > 4 * 1024 * 1024) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('图片大小不能超过 4MB')),
+              );
+            }
+            return;
+          }
+          
+          // 转换为 base64，并添加 data URL 前缀（服务端要求）
+          final base64String = base64Encode(bytes);
+          // 根据文件扩展名确定 MIME 类型
+          final extension = pickedFile.path.split('.').last.toLowerCase();
+          final mimeType = extension == 'png' ? 'image/png' : 'image/jpeg';
+          final dataUrl = 'data:$mimeType;base64,$base64String';
+          
+          if (mounted) {
+            setState(() {
+              _avatarBase64 = dataUrl;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('图片已选择')),
+            );
+          }
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('文件不存在')),
+            );
+          }
+        }
+      }
+    } catch (e, stackTrace) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('选择图片失败: $e')),
+        );
+      }
+      // 打印详细错误信息用于调试
+      debugPrint('Image picker error: $e');
+      debugPrint('Stack trace: $stackTrace');
+    }
   }
 
   Future<void> _saveConfig() async {
@@ -954,18 +1191,49 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
     });
 
     try {
+      // 构建 parser_config
+      final parserConfig = <String, dynamic>{
+        'layout_recognize': _layoutRecognize,
+        'chunk_token_num': int.tryParse(_chunkTokenNumController.text) ?? 512,
+        'delimiter': _delimiterController.text,
+        'html4excel': _html4excel,
+        'auto_keywords': int.tryParse(_autoKeywordsController.text) ?? 0,
+        'auto_questions': int.tryParse(_autoQuestionsController.text) ?? 0,
+      };
+      
+      if (_useRaptor) {
+        parserConfig['raptor'] = {
+          'use_raptor': true,
+        };
+      }
+      
+      if (_useGraphrag) {
+        parserConfig['graphrag'] = {
+          'use_graphrag': true,
+        };
+      }
+
       final success = await KnowledgeService.updateKnowledgeBase(
         id: widget.kbId,
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim().isEmpty
             ? null
             : _descriptionController.text.trim(),
+        parserId: _parserId.value,
+        permission: _permission.value,
+        embdId: _selectedEmbeddingModel,
+        language: _language.value,
+        avatar: _avatarBase64,
+        parserConfig: parserConfig,
+        pagerank: _pagerank,
       );
 
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('保存成功')),
         );
+        // 重新加载知识库信息
+        _loadKnowledgeBase();
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('保存失败')),
@@ -988,6 +1256,10 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoadingKb) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -995,10 +1267,12 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // 基本信息
+            _buildSectionTitle('基本信息'),
             TextFormField(
               controller: _nameController,
               decoration: const InputDecoration(
-                labelText: '知识库名称',
+                labelText: '知识库名称 *',
                 border: OutlineInputBorder(),
               ),
               validator: (value) {
@@ -1009,15 +1283,123 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
               },
             ),
             const SizedBox(height: 16),
+            // 知识库图片
+            _buildAvatarSection(),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _descriptionController,
               decoration: const InputDecoration(
                 labelText: '描述',
                 border: OutlineInputBorder(),
               ),
-              maxLines: 5,
+              maxLines: 3,
+            ),
+            const SizedBox(height: 16),
+            // 权限
+            _buildPermissionSelector(),
+            const SizedBox(height: 16),
+            // 语言
+            _buildLanguageSelector(),
+            const SizedBox(height: 24),
+            
+            // 解析配置
+            _buildSectionTitle('解析配置'),
+            // 解析器（切片方法）
+            _buildParserSelector(),
+            const SizedBox(height: 16),
+            // 嵌入模型
+            _buildEmbeddingModelSelector(),
+            const SizedBox(height: 16),
+            // 建议文本块大小
+            TextFormField(
+              controller: _chunkTokenNumController,
+              decoration: const InputDecoration(
+                labelText: '建议文本块大小（Token数）',
+                border: OutlineInputBorder(),
+                helperText: '设置创建分块的Token阈值',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 16),
+            // 文本分段标识符
+            TextFormField(
+              controller: _delimiterController,
+              decoration: const InputDecoration(
+                labelText: '文本分段标识符',
+                border: OutlineInputBorder(),
+                helperText: '用于分割文本的标识符，如 \\n',
+              ),
+            ),
+            const SizedBox(height: 16),
+            // 布局识别
+            _buildLayoutRecognizeSelector(),
+            const SizedBox(height: 16),
+            // 页面排名
+            _buildPagerankSelector(),
+            const SizedBox(height: 24),
+            
+            // 高级选项
+            _buildSectionTitle('高级选项'),
+            // 自动关键词提取
+            TextFormField(
+              controller: _autoKeywordsController,
+              decoration: const InputDecoration(
+                labelText: '自动关键词提取数量',
+                border: OutlineInputBorder(),
+                helperText: '0表示不提取',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 16),
+            // 自动问题提取
+            TextFormField(
+              controller: _autoQuestionsController,
+              decoration: const InputDecoration(
+                labelText: '自动问题提取数量',
+                border: OutlineInputBorder(),
+                helperText: '0表示不提取',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 16),
+            // 表格转HTML
+            SwitchListTile(
+              title: const Text('表格转HTML'),
+              subtitle: const Text('将Excel表格转换为HTML格式'),
+              value: _html4excel,
+              onChanged: (value) {
+                setState(() {
+                  _html4excel = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            // 使用召回增强 RAPTOR 策略
+            SwitchListTile(
+              title: const Text('使用召回增强 RAPTOR 策略'),
+              subtitle: const Text('启用RAPTOR策略以增强召回效果'),
+              value: _useRaptor,
+              onChanged: (value) {
+                setState(() {
+                  _useRaptor = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            // 提取知识图谱
+            SwitchListTile(
+              title: const Text('提取知识图谱'),
+              subtitle: const Text('启用知识图谱提取功能'),
+              value: _useGraphrag,
+              onChanged: (value) {
+                setState(() {
+                  _useGraphrag = value;
+                });
+              },
             ),
             const SizedBox(height: 24),
+            
+            // 保存按钮
             ElevatedButton.icon(
               onPressed: _isSaving ? null : _saveConfig,
               icon: _isSaving
@@ -1035,6 +1417,303 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatarSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '知识库图片',
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            if (_avatarBase64 != null && _avatarBase64!.isNotEmpty)
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: _buildAvatarImage(_avatarBase64!),
+                ),
+              )
+            else
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.image, size: 40),
+              ),
+            const SizedBox(width: 16),
+            ElevatedButton.icon(
+              onPressed: _pickAvatar,
+              icon: const Icon(Icons.upload),
+              label: const Text('上传图片'),
+            ),
+            if (_avatarBase64 != null && _avatarBase64!.isNotEmpty) ...[
+              const SizedBox(width: 8),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _avatarBase64 = null;
+                  });
+                },
+                child: const Text('清除'),
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAvatarImage(String avatarData) {
+    try {
+      String base64String = avatarData;
+      
+      // 如果是 data URL 格式（如 data:image/png;base64,xxx），提取 base64 部分
+      if (base64String.contains(',')) {
+        base64String = base64String.split(',').last;
+      }
+      
+      // 解码 base64 字符串为 Uint8List
+      final Uint8List imageBytes = base64Decode(base64String);
+      
+      // 使用 Image.memory 显示图片，添加错误处理
+      return Image.memory(
+        imageBytes,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          // 如果图片加载失败，显示默认图标
+          return const Icon(Icons.image, size: 40);
+        },
+      );
+    } catch (e) {
+      // base64 解码失败，显示默认图标
+      return const Icon(Icons.image, size: 40);
+    }
+  }
+
+  Widget _buildPermissionSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '权限',
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        SegmentedButton<PermissionType>(
+          segments: PermissionType.values.map((type) {
+            return ButtonSegment<PermissionType>(
+              value: type,
+              label: Text(type.label),
+            );
+          }).toList(),
+          selected: {_permission},
+          onSelectionChanged: (Set<PermissionType> newSelection) {
+            setState(() {
+              _permission = newSelection.first;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLanguageSelector() {
+    return DropdownButtonFormField<LanguageType>(
+      value: _language,
+      decoration: const InputDecoration(
+        labelText: '文档语言',
+        border: OutlineInputBorder(),
+      ),
+      items: LanguageType.values.map((type) {
+        return DropdownMenuItem<LanguageType>(
+          value: type,
+          child: Text(type.label),
+        );
+      }).toList(),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            _language = value;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildParserSelector() {
+    return DropdownButtonFormField<DocumentParserType>(
+      value: _parserId,
+      decoration: const InputDecoration(
+        labelText: '切片方法（解析器）',
+        border: OutlineInputBorder(),
+        helperText: '选择文档解析和切片的方法',
+      ),
+      items: DocumentParserType.values.map((type) {
+        return DropdownMenuItem<DocumentParserType>(
+          value: type,
+          child: Text(type.label),
+        );
+      }).toList(),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            _parserId = value;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildEmbeddingModelSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownButtonFormField<String>(
+          value: _selectedEmbeddingModel,
+          decoration: InputDecoration(
+            labelText: '嵌入模型',
+            border: const OutlineInputBorder(),
+            helperText: _currentKb?.chunkNum != null && _currentKb!.chunkNum > 0
+                ? '注意：已有分块时更改嵌入模型需要删除所有分块'
+                : '选择用于生成嵌入向量的模型',
+            suffixIcon: _isLoadingModels
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: _loadEmbeddingModels,
+                  ),
+          ),
+          items: _embeddingModels.map((model) {
+            return DropdownMenuItem<String>(
+              value: model.modelId,
+              child: Row(
+                children: [
+                  Text(model.displayName),
+                  if (!model.available)
+                    const Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Text(
+                        '(不可用)',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          }).toList(),
+          onChanged: _currentKb?.chunkNum != null && _currentKb!.chunkNum > 0
+              ? null
+              : (value) {
+                  setState(() {
+                    _selectedEmbeddingModel = value;
+                  });
+                },
+        ),
+        if (_embeddingModels.isEmpty && !_isLoadingModels)
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text(
+              '暂无可用模型',
+              style: TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildLayoutRecognizeSelector() {
+    return DropdownButtonFormField<String>(
+      value: _layoutRecognize,
+      decoration: const InputDecoration(
+        labelText: '布局识别',
+        border: OutlineInputBorder(),
+        helperText: '选择布局识别方式',
+      ),
+      items: const [
+        DropdownMenuItem(value: 'DeepDOC', child: Text('DeepDOC')),
+        DropdownMenuItem(value: 'Plain Text', child: Text('纯文本')),
+      ],
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            _layoutRecognize = value;
+          });
+        }
+      },
+    );
+  }
+
+  Widget _buildPagerankSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '页面排名',
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: Slider(
+                value: _pagerank.toDouble(),
+                min: 0,
+                max: 100,
+                divisions: 100,
+                label: _pagerank.toString(),
+                onChanged: (value) {
+                  setState(() {
+                    _pagerank = value.toInt();
+                  });
+                },
+              ),
+            ),
+            SizedBox(
+              width: 60,
+              child: Text(
+                _pagerank.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+        const Text(
+          '页面排名值，用于搜索结果排序',
+          style: TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ],
     );
   }
 }
