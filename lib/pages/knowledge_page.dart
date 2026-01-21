@@ -46,6 +46,100 @@ class _KnowledgePageState extends State<KnowledgePage> {
     }
   }
 
+  Future<void> _showCreateDialog() async {
+    final nameController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('创建知识库'),
+        content: Form(
+          key: formKey,
+          child: TextFormField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              labelText: '名称',
+              hintText: '请输入知识库名称',
+              border: OutlineInputBorder(),
+            ),
+            autofocus: true,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return '请输入知识库名称';
+              }
+              return null;
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                Navigator.pop(context, true);
+              }
+            },
+            child: const Text('创建'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && nameController.text.trim().isNotEmpty) {
+      await _createKnowledgeBase(nameController.text.trim());
+    }
+  }
+
+  Future<void> _createKnowledgeBase(String name) async {
+    // 显示加载提示
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('正在创建...')),
+      );
+    }
+
+    try {
+      final kbId = await KnowledgeService.createKnowledgeBase(name: name);
+      
+      if (kbId != null) {
+        // 创建成功，刷新列表
+        await _loadKnowledgeBases();
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('创建成功')),
+          );
+          
+          // 导航到新创建的知识库详情页
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => KnowledgeDetailPage(
+                knowledgeBaseId: kbId,
+              ),
+            ),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('创建失败，请重试')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('创建失败: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,9 +206,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
                   ),
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Show create knowledge base dialog
-        },
+        onPressed: _showCreateDialog,
         child: const Icon(Icons.add),
       ),
     );

@@ -194,12 +194,6 @@ class _AgentPageState extends State<AgentPage> {
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Show create agent dialog
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 

@@ -33,7 +33,7 @@ class KnowledgeService {
     return [];
   }
 
-  static Future<KnowledgeBase?> createKnowledgeBase({
+  static Future<String?> createKnowledgeBase({
     required String name,
     String? description,
     String language = 'Chinese',
@@ -43,16 +43,16 @@ class KnowledgeService {
       createKbEndpoint,
       body: {
         'name': name,
-        'description': description,
+        if (description != null) 'description': description,
         'language': language,
-        'embedding_model': embeddingModel,
+        if (embeddingModel.isNotEmpty) 'embedding_model': embeddingModel,
       },
     );
 
     if (response.success && response.data != null) {
       final data = response.data!['data'] as Map<String, dynamic>?;
-      if (data != null) {
-        return KnowledgeBase.fromJson(data);
+      if (data != null && data.containsKey('kb_id')) {
+        return data['kb_id'] as String;
       }
     }
     return null;
