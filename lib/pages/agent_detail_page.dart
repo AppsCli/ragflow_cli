@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../services/agent_service.dart';
 
 class AgentDetailPage extends StatefulWidget {
@@ -350,10 +351,34 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                     ),
                   ),
                   const SizedBox(height: 4.0),
-                  Text(
-                    content,
-                    style: const TextStyle(fontSize: 16.0),
-                  ),
+                  isUser
+                      ? Text(
+                          content,
+                          style: const TextStyle(fontSize: 16.0),
+                        )
+                      : MarkdownBody(
+                          data: content,
+                          styleSheet: MarkdownStyleSheet(
+                            p: const TextStyle(fontSize: 16),
+                            h1: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            h2: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                            h3: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            code: TextStyle(
+                              fontSize: 14,
+                              backgroundColor: Colors.grey[300],
+                              fontFamily: 'monospace',
+                            ),
+                            codeblockDecoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            blockquote: TextStyle(
+                              fontSize: 16,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
                   if (isStreaming)
                     const Padding(
                       padding: EdgeInsets.only(top: 4.0),

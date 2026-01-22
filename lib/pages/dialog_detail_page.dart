@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../models/dialog.dart';
 import '../services/chat_service.dart';
 
@@ -537,10 +538,34 @@ class _ChatViewState extends State<ChatView> {
                 color: isUser ? Colors.blue[100] : Colors.grey[200],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(
-                message.content,
-                style: const TextStyle(fontSize: 16),
-              ),
+              child: isUser
+                  ? Text(
+                      message.content,
+                      style: const TextStyle(fontSize: 16),
+                    )
+                  : MarkdownBody(
+                      data: message.content,
+                      styleSheet: MarkdownStyleSheet(
+                        p: const TextStyle(fontSize: 16),
+                        h1: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        h2: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        h3: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        code: TextStyle(
+                          fontSize: 14,
+                          backgroundColor: Colors.grey[300],
+                          fontFamily: 'monospace',
+                        ),
+                        codeblockDecoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        blockquote: TextStyle(
+                          fontSize: 16,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ),
             ),
           ),
           if (isUser) ...[
