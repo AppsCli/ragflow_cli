@@ -410,7 +410,7 @@ class _ChatViewState extends State<ChatView> {
       ).listen(
         (data) {
           // 打印接收到的数据用于调试
-          print('Received SSE data: $data');
+          // print('Received SSE data: $data');
           
           if (data['error'] == true) {
             setState(() {
@@ -441,22 +441,20 @@ class _ChatViewState extends State<ChatView> {
           
           // 如果 data 是 true（表示流式传输完成），不处理，等待 onDone
           if (dataField == true && dataField is bool) {
-            print('Stream completed signal received');
+            // print('Stream completed signal received');
             return;
           }
 
           // 如果 data 是 Map，提取 answer 字段
           if (dataField is Map<String, dynamic>) {
             final answerData = dataField;
-            // SSE 流式响应中，answer 字段是增量更新的（delta），需要累加
-            // 参考前端代码：let newAnswer = (prev.answer || '') + (d.answer || '');
-            final delta = answerData['answer'] as String?;
-            if (delta != null) {
-              // 即使 delta 是空字符串，也要更新（因为可能是格式化的空格等）
+            // SSE 流式响应中，每一行都是完整的答案，直接替换而不是累加
+            final completeAnswer = answerData['answer'] as String?;
+            if (completeAnswer != null) {
               setState(() {
-                _streamingAnswer += delta; // 累加增量内容
+                _streamingAnswer = completeAnswer; // 直接替换为完整答案
               });
-              print('Updated streaming answer, length: ${_streamingAnswer.length}');
+              // print('Updated streaming answer, length: ${_streamingAnswer.length}');
               _scrollToBottom();
             } else {
               print('No answer field in data: $answerData');

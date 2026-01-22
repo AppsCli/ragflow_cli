@@ -136,7 +136,7 @@ class ChatService {
     required String conversationId,
     required List<Map<String, dynamic>> messages,
   }) async* {
-    print("completion:$conversationId $messages");
+    // print("completion:$conversationId $messages");
     try {
       final url = Uri.parse('${ApiClient.baseUrl}/v1/conversation/completion');
       
@@ -161,14 +161,14 @@ class ChatService {
       request.body = body;
 
       final streamedResponse = await http.Client().send(request);
-      print("streamedResponse: $streamedResponse");
-      print("streamedResponse.statusCode: : ${streamedResponse.statusCode}");
+      // print("streamedResponse: $streamedResponse");
+      // print("streamedResponse.statusCode: : ${streamedResponse.statusCode}");
       if (streamedResponse.statusCode >= 200 &&
           streamedResponse.statusCode < 300) {
         String buffer = '';
         await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
           buffer += chunk;
-          print('Received chunk: ${chunk.length} bytes');
+          // print('Received chunk: ${chunk.length} bytes');
           
           // 处理完整的 SSE 事件（以 \n\n 分隔）
           while (buffer.contains('\n\n')) {
@@ -178,7 +178,7 @@ class ChatService {
             
             if (event.trim().isEmpty) continue;
 
-            print('Processing SSE event: $event');
+            // print('Processing SSE event: $event');
 
             // SSE 格式: "data: {...}"
             // 可能有多行，需要找到所有 "data: " 开头的行
@@ -187,25 +187,25 @@ class ChatService {
               final trimmedLine = line.trim();
               if (trimmedLine.isEmpty) continue;
               
-              if (trimmedLine.startsWith('data: ')) {
-                final dataStr = trimmedLine.substring(6); // 跳过 "data: "
-                print('Parsing data string: $dataStr');
+              if (trimmedLine.startsWith('data:')) {
+                final dataStr = trimmedLine.substring(5); // 跳过 "data: "
+                // print('Parsing data string: $dataStr');
                 try {
                   final data = jsonDecode(dataStr) as Map<String, dynamic>;
-                  print('Parsed data: $data');
+                  // print('Parsed data: $data');
                   
                   // 检查是否完成（data: {"code": 0, "message": "", "data": true}）
                   final dataField = data['data'];
                   if (dataField == true && dataField is bool) {
                     // 流式传输完成，返回完成标记
-                    print('Stream completed');
+                    // print('Stream completed');
                     yield data;
                     return;
                   }
 
                   // 检查是否有错误
                   if (data['code'] != null && data['code'] != 0) {
-                    print('Error in response: ${data['message']}');
+                    // print('Error in response: ${data['message']}');
                     yield {
                       'error': true,
                       'message': data['message'] ?? '请求失败',
@@ -215,7 +215,7 @@ class ChatService {
                   }
 
                   // 返回数据（包括正常数据）
-                  print('Yielding data: $data');
+                  // print('Yielding data: $data');
                   yield data;
                 } catch (e) {
                   // 忽略解析错误，继续处理下一行
