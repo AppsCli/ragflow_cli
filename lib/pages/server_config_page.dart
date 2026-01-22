@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/system_service.dart';
+import '../models/server_config.dart';
 
 class ServerConfigPage extends StatefulWidget {
   const ServerConfigPage({super.key});
@@ -13,6 +14,7 @@ class ServerConfigPage extends StatefulWidget {
 class _ServerConfigPageState extends State<ServerConfigPage> {
   final _formKey = GlobalKey<FormState>();
   final _urlController = TextEditingController();
+  final _nameController = TextEditingController();
   bool _isLoading = false;
   bool _isLoadingStatus = false;
   bool _isLoadingVersion = false;
@@ -22,10 +24,6 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
   @override
   void initState() {
     super.initState();
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (authProvider.serverConfig != null) {
-      _urlController.text = authProvider.serverConfig!.baseUrl;
-    }
     _loadSystemInfo();
   }
 
@@ -83,11 +81,102 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
   @override
   void dispose() {
     _urlController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSave() async {
-    if (!_formKey.currentState!.validate()) {
+  Future<void> _showAddServerDialog() async {
+    _urlController.clear();
+    _nameController.clear();
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('添加服务器'),
+        content: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: '服务器名称（可选）',
+                  hintText: '例如: 生产环境',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.label),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _urlController,
+                decoration: const InputDecoration(
+                  labelText: '服务器地址',
+                  hintText: '例如: http://192.168.1.100:9380',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.cloud),
+                ),
+                keyboardType: TextInputType.url,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return '请输入服务器地址';
+                  }
+                  if (!value.startsWith('http://') && !value.startsWith('https://')) {
+                    return '地址必须以 http:// 或 https:// 开头';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                Navigator.pop(context, true);
+              }
+            },
+            child: const Text('添加'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final success = await authProvider.addServer(
+        _urlController.text.trim(),
+        name: _nameController.text.trim().isNotEmpty 
+            ? _nameController.text.trim() 
+            : null,
+      );
+
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('服务器添加成功')),
+          );
+          // 如果这是第一个服务器，可能需要重新加载系统信息
+          _loadSystemInfo();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('添加失败，请检查地址格式')),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _handleActivate(ServerConfig config) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    
+    // 如果已经是激活的服务器，不需要操作
+    if (config.isActive) {
       return;
     }
 
@@ -95,9 +184,9 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认保存'),
-        content: const Text(
-          '保存服务器地址后需要重新登录，确定要继续吗？',
+        title: const Text('确认切换'),
+        content: Text(
+          '切换到服务器 "${config.name.isNotEmpty ? config.name : config.baseUrl}" 后需要重新登录，确定要继续吗？',
         ),
         actions: [
           TextButton(
@@ -112,23 +201,13 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
       ),
     );
 
-    // 如果用户取消，不做任何操作
     if (confirmed != true) {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final success = await authProvider.setServerConfig(_urlController.text.trim());
+    final success = await authProvider.activateServer(config.baseUrl);
 
     if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-
       if (success) {
         // 清除用户信息（登出）
         await authProvider.logout();
@@ -141,11 +220,58 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
           );
         }
       } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('保存失败，请检查地址格式')),
-          );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('切换失败')),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleDelete(ServerConfig config) async {
+    // 显示确认对话框
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('确认删除'),
+        content: Text(
+          '确定要删除服务器 "${config.name.isNotEmpty ? config.name : config.baseUrl}" 吗？',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('删除'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final wasActive = config.isActive;
+    final success = await authProvider.deleteServer(config.baseUrl);
+
+    if (mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('服务器已删除')),
+        );
+        
+        // 如果删除的是激活的服务器，需要重新加载系统信息
+        if (wasActive) {
+          _loadSystemInfo();
         }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('删除失败')),
+        );
       }
     }
   }
@@ -160,43 +286,72 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                TextFormField(
-                  controller: _urlController,
-                  decoration: const InputDecoration(
-                    labelText: '服务器地址',
-                    hintText: '例如: http://192.168.1.100:9380',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.cloud),
-                  ),
-                  keyboardType: TextInputType.url,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '请输入服务器地址';
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // 服务器列表
+                Consumer<AuthProvider>(
+                  builder: (context, authProvider, child) {
+                    final servers = authProvider.serverConfigs;
+                    
+                    if (servers.isEmpty) {
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.cloud_off,
+                                size: 48,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                '暂无服务器配置',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              const Text(
+                                '点击下方按钮添加服务器',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                     }
-                    if (!value.startsWith('http://') && !value.startsWith('https://')) {
-                      return '地址必须以 http:// 或 https:// 开头';
-                    }
-                    return null;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '服务器列表',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ...servers.map((server) => _buildServerCard(server)),
+                      ],
+                    );
                   },
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _handleSave,
+                // 添加服务器按钮
+                ElevatedButton.icon(
+                  onPressed: _isLoading ? null : _showAddServerDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('添加服务器'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('保存', style: TextStyle(fontSize: 16)),
                 ),
                 const SizedBox(height: 32),
                 const Divider(),
@@ -312,6 +467,101 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildServerCard(ServerConfig server) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: server.isActive ? 4 : 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: server.isActive ? Colors.blue : Colors.transparent,
+          width: 2,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (server.name.isNotEmpty) ...[
+                        Text(
+                          server.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                      ],
+                      Text(
+                        server.baseUrl,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (server.isActive)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.blue),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.check_circle, size: 16, color: Colors.blue),
+                        SizedBox(width: 4),
+                        Text(
+                          '已激活',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (!server.isActive)
+                  TextButton.icon(
+                    onPressed: () => _handleActivate(server),
+                    icon: const Icon(Icons.power_settings_new, size: 18),
+                    label: const Text('激活'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                    ),
+                  ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () => _handleDelete(server),
+                  icon: const Icon(Icons.delete_outline),
+                  color: Colors.red,
+                  tooltip: '删除',
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
