@@ -136,6 +136,7 @@ class ChatService {
     required String conversationId,
     required List<Map<String, dynamic>> messages,
   }) async* {
+    print("completion:$conversationId $messages");
     try {
       final url = Uri.parse('${ApiClient.baseUrl}/v1/conversation/completion');
       
@@ -151,7 +152,8 @@ class ChatService {
       final body = jsonEncode({
         'conversation_id': conversationId,
         'messages': messages,
-        'stream': true,
+        // 不传递 stream 参数，让服务端使用默认值（默认为 True）
+        // 服务端在调用 async_chat 时已经显式传递了 stream=True，如果这里也传递会导致冲突
       });
 
       final request = http.Request('POST', url);
@@ -159,66 +161,91 @@ class ChatService {
       request.body = body;
 
       final streamedResponse = await http.Client().send(request);
-
+      print("streamedResponse: $streamedResponse");
+      print("streamedResponse.statusCode: : ${streamedResponse.statusCode}");
       if (streamedResponse.statusCode >= 200 &&
           streamedResponse.statusCode < 300) {
         String buffer = '';
         await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
           buffer += chunk;
+          print('Received chunk: ${chunk.length} bytes');
           
-          // 处理完整的 SSE 行（以 \n\n 分隔）
+          // 处理完整的 SSE 事件（以 \n\n 分隔）
           while (buffer.contains('\n\n')) {
             final index = buffer.indexOf('\n\n');
-            final line = buffer.substring(0, index);
+            final event = buffer.substring(0, index);
             buffer = buffer.substring(index + 2); // 跳过 \n\n
             
-            if (line.trim().isEmpty) continue;
+            if (event.trim().isEmpty) continue;
+
+            print('Processing SSE event: $event');
 
             // SSE 格式: "data: {...}"
-            if (line.startsWith('data: ')) {
-              final dataStr = line.substring(6); // 跳过 "data: "
-              try {
-                final data = jsonDecode(dataStr) as Map<String, dynamic>;
-                
-                // 检查是否完成（data: {"code": 0, "message": "", "data": true}）
-                if (data['data'] == true && data['data'] is bool) {
-                  // 流式传输完成
-                  return;
-                }
+            // 可能有多行，需要找到所有 "data: " 开头的行
+            final lines = event.split('\n');
+            for (final line in lines) {
+              final trimmedLine = line.trim();
+              if (trimmedLine.isEmpty) continue;
+              
+              if (trimmedLine.startsWith('data: ')) {
+                final dataStr = trimmedLine.substring(6); // 跳过 "data: "
+                print('Parsing data string: $dataStr');
+                try {
+                  final data = jsonDecode(dataStr) as Map<String, dynamic>;
+                  print('Parsed data: $data');
+                  
+                  // 检查是否完成（data: {"code": 0, "message": "", "data": true}）
+                  final dataField = data['data'];
+                  if (dataField == true && dataField is bool) {
+                    // 流式传输完成，返回完成标记
+                    print('Stream completed');
+                    yield data;
+                    return;
+                  }
 
-                // 检查是否有错误
-                if (data['code'] != null && data['code'] != 0) {
-                  yield {
-                    'error': true,
-                    'message': data['message'] ?? '请求失败',
-                  };
-                  return;
-                }
+                  // 检查是否有错误
+                  if (data['code'] != null && data['code'] != 0) {
+                    print('Error in response: ${data['message']}');
+                    yield {
+                      'error': true,
+                      'message': data['message'] ?? '请求失败',
+                      'code': data['code'],
+                    };
+                    return;
+                  }
 
-                // 返回数据
-                yield data;
-              } catch (e) {
-                // 忽略解析错误，继续处理下一行
-                continue;
+                  // 返回数据（包括正常数据）
+                  print('Yielding data: $data');
+                  yield data;
+                } catch (e) {
+                  // 忽略解析错误，继续处理下一行
+                  print('Failed to parse SSE data: $dataStr, error: $e');
+                  continue;
+                }
               }
             }
           }
         }
         
         // 处理剩余的 buffer（如果有完整的数据行）
-        if (buffer.trim().isNotEmpty && buffer.contains('data: ')) {
+        if (buffer.trim().isNotEmpty) {
+          print('Processing remaining buffer: $buffer');
           final lines = buffer.split('\n');
           for (final line in lines) {
-            if (line.trim().isEmpty) continue;
-            if (line.startsWith('data: ')) {
-              final dataStr = line.substring(6);
+            final trimmedLine = line.trim();
+            if (trimmedLine.isEmpty) continue;
+            if (trimmedLine.startsWith('data: ')) {
+              final dataStr = trimmedLine.substring(6);
               try {
                 final data = jsonDecode(dataStr) as Map<String, dynamic>;
-                if (data['data'] != true && (data['code'] == null || data['code'] == 0)) {
+                final dataField = data['data'];
+                // 如果不是完成标记，则返回数据
+                if (dataField != true) {
+                  print('Yielding remaining data: $data');
                   yield data;
                 }
               } catch (e) {
-                // 忽略解析错误
+                print('Failed to parse remaining SSE data: $dataStr, error: $e');
               }
             }
           }

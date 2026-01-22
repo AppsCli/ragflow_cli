@@ -97,16 +97,19 @@ class Conversation {
 class Message {
   final String content;
   final MessageRole role;
+  final String? id; // 消息ID（可选）
 
   Message({
     required this.content,
     required this.role,
+    this.id,
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
       content: json['content'] ?? '',
       role: MessageRole.fromString(json['role'] ?? 'user'),
+      id: json['id']?.toString(),
     );
   }
 
@@ -114,6 +117,7 @@ class Message {
     return {
       'content': content,
       'role': role.toString(),
+      if (id != null) 'id': id,
     };
   }
 }

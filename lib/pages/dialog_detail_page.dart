@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import '../models/dialog.dart';
@@ -332,8 +333,14 @@ class _ChatViewState extends State<ChatView> {
       _isSending = false;
       // 如果有流式内容，保存当前内容
       if (_streamingAnswer.isNotEmpty) {
+        // 为 assistant 消息生成 ID
+        final assistantMessageId = _generateMessageId();
         _messages.add(
-          Message(content: _streamingAnswer, role: MessageRole.assistant),
+          Message(
+            content: _streamingAnswer,
+            role: MessageRole.assistant,
+            id: assistantMessageId,
+          ),
         );
         _streamingAnswer = '';
       }
@@ -341,12 +348,24 @@ class _ChatViewState extends State<ChatView> {
     _scrollToBottom();
   }
 
+  /// 生成消息ID（UUID格式）
+  String _generateMessageId() {
+    final random = Random();
+    final bytes = List<int>.generate(32, (i) => random.nextInt(16));
+    final hex = bytes.map((b) => b.toRadixString(16)).join();
+    // 格式化为 UUID 格式：xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+    return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-4${hex.substring(13, 16)}-${hex.substring(16, 17)}${hex.substring(17, 20)}-${hex.substring(20, 32)}';
+  }
+
   Future<void> _sendMessage() async {
     final text = _messageController.text.trim();
     if (text.isEmpty || _isSending) return;
 
-    // 添加用户消息
-    final userMessage = Message(content: text, role: MessageRole.user);
+    // 生成新消息的ID
+    final messageId = _generateMessageId();
+    
+    // 添加用户消息（包含ID）
+    final userMessage = Message(content: text, role: MessageRole.user, id: messageId);
     setState(() {
       _messages.add(userMessage);
       _isSending = true;
@@ -357,11 +376,31 @@ class _ChatViewState extends State<ChatView> {
     _scrollToBottom();
 
     try {
-      // 构建消息列表（格式：{"role": "user", "content": "..."}）
-      final messagesForApi = _messages.map((msg) => {
-        'role': msg.role.toString(),
-        'content': msg.content,
-      }).toList();
+      // 构建消息列表，按照 API 要求的格式
+      // 格式：每个消息包含 role, content, id，用户消息还需要 doc_ids
+      final messagesForApi = <Map<String, dynamic>>[];
+      
+      // 遍历已有消息，构建符合 API 格式的消息
+      for (final msg in _messages) {
+        final messageMap = <String, dynamic>{
+          'role': msg.role.toString(),
+          'content': msg.content,
+        };
+        
+        // 如果有ID，使用已有的ID；否则生成新的ID
+        if (msg.id != null && msg.id!.isNotEmpty) {
+          messageMap['id'] = msg.id;
+        } else {
+          messageMap['id'] = _generateMessageId();
+        }
+        
+        // 用户消息需要添加 doc_ids 字段（空数组）
+        if (msg.role == MessageRole.user) {
+          messageMap['doc_ids'] = [];
+        }
+        
+        messagesForApi.add(messageMap);
+      }
 
       // 使用 SSE 流式接收响应
       _completionSubscription?.cancel();
@@ -370,6 +409,9 @@ class _ChatViewState extends State<ChatView> {
         messages: messagesForApi,
       ).listen(
         (data) {
+          // 打印接收到的数据用于调试
+          print('Received SSE data: $data');
+          
           if (data['error'] == true) {
             setState(() {
               _isSending = false;
@@ -381,24 +423,60 @@ class _ChatViewState extends State<ChatView> {
             return;
           }
 
-          final answerData = data['data'] as Map<String, dynamic>?;
-          if (answerData != null) {
+          // 检查是否有错误码
+          if (data['code'] != null && data['code'] != 0) {
+            setState(() {
+              _isSending = false;
+              _streamingAnswer = '';
+            });
+            final errorMessage = data['message'] as String? ?? '请求失败';
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('发送失败: $errorMessage')),
+            );
+            return;
+          }
+
+          // 解析 data 字段
+          final dataField = data['data'];
+          
+          // 如果 data 是 true（表示流式传输完成），不处理，等待 onDone
+          if (dataField == true && dataField is bool) {
+            print('Stream completed signal received');
+            return;
+          }
+
+          // 如果 data 是 Map，提取 answer 字段
+          if (dataField is Map<String, dynamic>) {
+            final answerData = dataField;
             // SSE 流式响应中，answer 字段是增量更新的（delta），需要累加
+            // 参考前端代码：let newAnswer = (prev.answer || '') + (d.answer || '');
             final delta = answerData['answer'] as String?;
-            if (delta != null && delta.isNotEmpty) {
+            if (delta != null) {
+              // 即使 delta 是空字符串，也要更新（因为可能是格式化的空格等）
               setState(() {
                 _streamingAnswer += delta; // 累加增量内容
               });
+              print('Updated streaming answer, length: ${_streamingAnswer.length}');
               _scrollToBottom();
+            } else {
+              print('No answer field in data: $answerData');
             }
+          } else {
+            print('Data field is not a Map: $dataField (type: ${dataField.runtimeType})');
           }
         },
         onDone: () {
           // 流式响应完成，保存完整答案
           setState(() {
             if (_streamingAnswer.isNotEmpty) {
+              // 为 assistant 消息生成 ID
+              final assistantMessageId = _generateMessageId();
               _messages.add(
-                Message(content: _streamingAnswer, role: MessageRole.assistant),
+                Message(
+                  content: _streamingAnswer,
+                  role: MessageRole.assistant,
+                  id: assistantMessageId,
+                ),
               );
             }
             _streamingAnswer = '';
