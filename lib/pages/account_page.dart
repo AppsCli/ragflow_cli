@@ -3,11 +3,17 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../services/user_service.dart';
 import 'server_config_page.dart';
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -69,6 +75,15 @@ class AccountPage extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
+            leading: const Icon(Icons.lock),
+            title: const Text('修改密码'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              _showChangePasswordDialog(context);
+            },
+          ),
+          const Divider(),
+          ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text('退出登录', style: TextStyle(color: Colors.red)),
             onTap: () async {
@@ -99,6 +114,193 @@ class AccountPage extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  void _showChangePasswordDialog(BuildContext context) {
+    final oldPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+    bool obscureOldPassword = true;
+    bool obscureNewPassword = true;
+    bool obscureConfirmPassword = true;
+    bool isChanging = false;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('修改密码'),
+          content: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: oldPasswordController,
+                    decoration: InputDecoration(
+                      labelText: '当前密码',
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscureOldPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            obscureOldPassword = !obscureOldPassword;
+                          });
+                        },
+                      ),
+                    ),
+                    obscureText: obscureOldPassword,
+                    enabled: !isChanging,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '请输入当前密码';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: newPasswordController,
+                    decoration: InputDecoration(
+                      labelText: '新密码',
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscureNewPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            obscureNewPassword = !obscureNewPassword;
+                          });
+                        },
+                      ),
+                    ),
+                    obscureText: obscureNewPassword,
+                    enabled: !isChanging,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '请输入新密码';
+                      }
+                      if (value.length < 8) {
+                        return '密码长度至少为8位';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: confirmPasswordController,
+                    decoration: InputDecoration(
+                      labelText: '确认新密码',
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          obscureConfirmPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            obscureConfirmPassword = !obscureConfirmPassword;
+                          });
+                        },
+                      ),
+                    ),
+                    obscureText: obscureConfirmPassword,
+                    enabled: !isChanging,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '请确认新密码';
+                      }
+                      if (value != newPasswordController.text) {
+                        return '两次输入的密码不一致';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: isChanging
+                  ? null
+                  : () {
+                      Navigator.pop(dialogContext);
+                    },
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: isChanging
+                  ? null
+                  : () async {
+                      if (!formKey.currentState!.validate()) {
+                        return;
+                      }
+
+                      setState(() {
+                        isChanging = true;
+                      });
+
+                      try {
+                        final success = await UserService.changePassword(
+                          oldPasswordController.text,
+                          newPasswordController.text,
+                        );
+
+                        if (context.mounted) {
+                          Navigator.pop(dialogContext);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                success
+                                    ? '密码修改成功'
+                                    : '密码修改失败，请检查当前密码是否正确',
+                              ),
+                              backgroundColor: success
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          setState(() {
+                            isChanging = false;
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('密码修改失败: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    },
+              child: isChanging
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('确定'),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1592,11 +1592,17 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   }
 
   Widget _buildEmbeddingModelSelector() {
+    // 确保选中的值在列表中，如果不在则设为 null
+    final validSelectedValue = _selectedEmbeddingModel != null &&
+            _embeddingModels.any((model) => model.modelId == _selectedEmbeddingModel)
+        ? _selectedEmbeddingModel
+        : null;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DropdownButtonFormField<String>(
-          value: _selectedEmbeddingModel,
+          value: validSelectedValue,
           decoration: InputDecoration(
             labelText: '嵌入模型',
             border: const OutlineInputBorder(),

@@ -38,10 +38,17 @@ class LLMService {
   static Future<List<LLMModel>> getEmbeddingModels() async {
     final modelsMap = await getLLMList(modelType: 'embedding');
     final models = <LLMModel>[];
+    final seenModelIds = <String>{};
+    
     modelsMap.forEach((factory, factoryModels) {
       for (final model in factoryModels) {
         if (model.modelType.contains('embedding')) {
-          models.add(model);
+          final modelId = model.modelId;
+          // 去重：确保每个 modelId 只出现一次
+          if (!seenModelIds.contains(modelId)) {
+            seenModelIds.add(modelId);
+            models.add(model);
+          }
         }
       }
     });

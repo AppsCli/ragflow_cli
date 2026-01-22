@@ -100,4 +100,26 @@ class UserService {
     );
     return response.success;
   }
+
+  static Future<bool> changePassword(String oldPassword, String newPassword) async {
+    // 加密旧密码和新密码
+    final encryptedOldPassword = rsaEncryptPassword(oldPassword);
+    final encryptedNewPassword = rsaEncryptPassword(newPassword);
+    
+    final response = await ApiClient.post(
+      '/v1/user/setting',
+      body: {
+        'password': encryptedOldPassword,
+        'new_password': encryptedNewPassword,
+      },
+    );
+    
+    if (response.success && response.data != null) {
+      final data = response.data!['data'];
+      // API 返回 true 表示成功
+      return data == true;
+    }
+    
+    return false;
+  }
 }
