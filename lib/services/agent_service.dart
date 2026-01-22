@@ -38,7 +38,7 @@ class AgentService {
     
     if (response.success && response.data != null) {
       final data = response.data!['data'] as Map<String, dynamic>?;
-      print(data);
+      // print(data);
       if (data != null) {
         // 根据web前端，响应格式为: { canvas: [], total: number }
         final canvas = data['kbs'] as List<dynamic>?;
@@ -135,59 +135,75 @@ class AgentService {
         await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
           buffer += chunk;
           
-          // 处理完整的 SSE 行（以 \n\n 分隔）
+          // 处理完整的 SSE 事件（以 \n\n 分隔），与聊天功能 ChatService.completion 一致
           while (buffer.contains('\n\n')) {
             final index = buffer.indexOf('\n\n');
-            final line = buffer.substring(0, index);
-            buffer = buffer.substring(index + 2); // 跳过 \n\n
+            final event = buffer.substring(0, index);
+            buffer = buffer.substring(index + 2);
             
-            if (line.trim().isEmpty) continue;
+            if (event.trim().isEmpty) continue;
 
-            // SSE 格式: "data: {...}"
-            if (line.startsWith('data: ')) {
-              final dataStr = line.substring(6); // 跳过 "data: "
-              try {
-                final data = jsonDecode(dataStr) as Map<String, dynamic>;
-                
-                // 检查是否完成
-                if (data['data'] == true && data['data'] is bool) {
-                  // 流式传输完成
-                  return;
+            // SSE 格式: data:{"code": 0, "message": "", "data": {"answer": "...", "reference": []}}
+            // 或 data: {"code": 0, "message": "", "data": true} 表示流结束
+            final lines = event.split('\n');
+            for (final line in lines) {
+              final trimmedLine = line.trim();
+              if (trimmedLine.isEmpty) continue;
+              
+              if (trimmedLine.startsWith('data:')) {
+                final dataStr = trimmedLine.substring(5).trim();
+                if (dataStr.isEmpty) continue;
+                try {
+                  final data = jsonDecode(dataStr) as Map<String, dynamic>;
+                  
+                  // 检查是否完成（data: {"code": 0, "message": "", "data": true}）
+                  final dataField = data['data'];
+                  if (dataField == true && dataField is bool) {
+                    yield data;
+                    return;
+                  }
+
+                  if (data['code'] != null && data['code'] != 0) {
+                    yield {
+                      'error': true,
+                      'message': data['message'] ?? '请求失败',
+                      'code': data['code'],
+                    };
+                    return;
+                  }
+
+                  yield data;
+                } catch (e) {
+                  continue;
                 }
-
-                // 检查是否有错误
-                if (data['code'] != null && data['code'] != 0) {
-                  yield {
-                    'error': true,
-                    'message': data['message'] ?? '请求失败',
-                  };
-                  return;
-                }
-
-                // 返回数据
-                yield data;
-              } catch (e) {
-                // 忽略解析错误，继续处理下一行
-                continue;
               }
             }
           }
         }
         
-        // 处理剩余的 buffer
-        if (buffer.trim().isNotEmpty && buffer.contains('data: ')) {
+        if (buffer.trim().isNotEmpty) {
           final lines = buffer.split('\n');
           for (final line in lines) {
-            if (line.trim().isEmpty) continue;
-            if (line.startsWith('data: ')) {
-              final dataStr = line.substring(6);
+            final trimmedLine = line.trim();
+            if (trimmedLine.isEmpty) continue;
+            if (trimmedLine.startsWith('data:')) {
+              final dataStr = trimmedLine.substring(5).trim();
+              if (dataStr.isEmpty) continue;
               try {
                 final data = jsonDecode(dataStr) as Map<String, dynamic>;
-                if (data['data'] != true && (data['code'] == null || data['code'] == 0)) {
+                final dataField = data['data'];
+                if (dataField == true && dataField is bool) continue;
+                if (data['code'] != null && data['code'] != 0) {
+                  yield {
+                    'error': true,
+                    'message': data['message'] ?? '请求失败',
+                    'code': data['code'],
+                  };
+                } else {
                   yield data;
                 }
               } catch (e) {
-                // 忽略解析错误
+                continue;
               }
             }
           }

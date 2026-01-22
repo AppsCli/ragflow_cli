@@ -100,21 +100,28 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
             return;
           }
 
-          // Agent 的 SSE 响应格式: {"event": "message", "data": {"content": "...", ...}, "session_id": "..."}
-          // 根据 API 代码，直接返回 ans 对象，包含 event、data、session_id 等字段
-          if (data['session_id'] != null) {
+          if (data['code'] != null && data['code'] != 0) {
             setState(() {
-              _sessionId = data['session_id'] as String;
+              _isSending = false;
+              _streamingAnswer = '';
             });
+            final errorMessage = data['message'] as String? ?? '请求失败';
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('发送失败: $errorMessage')),
+            );
+            return;
           }
 
-          // 处理消息内容
-          if (data['event'] == 'message' && data['data'] != null) {
-            final messageData = data['data'] as Map<String, dynamic>;
-            final content = messageData['content'] as String?;
-            if (content != null && content.isNotEmpty) {
+          // Agent SSE 格式与聊天一致: data:{"code": 0, "message": "", "data": {"answer": "...", "reference": []}}
+          // 每一行都是当前完整答案，直接替换；data 为 true 表示流结束
+          final dataField = data['data'];
+          if (dataField == true && dataField is bool) return;
+
+          if (dataField is Map<String, dynamic>) {
+            final completeAnswer = dataField['answer'] as String?;
+            if (completeAnswer != null) {
               setState(() {
-                _streamingAnswer += content; // 累加增量内容
+                _streamingAnswer = completeAnswer;
               });
               _scrollToBottom();
             }
