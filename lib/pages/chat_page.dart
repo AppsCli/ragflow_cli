@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/dialog.dart' as models;
 import '../services/chat_service.dart';
 import 'dialog_detail_page.dart';
@@ -38,8 +39,9 @@ class _ChatPageState extends State<ChatPage> {
         _isLoading = false;
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('加载失败: $e')),
+          SnackBar(content: Text(l10n.loadFailed(e.toString()))),
         );
       }
     }
@@ -51,40 +53,43 @@ class _ChatPageState extends State<ChatPage> {
 
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('创建新对话'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: '对话名称',
-                border: OutlineInputBorder(),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.createNewDialog),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: l10n.dialogName,
+                  border: const OutlineInputBorder(),
+                ),
               ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: descriptionController,
+                decoration: InputDecoration(
+                  labelText: l10n.descriptionOptional,
+                  border: const OutlineInputBorder(),
+                ),
+                maxLines: 3,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(
-                labelText: '描述（可选）',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.create),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('创建'),
-          ),
-        ],
-      ),
+        );
+      },
     );
 
     if (result == true && nameController.text.trim().isNotEmpty) {
@@ -96,9 +101,10 @@ class _ChatPageState extends State<ChatPage> {
               : descriptionController.text.trim(),
         );
 
+        final l10n = AppLocalizations.of(context)!;
         if (dialog != null && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('创建成功')),
+            SnackBar(content: Text(l10n.createSuccess)),
           );
           _loadDialogs();
           
@@ -114,13 +120,14 @@ class _ChatPageState extends State<ChatPage> {
           );
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('创建失败')),
+            SnackBar(content: Text(l10n.createFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('创建失败: $e')),
+            SnackBar(content: Text('${l10n.createFailed}: $e')),
           );
         }
       }
@@ -131,7 +138,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('聊天'),
+        title: Text(AppLocalizations.of(context)!.chat),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -142,8 +149,8 @@ class _ChatPageState extends State<ChatPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _dialogs.isEmpty
-              ? const Center(
-                  child: Text('暂无对话', style: TextStyle(fontSize: 16)),
+              ? Center(
+                  child: Text(AppLocalizations.of(context)!.noDialogs, style: const TextStyle(fontSize: 16)),
                 )
               : RefreshIndicator(
                   onRefresh: _loadDialogs,
@@ -161,7 +168,7 @@ class _ChatPageState extends State<ChatPage> {
                           leading: _buildAvatar(dialog.icon),
                           title: Text(dialog.name),
                           subtitle: Text(
-                            dialog.description ?? '暂无描述',
+                            dialog.description ?? AppLocalizations.of(context)!.noDescription,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

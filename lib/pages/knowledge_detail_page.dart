@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import '../l10n/app_localizations.dart';
 import '../models/knowledge_base.dart';
 import '../models/document.dart';
 import '../models/search_result.dart';
@@ -58,13 +59,13 @@ class _KnowledgeDetailPageState extends State<KnowledgeDetailPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_knowledgeBase?.name ?? '知识库详情'),
+        title: Text(_knowledgeBase?.name ?? AppLocalizations.of(context)!.knowledgeBaseDetail),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: '数据集'),
-            Tab(text: '检索测试'),
-            Tab(text: '配置'),
+          tabs: [
+            Tab(text: AppLocalizations.of(context)!.dataset),
+            Tab(text: AppLocalizations.of(context)!.retrievalTest),
+            Tab(text: AppLocalizations.of(context)!.config),
           ],
         ),
       ),
@@ -191,42 +192,48 @@ class _DocumentListTabState extends State<DocumentListTab> {
         _isLoading = false;
       });
       if (mounted && !silent) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('加载文档失败: $e')),
+          SnackBar(content: Text(l10n.loadDocumentsFailed(e.toString()))),
         );
       }
     }
   }
 
   Future<void> _deleteDocument(String id) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('确认删除'),
-        content: const Text('确定要删除这个文档吗？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('删除'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.confirmDelete),
+          content: Text(l10n.confirmDeleteDocument),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.delete),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed == true) {
+      final l10n = AppLocalizations.of(context)!;
       final success = await DocumentService.deleteDocument(id);
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('删除成功')),
+          SnackBar(content: Text(l10n.deleteSuccess)),
         );
         _loadDocuments();
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('删除失败')),
+          SnackBar(content: Text(l10n.deleteFailed)),
         );
       }
     }
@@ -244,7 +251,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
               child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: '搜索文档...',
+              hintText: AppLocalizations.of(context)!.searchDocuments,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _searchKeywords.isNotEmpty
                   ? IconButton(
@@ -284,8 +291,8 @@ class _DocumentListTabState extends State<DocumentListTab> {
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _documents.isEmpty
-                  ? const Center(
-                      child: Text('暂无文档', style: TextStyle(fontSize: 16)),
+                  ? Center(
+                      child: Text(AppLocalizations.of(context)!.noDocuments, style: const TextStyle(fontSize: 16)),
                     )
                   : RefreshIndicator(
                       onRefresh: _loadDocuments,
@@ -307,7 +314,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                 children: [
                                   Row(
                                     children: [
-                                      Text('片段: ${doc.chunkNum} | Token: ${doc.tokenNum}'),
+                                      Text('${AppLocalizations.of(context)!.chunks}: ${doc.chunkNum} | ${AppLocalizations.of(context)!.tokens}: ${doc.tokenNum}'),
                                       const SizedBox(width: 8),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -327,7 +334,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                   ),
                                   if (doc.updateTime != null)
                                     Text(
-                                      '更新: ${_formatDateTime(doc.updateTime!)}',
+                                      '${AppLocalizations.of(context)!.update}: ${_formatDateTime(doc.updateTime!)}',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -337,23 +344,23 @@ class _DocumentListTabState extends State<DocumentListTab> {
                               ),
                               trailing: PopupMenuButton(
                                 itemBuilder: (context) => [
-                                  const PopupMenuItem(
+                                  PopupMenuItem(
                                     value: 'detail',
                                     child: Row(
                                       children: [
-                                        Icon(Icons.info, size: 20),
-                                        SizedBox(width: 8),
-                                        Text('详情'),
+                                        const Icon(Icons.info, size: 20),
+                                        const SizedBox(width: 8),
+                                        Text(AppLocalizations.of(context)!.detail),
                                       ],
                                     ),
                                   ),
-                                  const PopupMenuItem(
+                                  PopupMenuItem(
                                     value: 'download',
                                     child: Row(
                                       children: [
-                                        Icon(Icons.download, size: 20),
-                                        SizedBox(width: 8),
-                                        Text('下载'),
+                                        const Icon(Icons.download, size: 20),
+                                        const SizedBox(width: 8),
+                                        Text(AppLocalizations.of(context)!.download),
                                       ],
                                     ),
                                   ),
@@ -365,35 +372,35 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                       doc.run == 'CANCEL' ||
                                       doc.run == '4' ||
                                       doc.run == 'FAIL')
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'parse',
                                       child: Row(
                                         children: [
-                                          Icon(Icons.play_arrow, size: 20),
-                                          SizedBox(width: 8),
-                                          Text('解析'),
+                                          const Icon(Icons.play_arrow, size: 20),
+                                          const SizedBox(width: 8),
+                                          Text(AppLocalizations.of(context)!.parse),
                                         ],
                                       ),
                                     ),
                                   // 显示"取消解析"选项：解析中状态
                                   if (doc.run == '1' || doc.run == 'RUNNING')
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'cancel',
                                       child: Row(
                                         children: [
-                                          Icon(Icons.stop, size: 20, color: Colors.orange),
-                                          SizedBox(width: 8),
-                                          Text('取消解析', style: TextStyle(color: Colors.orange)),
+                                          const Icon(Icons.stop, size: 20, color: Colors.orange),
+                                          const SizedBox(width: 8),
+                                          Text(AppLocalizations.of(context)!.cancelParse, style: const TextStyle(color: Colors.orange)),
                                         ],
                                       ),
                                     ),
-                                  const PopupMenuItem(
+                                  PopupMenuItem(
                                     value: 'delete',
                                     child: Row(
                                       children: [
-                                        Icon(Icons.delete, size: 20, color: Colors.red),
-                                        SizedBox(width: 8),
-                                        Text('删除', style: TextStyle(color: Colors.red)),
+                                        const Icon(Icons.delete, size: 20, color: Colors.red),
+                                        const SizedBox(width: 8),
+                                        Text(AppLocalizations.of(context)!.deleteDocument, style: const TextStyle(color: Colors.red)),
                                       ],
                                     ),
                                   ),
@@ -429,7 +436,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '共 $_total 个文档',
+                  AppLocalizations.of(context)!.totalDocuments(_total),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(width: 16),
@@ -442,7 +449,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                       _loadDocuments();
                     },
                     icon: const Icon(Icons.arrow_back, size: 16),
-                    label: const Text('上一页'),
+                    label: Text(AppLocalizations.of(context)!.previousPage),
                   ),
                 if ((_currentPage * _pageSize) < _total)
                   TextButton.icon(
@@ -453,7 +460,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                       _loadDocuments();
                     },
                     icon: const Icon(Icons.arrow_forward, size: 16),
-                    label: const Text('下一页'),
+                    label: Text(AppLocalizations.of(context)!.nextPage),
                   ),
               ],
             ),
@@ -467,7 +474,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
           child: FloatingActionButton(
             onPressed: _uploadDocument,
             child: const Icon(Icons.upload),
-            tooltip: '上传文件',
+            tooltip: AppLocalizations.of(context)!.uploadFile,
           ),
         ),
       ],
@@ -484,25 +491,25 @@ class _DocumentListTabState extends State<DocumentListTab> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('ID: ${doc.id}'),
-              Text('后缀: ${doc.suffix}'),
-              Text('大小: ${_formatFileSize(doc.size)}'),
-              Text('片段数: ${doc.chunkNum}'),
-              Text('Token数: ${doc.tokenNum}'),
-              Text('状态: ${_getStatusText(doc.run ?? doc.status)}'),
+              Text('${AppLocalizations.of(context)!.id}: ${doc.id}'),
+              Text('${AppLocalizations.of(context)!.suffix}: ${doc.suffix}'),
+              Text('${AppLocalizations.of(context)!.size}: ${_formatFileSize(doc.size)}'),
+              Text('${AppLocalizations.of(context)!.chunkCount}: ${doc.chunkNum}'),
+              Text('${AppLocalizations.of(context)!.tokenCount}: ${doc.tokenNum}'),
+              Text('${AppLocalizations.of(context)!.status}: ${_getStatusText(doc.run ?? doc.status)}'),
               if (doc.description != null)
-                Text('描述: ${doc.description}'),
+                Text('${AppLocalizations.of(context)!.description}: ${doc.description}'),
               if (doc.createTime != null)
-                Text('创建时间: ${_formatDateTime(doc.createTime!)}'),
+                Text('${AppLocalizations.of(context)!.createTime}: ${_formatDateTime(doc.createTime!)}'),
               if (doc.updateTime != null)
-                Text('更新时间: ${_formatDateTime(doc.updateTime!)}'),
+                Text('${AppLocalizations.of(context)!.updateTime}: ${_formatDateTime(doc.updateTime!)}'),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('关闭'),
+            child: Text(AppLocalizations.of(context)!.close),
           ),
         ],
       ),
@@ -510,23 +517,24 @@ class _DocumentListTabState extends State<DocumentListTab> {
   }
 
   String _getStatusText(String? status) {
-    if (status == null) return '未知';
+    final l10n = AppLocalizations.of(context)!;
+    if (status == null) return l10n.unknown;
     switch (status) {
       case '0':
       case 'UNSTART':
-        return '未开始';
+        return l10n.notStarted;
       case '1':
       case 'RUNNING':
-        return '解析中';
+        return l10n.parsing;
       case '2':
       case 'CANCEL':
-        return '已取消';
+        return l10n.cancelled;
       case '3':
       case 'DONE':
-        return '已完成';
+        return l10n.completed;
       case '4':
       case 'FAIL':
-        return '失败';
+        return l10n.failed;
       default:
         return status;
     }
@@ -557,9 +565,10 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
   Future<void> _downloadDocument(Document doc) async {
     try {
+      final l10n = AppLocalizations.of(context)!;
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('正在下载...')),
+          SnackBar(content: Text(l10n.downloading)),
         );
       }
 
@@ -567,7 +576,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
       if (fileBytes == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('下载失败')),
+            SnackBar(content: Text(l10n.downloadFailed)),
           );
         }
         return;
@@ -582,13 +591,14 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('下载成功: $filePath')),
+          SnackBar(content: Text(l10n.downloadSuccess(filePath))),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('下载失败: $e')),
+          SnackBar(content: Text('${l10n.downloadFailed}: $e')),
         );
       }
     }
@@ -596,9 +606,10 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
   Future<void> _parseDocument(Document doc) async {
     try {
+      final l10n = AppLocalizations.of(context)!;
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('正在启动解析...')),
+          SnackBar(content: Text(l10n.startingParse)),
         );
       }
 
@@ -610,47 +621,53 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('解析已启动')),
+          SnackBar(content: Text(l10n.parseStarted)),
         );
         _loadDocuments(); // 刷新列表
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('启动解析失败')),
+          SnackBar(content: Text(l10n.startParseFailed)),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('启动解析失败: $e')),
+          SnackBar(content: Text('${l10n.startParseFailed}: $e')),
         );
       }
     }
   }
 
   Future<void> _cancelParseDocument(Document doc) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('确认取消'),
-        content: Text('确定要取消解析文档 "${doc.name}" 吗？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('确定', style: TextStyle(color: Colors.orange)),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.confirmCancel),
+          content: Text(l10n.confirmCancelParse(doc.name)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.confirm, style: const TextStyle(color: Colors.orange)),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed == true) {
       try {
+        final l10n = AppLocalizations.of(context)!;
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('正在取消解析...')),
+            SnackBar(content: Text(l10n.cancellingParse)),
           );
         }
 
@@ -662,18 +679,19 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
         if (success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('已取消解析')),
+            SnackBar(content: Text(l10n.parseCancelled)),
           );
           _loadDocuments(); // 刷新列表
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('取消解析失败')),
+            SnackBar(content: Text(l10n.cancelParseFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('取消解析失败: $e')),
+            SnackBar(content: Text('${l10n.cancelParseFailed}: $e')),
           );
         }
       }
@@ -688,9 +706,10 @@ class _DocumentListTabState extends State<DocumentListTab> {
       );
 
       if (result != null && result.files.isNotEmpty) {
+        final l10n = AppLocalizations.of(context)!;
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('正在上传...')),
+            SnackBar(content: Text(l10n.uploading)),
           );
         }
 
@@ -712,7 +731,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
         if (mounted) {
           if (allSuccess && uploadedDocIds.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('上传成功，正在启动解析...')),
+              SnackBar(content: Text(l10n.uploadSuccess)),
             );
             // 自动启动解析
             await DocumentService.runDocument(
@@ -723,20 +742,21 @@ class _DocumentListTabState extends State<DocumentListTab> {
             _loadDocuments(); // 刷新列表
           } else if (uploadedDocIds.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('部分文件上传失败')),
+              SnackBar(content: Text(l10n.partialUploadFailed)),
             );
             _loadDocuments(); // 刷新列表
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('上传失败')),
+              SnackBar(content: Text(l10n.uploadFailed)),
             );
           }
         }
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('上传失败: $e')),
+          SnackBar(content: Text('${l10n.uploadFailed}: $e')),
         );
       }
     }
@@ -777,10 +797,11 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
   }
 
   Future<void> _testRetrieval() async {
+    final l10n = AppLocalizations.of(context)!;
     final question = _questionController.text.trim();
     if (question.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请输入问题')),
+        SnackBar(content: Text(l10n.enterQuestion)),
       );
       return;
     }
@@ -811,8 +832,9 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
         _isLoading = false;
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('检索测试失败: $e')),
+          SnackBar(content: Text(l10n.retrievalTestFailed(e.toString()))),
         );
       }
     }
@@ -830,9 +852,9 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
               Expanded(
                 child: TextField(
                   controller: _questionController,
-                  decoration: const InputDecoration(
-                    hintText: '输入问题进行检索测试...',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.enterQuestionForRetrieval,
+                    border: const OutlineInputBorder(),
                   ),
                   maxLines: 3,
                   enabled: !_isLoading,
@@ -848,7 +870,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.search),
-                label: const Text('测试'),
+                label: Text(AppLocalizations.of(context)!.test),
               ),
             ],
           ),
@@ -858,7 +880,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
           child: _chunks.isEmpty
               ? Center(
                   child: Text(
-                    _isLoading ? '检索中...' : '请输入问题进行检索测试',
+                    _isLoading ? AppLocalizations.of(context)!.retrieving : AppLocalizations.of(context)!.enterQuestionForRetrievalTest,
                     style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   ),
                 )
@@ -868,7 +890,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '检索结果 (共 $_total 条)',
+                        AppLocalizations.of(context)!.retrievalResults(_total),
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -890,7 +912,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
                               children: [
                                 if (chunk.similarity != null)
                                   Text(
-                                    '相似度: ${(chunk.similarity! * 100).toStringAsFixed(1)}%',
+                                    AppLocalizations.of(context)!.similarity((chunk.similarity! * 100).toStringAsFixed(1)),
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                       fontSize: 12,
@@ -1082,24 +1104,27 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
       // 显示选择来源对话框
       final ImageSource? source = await showDialog<ImageSource>(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('选择图片来源'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('从相册选择'),
-                onTap: () => Navigator.pop(context, ImageSource.gallery),
-              ),
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('拍照'),
-                onTap: () => Navigator.pop(context, ImageSource.camera),
-              ),
-            ],
-          ),
-        ),
+        builder: (context) {
+          final l10n = AppLocalizations.of(context)!;
+          return AlertDialog(
+            title: Text(l10n.selectImageSource),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: Text(l10n.selectFromGallery),
+                  onTap: () => Navigator.pop(context, ImageSource.gallery),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: Text(l10n.takePhoto),
+                  onTap: () => Navigator.pop(context, ImageSource.camera),
+                ),
+              ],
+            ),
+          );
+        },
       );
       
       if (source == null) {
@@ -1124,8 +1149,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
         }
       } catch (e) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('打开图片选择器失败: $e')),
+            SnackBar(content: Text(l10n.selectImageFailed(e.toString()))),
           );
         }
         return;
@@ -1137,10 +1163,11 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           final bytes = await file.readAsBytes();
           
           // 检查文件大小（限制为 4MB）
+          final l10n = AppLocalizations.of(context)!;
           if (bytes.length > 4 * 1024 * 1024) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('图片大小不能超过 4MB')),
+                SnackBar(content: Text(l10n.imageTooLarge)),
               );
             }
             return;
@@ -1158,21 +1185,23 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
               _avatarBase64 = dataUrl;
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('图片已选择')),
+              SnackBar(content: Text(l10n.imageSelected)),
             );
           }
         } else {
           if (mounted) {
+            final l10n = AppLocalizations.of(context)!;
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('文件不存在')),
+              SnackBar(content: Text(l10n.fileNotExists)),
             );
           }
         }
       }
     } catch (e, stackTrace) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('选择图片失败: $e')),
+          SnackBar(content: Text(l10n.selectImageFailed(e.toString()))),
         );
       }
       // 打印详细错误信息用于调试
@@ -1228,21 +1257,23 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
         pagerank: _pagerank,
       );
 
+      final l10n = AppLocalizations.of(context)!;
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('保存成功')),
+          SnackBar(content: Text(l10n.saveSuccess)),
         );
         // 重新加载知识库信息
         _loadKnowledgeBase();
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('保存失败')),
+          SnackBar(content: Text(l10n.saveFailed)),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('保存失败: $e')),
+          SnackBar(content: Text('${l10n.saveFailed}: $e')),
         );
       }
     } finally {
@@ -1268,16 +1299,16 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // 基本信息
-            _buildSectionTitle('基本信息'),
+            _buildSectionTitle(AppLocalizations.of(context)!.basicInfo),
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: '知识库名称 *',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: '${AppLocalizations.of(context)!.knowledgeBaseName} *',
+                border: const OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return '请输入知识库名称';
+                  return AppLocalizations.of(context)!.knowledgeBaseNameRequired;
                 }
                 return null;
               },
@@ -1288,9 +1319,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: '描述',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.description,
+                border: const OutlineInputBorder(),
               ),
               maxLines: 3,
             ),
@@ -1303,7 +1334,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 24),
             
             // 解析配置
-            _buildSectionTitle('解析配置'),
+            _buildSectionTitle(AppLocalizations.of(context)!.parseConfig),
             // 解析器（切片方法）
             _buildParserSelector(),
             const SizedBox(height: 16),
@@ -1313,10 +1344,10 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             // 建议文本块大小
             TextFormField(
               controller: _chunkTokenNumController,
-              decoration: const InputDecoration(
-                labelText: '建议文本块大小（Token数）',
-                border: OutlineInputBorder(),
-                helperText: '设置创建分块的Token阈值',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.suggestedChunkSize,
+                border: const OutlineInputBorder(),
+                helperText: AppLocalizations.of(context)!.chunkSizeHelper,
               ),
               keyboardType: TextInputType.number,
             ),
@@ -1324,10 +1355,10 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             // 文本分段标识符
             TextFormField(
               controller: _delimiterController,
-              decoration: const InputDecoration(
-                labelText: '文本分段标识符',
-                border: OutlineInputBorder(),
-                helperText: '用于分割文本的标识符，如 \\n',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.textDelimiter,
+                border: const OutlineInputBorder(),
+                helperText: AppLocalizations.of(context)!.delimiterHelper,
               ),
             ),
             const SizedBox(height: 16),
@@ -1339,14 +1370,14 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 24),
             
             // 高级选项
-            _buildSectionTitle('高级选项'),
+            _buildSectionTitle(AppLocalizations.of(context)!.advancedOptions),
             // 自动关键词提取
             TextFormField(
               controller: _autoKeywordsController,
-              decoration: const InputDecoration(
-                labelText: '自动关键词提取数量',
-                border: OutlineInputBorder(),
-                helperText: '0表示不提取',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.autoKeywordsCount,
+                border: const OutlineInputBorder(),
+                helperText: AppLocalizations.of(context)!.autoKeywordsHelper,
               ),
               keyboardType: TextInputType.number,
             ),
@@ -1354,18 +1385,18 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             // 自动问题提取
             TextFormField(
               controller: _autoQuestionsController,
-              decoration: const InputDecoration(
-                labelText: '自动问题提取数量',
-                border: OutlineInputBorder(),
-                helperText: '0表示不提取',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.autoQuestionsCount,
+                border: const OutlineInputBorder(),
+                helperText: AppLocalizations.of(context)!.autoQuestionsHelper,
               ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
             // 表格转HTML
             SwitchListTile(
-              title: const Text('表格转HTML'),
-              subtitle: const Text('将Excel表格转换为HTML格式'),
+              title: Text(AppLocalizations.of(context)!.tableToHtml),
+              subtitle: Text(AppLocalizations.of(context)!.tableToHtmlSubtitle),
               value: _html4excel,
               onChanged: (value) {
                 setState(() {
@@ -1376,8 +1407,8 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 16),
             // 使用召回增强 RAPTOR 策略
             SwitchListTile(
-              title: const Text('使用召回增强 RAPTOR 策略'),
-              subtitle: const Text('启用RAPTOR策略以增强召回效果'),
+              title: Text(AppLocalizations.of(context)!.useRaptor),
+              subtitle: Text(AppLocalizations.of(context)!.useRaptorSubtitle),
               value: _useRaptor,
               onChanged: (value) {
                 setState(() {
@@ -1388,8 +1419,8 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 16),
             // 提取知识图谱
             SwitchListTile(
-              title: const Text('提取知识图谱'),
-              subtitle: const Text('启用知识图谱提取功能'),
+              title: Text(AppLocalizations.of(context)!.extractKnowledgeGraph),
+              subtitle: Text(AppLocalizations.of(context)!.extractKnowledgeGraphSubtitle),
               value: _useGraphrag,
               onChanged: (value) {
                 setState(() {
@@ -1409,7 +1440,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.save),
-              label: const Text('保存配置'),
+              label: Text(AppLocalizations.of(context)!.saveConfig),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
@@ -1437,9 +1468,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '知识库图片',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        Text(
+          AppLocalizations.of(context)!.knowledgeBaseImage,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         Row(
@@ -1471,7 +1502,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             ElevatedButton.icon(
               onPressed: _pickAvatar,
               icon: const Icon(Icons.upload),
-              label: const Text('上传图片'),
+              label: Text(AppLocalizations.of(context)!.uploadImage),
             ),
             if (_avatarBase64 != null && _avatarBase64!.isNotEmpty) ...[
               const SizedBox(width: 8),
@@ -1481,7 +1512,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
                     _avatarBase64 = null;
                   });
                 },
-                child: const Text('清除'),
+                child: Text(AppLocalizations.of(context)!.clear),
               ),
             ],
           ],
@@ -1521,9 +1552,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '权限',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        Text(
+          AppLocalizations.of(context)!.permission,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         SegmentedButton<PermissionType>(
@@ -1547,9 +1578,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   Widget _buildLanguageSelector() {
     return DropdownButtonFormField<LanguageType>(
       value: _language,
-      decoration: const InputDecoration(
-        labelText: '文档语言',
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.documentLanguage,
+        border: const OutlineInputBorder(),
       ),
       items: LanguageType.values.map((type) {
         return DropdownMenuItem<LanguageType>(
@@ -1570,10 +1601,10 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   Widget _buildParserSelector() {
     return DropdownButtonFormField<DocumentParserType>(
       value: _parserId,
-      decoration: const InputDecoration(
-        labelText: '切片方法（解析器）',
-        border: OutlineInputBorder(),
-        helperText: '选择文档解析和切片的方法',
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.sliceMethod,
+        border: const OutlineInputBorder(),
+        helperText: AppLocalizations.of(context)!.sliceMethodHelper,
       ),
       items: DocumentParserType.values.map((type) {
         return DropdownMenuItem<DocumentParserType>(
@@ -1604,11 +1635,11 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
         DropdownButtonFormField<String>(
           value: validSelectedValue,
           decoration: InputDecoration(
-            labelText: '嵌入模型',
+            labelText: AppLocalizations.of(context)!.embeddingModel,
             border: const OutlineInputBorder(),
             helperText: _currentKb?.chunkNum != null && _currentKb!.chunkNum > 0
-                ? '注意：已有分块时更改嵌入模型需要删除所有分块'
-                : '选择用于生成嵌入向量的模型',
+                ? AppLocalizations.of(context)!.embeddingModelWarning
+                : AppLocalizations.of(context)!.embeddingModelHelper,
             suffixIcon: _isLoadingModels
                 ? const SizedBox(
                     width: 16,
@@ -1647,11 +1678,11 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
                 },
         ),
         if (_embeddingModels.isEmpty && !_isLoadingModels)
-          const Padding(
-            padding: EdgeInsets.only(top: 8),
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
             child: Text(
-              '暂无可用模型',
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+              AppLocalizations.of(context)!.noModelsAvailable,
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
             ),
           ),
       ],
@@ -1661,14 +1692,14 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   Widget _buildLayoutRecognizeSelector() {
     return DropdownButtonFormField<String>(
       value: _layoutRecognize,
-      decoration: const InputDecoration(
-        labelText: '布局识别',
-        border: OutlineInputBorder(),
-        helperText: '选择布局识别方式',
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.layoutRecognition,
+        border: const OutlineInputBorder(),
+        helperText: AppLocalizations.of(context)!.layoutRecognitionHelper,
       ),
-      items: const [
-        DropdownMenuItem(value: 'DeepDOC', child: Text('DeepDOC')),
-        DropdownMenuItem(value: 'Plain Text', child: Text('纯文本')),
+      items: [
+        const DropdownMenuItem(value: 'DeepDOC', child: Text('DeepDOC')),
+        DropdownMenuItem(value: 'Plain Text', child: Text(AppLocalizations.of(context)!.plainText)),
       ],
       onChanged: (value) {
         if (value != null) {
@@ -1684,9 +1715,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '页面排名',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        Text(
+          AppLocalizations.of(context)!.pageRank,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         Row(
@@ -1715,9 +1746,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             ),
           ],
         ),
-        const Text(
-          '页面排名值，用于搜索结果排序',
-          style: TextStyle(fontSize: 12, color: Colors.grey),
+        Text(
+          AppLocalizations.of(context)!.pageRankHelper,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
         ),
       ],
     );

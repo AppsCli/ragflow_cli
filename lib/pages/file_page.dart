@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
+import '../l10n/app_localizations.dart';
 import '../services/file_service.dart';
 import 'file_detail_page.dart';
 
@@ -39,8 +40,9 @@ class _FilePageState extends State<FilePage> {
         _isLoading = false;
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('加载失败: $e')),
+          SnackBar(content: Text(l10n.loadFailed(e.toString()))),
         );
       }
     }
@@ -50,7 +52,7 @@ class _FilePageState extends State<FilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('文件管理'),
+        title: Text(AppLocalizations.of(context)!.fileManagement),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -61,8 +63,8 @@ class _FilePageState extends State<FilePage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _files.isEmpty
-              ? const Center(
-                  child: Text('暂无文件', style: TextStyle(fontSize: 16)),
+              ? Center(
+                  child: Text(AppLocalizations.of(context)!.noFiles, style: const TextStyle(fontSize: 16)),
                 )
               : RefreshIndicator(
                   onRefresh: _loadFiles,
@@ -79,11 +81,11 @@ class _FilePageState extends State<FilePage> {
                         ),
                         child: ListTile(
                           leading: Icon(isFolder ? Icons.folder : Icons.insert_drive_file),
-                          title: Text(file['name'] ?? '未命名'),
+                          title: Text(file['name'] ?? AppLocalizations.of(context)!.unnamed),
                           subtitle: isFolder
                               ? null
                               : Text(
-                                  '大小: ${_formatFileSize(file['size'] ?? 0)}',
+                                  '${AppLocalizations.of(context)!.size}: ${_formatFileSize(file['size'] ?? 0)}',
                                 ),
                                 trailing: file['type'] == 'folder'
                                     ? const Icon(Icons.chevron_right)
@@ -100,43 +102,43 @@ class _FilePageState extends State<FilePage> {
                                           }
                                         },
                                         itemBuilder: (context) => [
-                                          const PopupMenuItem(
+                                          PopupMenuItem(
                                             value: 'preview',
                                             child: Row(
                                               children: [
-                                                Icon(Icons.preview, size: 20),
-                                                SizedBox(width: 8),
-                                                Text('预览'),
+                                                const Icon(Icons.preview, size: 20),
+                                                const SizedBox(width: 8),
+                                                Text(AppLocalizations.of(context)!.preview),
                                               ],
                                             ),
                                           ),
-                                          const PopupMenuItem(
+                                          PopupMenuItem(
                                             value: 'download',
                                             child: Row(
                                               children: [
-                                                Icon(Icons.download, size: 20),
-                                                SizedBox(width: 8),
-                                                Text('下载'),
+                                                const Icon(Icons.download, size: 20),
+                                                const SizedBox(width: 8),
+                                                Text(AppLocalizations.of(context)!.download),
                                               ],
                                             ),
                                           ),
-                                          const PopupMenuItem(
+                                          PopupMenuItem(
                                             value: 'detail',
                                             child: Row(
                                               children: [
-                                                Icon(Icons.info, size: 20),
-                                                SizedBox(width: 8),
-                                                Text('详情'),
+                                                const Icon(Icons.info, size: 20),
+                                                const SizedBox(width: 8),
+                                                Text(AppLocalizations.of(context)!.detail),
                                               ],
                                             ),
                                           ),
-                                          const PopupMenuItem(
+                                          PopupMenuItem(
                                             value: 'delete',
                                             child: Row(
                                               children: [
-                                                Icon(Icons.delete, color: Colors.red, size: 20),
-                                                SizedBox(width: 8),
-                                                Text('删除', style: TextStyle(color: Colors.red)),
+                                                const Icon(Icons.delete, color: Colors.red, size: 20),
+                                                const SizedBox(width: 8),
+                                                Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
                                               ],
                                             ),
                                           ),
@@ -167,7 +169,7 @@ class _FilePageState extends State<FilePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _uploadFile,
         child: const Icon(Icons.upload),
-        tooltip: '上传文件',
+        tooltip: AppLocalizations.of(context)!.uploadFile,
       ),
     );
   }
@@ -190,15 +192,17 @@ class _FilePageState extends State<FilePage> {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('无法打开预览: $previewUrl')),
+            SnackBar(content: Text(l10n.cannotOpenPreview(previewUrl))),
           );
         }
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('预览失败: $e')),
+          SnackBar(content: Text(l10n.previewFailed(e.toString()))),
         );
       }
     }
@@ -210,9 +214,10 @@ class _FilePageState extends State<FilePage> {
     if (fileId == null) return;
 
     try {
+      final l10n = AppLocalizations.of(context)!;
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('正在下载...')),
+          SnackBar(content: Text(l10n.downloading)),
         );
       }
 
@@ -220,7 +225,7 @@ class _FilePageState extends State<FilePage> {
       if (fileBytes == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('下载失败')),
+            SnackBar(content: Text(l10n.downloadFailed)),
           );
         }
         return;
@@ -234,13 +239,14 @@ class _FilePageState extends State<FilePage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('下载成功: $filePath')),
+          SnackBar(content: Text(l10n.downloadSuccess(filePath))),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('下载失败: $e')),
+          SnackBar(content: Text('${l10n.downloadFailed}: $e')),
         );
       }
     }
@@ -248,44 +254,50 @@ class _FilePageState extends State<FilePage> {
 
   Future<void> _deleteFile(Map<String, dynamic> file) async {
     final fileId = file['id'] as String?;
-    final fileName = file['name'] as String? ?? '未命名';
+    final fileName = file['name'] as String? ?? AppLocalizations.of(context)!.unnamed;
     if (fileId == null) return;
 
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('确认删除'),
-        content: Text('确定要删除 "$fileName" 吗？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('删除', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.confirmDelete),
+          content: Text(l10n.confirmDeleteFile(fileName)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed == true) {
       try {
+        final l10n = AppLocalizations.of(context)!;
         final success = await FileService.deleteFile([fileId]);
         if (success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('删除成功')),
+            SnackBar(content: Text(l10n.deleteSuccess)),
           );
           _loadFiles(); // 刷新列表
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('删除失败')),
+            SnackBar(content: Text(l10n.deleteFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('删除失败: $e')),
+            SnackBar(content: Text('${l10n.deleteFailed}: $e')),
           );
         }
       }
@@ -296,20 +308,20 @@ class _FilePageState extends State<FilePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(file['name'] ?? '未命名'),
+        title: Text(file['name'] ?? AppLocalizations.of(context)!.unnamed),
         content: SingleChildScrollView(
           child: ListBody(
             children: [
-              Text('ID: ${file['id']}'),
-              Text('类型: ${file['type'] ?? '未知'}'),
-              Text('大小: ${_formatFileSize(file['size'] ?? 0)}'),
+              Text('${AppLocalizations.of(context)!.id}: ${file['id']}'),
+              Text('${AppLocalizations.of(context)!.type}: ${file['type'] ?? AppLocalizations.of(context)!.unknown}'),
+              Text('${AppLocalizations.of(context)!.size}: ${_formatFileSize(file['size'] ?? 0)}'),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('关闭'),
+            child: Text(AppLocalizations.of(context)!.close),
           ),
         ],
       ),
@@ -324,9 +336,10 @@ class _FilePageState extends State<FilePage> {
       );
 
       if (result != null && result.files.isNotEmpty) {
+        final l10n = AppLocalizations.of(context)!;
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('正在上传...')),
+            SnackBar(content: Text(l10n.uploading)),
           );
         }
 
@@ -344,7 +357,7 @@ class _FilePageState extends State<FilePage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(allSuccess ? '上传成功' : '部分文件上传失败'),
+              content: Text(allSuccess ? l10n.uploadSuccess : l10n.partialUploadFailed),
             ),
           );
           _loadFiles(); // 刷新列表
@@ -352,8 +365,9 @@ class _FilePageState extends State<FilePage> {
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('上传失败: $e')),
+          SnackBar(content: Text('${l10n.uploadFailed}: $e')),
         );
       }
     }

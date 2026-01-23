@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../services/system_service.dart';
 import '../models/server_config.dart';
@@ -88,63 +89,67 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
   Future<void> _showAddServerDialog() async {
     _urlController.clear();
     _nameController.clear();
+    final l10n = AppLocalizations.of(context)!;
 
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('添加服务器'),
-        content: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: '服务器名称（可选）',
-                  hintText: '例如: 生产环境',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.label),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.addServer),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: l10n.serverName,
+                    hintText: AppLocalizations.of(context)!.exampleProduction,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.label),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _urlController,
-                decoration: const InputDecoration(
-                  labelText: '服务器地址',
-                  hintText: '例如: http://192.168.1.100:9380',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.cloud),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _urlController,
+                  decoration: InputDecoration(
+                    labelText: l10n.serverAddress,
+                    hintText: l10n.exampleServerAddress,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.cloud),
+                  ),
+                  keyboardType: TextInputType.url,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return l10n.serverAddressRequired;
+                    }
+                    if (!value.startsWith('http://') && !value.startsWith('https://')) {
+                      return l10n.serverAddressFormatError;
+                    }
+                    return null;
+                  },
                 ),
-                keyboardType: TextInputType.url,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '请输入服务器地址';
-                  }
-                  if (!value.startsWith('http://') && !value.startsWith('https://')) {
-                    return '地址必须以 http:// 或 https:// 开头';
-                  }
-                  return null;
-                },
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                Navigator.pop(context, true);
-              }
-            },
-            child: const Text('添加'),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  Navigator.pop(context, true);
+                }
+              },
+              child: Text(l10n.addServer),
+            ),
+          ],
+        );
+      },
     );
 
     if (result == true) {
@@ -159,13 +164,13 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
       if (mounted) {
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('服务器添加成功')),
+            SnackBar(content: Text(l10n.serverAdded)),
           );
           // 如果这是第一个服务器，可能需要重新加载系统信息
           _loadSystemInfo();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('添加失败，请检查地址格式')),
+            SnackBar(content: Text(l10n.addFailed)),
           );
         }
       }
@@ -174,6 +179,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
 
   Future<void> _handleActivate(ServerConfig config) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
     
     // 如果已经是激活的服务器，不需要操作
     if (config.isActive) {
@@ -183,22 +189,24 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
     // 显示确认对话框
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('确认切换'),
-        content: Text(
-          '切换到服务器 "${config.name.isNotEmpty ? config.name : config.baseUrl}" 后需要重新登录，确定要继续吗？',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('确定'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        final serverName = config.name.isNotEmpty ? config.name : config.baseUrl;
+        return AlertDialog(
+          title: Text(l10n.confirm),
+          content: Text(l10n.switchServerConfirm(serverName)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.confirm),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed != true) {
@@ -221,33 +229,36 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('切换失败')),
+          SnackBar(content: Text(l10n.switchFailed)),
         );
       }
     }
   }
 
   Future<void> _handleDelete(ServerConfig config) async {
+    final l10n = AppLocalizations.of(context)!;
     // 显示确认对话框
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('确认删除'),
-        content: Text(
-          '确定要删除服务器 "${config.name.isNotEmpty ? config.name : config.baseUrl}" 吗？',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('删除'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        final serverName = config.name.isNotEmpty ? config.name : config.baseUrl;
+        return AlertDialog(
+          title: Text(l10n.confirm),
+          content: Text(l10n.deleteServerConfirm(serverName)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: Text(l10n.delete),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed != true) {
@@ -261,7 +272,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
     if (mounted) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('服务器已删除')),
+          SnackBar(content: Text(l10n.serverDeleted)),
         );
         
         // 如果删除的是激活的服务器，需要重新加载系统信息
@@ -270,7 +281,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('删除失败')),
+          SnackBar(content: Text(l10n.deleteFailed)),
         );
       }
     }
@@ -278,9 +289,10 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('服务器设置'),
+        title: Text(l10n.serverSettings),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -293,6 +305,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                 Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {
                     final servers = authProvider.serverConfigs;
+                    final l10n = AppLocalizations.of(context)!;
                     
                     if (servers.isEmpty) {
                       return Card(
@@ -307,16 +320,16 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                '暂无服务器配置',
+                                l10n.noServerConfig,
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey[600],
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              const Text(
-                                '点击下方按钮添加服务器',
-                                style: TextStyle(
+                              Text(
+                                l10n.addServerHint,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey,
                                 ),
@@ -330,15 +343,15 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          '服务器列表',
-                          style: TextStyle(
+                        Text(
+                          l10n.serverList,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        ...servers.map((server) => _buildServerCard(server)),
+                        ...servers.map((server) => _buildServerCard(server, l10n)),
                       ],
                     );
                   },
@@ -348,7 +361,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                 ElevatedButton.icon(
                   onPressed: _isLoading ? null : _showAddServerDialog,
                   icon: const Icon(Icons.add),
-                  label: const Text('添加服务器'),
+                  label: Text(l10n.addServer),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
@@ -367,9 +380,9 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                           children: [
                             const Icon(Icons.info_outline),
                             const SizedBox(width: 8),
-                            const Text(
-                              'RAGFlow 版本',
-                              style: TextStyle(
+                            Text(
+                              l10n.systemVersion,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -385,7 +398,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                               TextButton.icon(
                                 onPressed: _loadSystemVersion,
                                 icon: const Icon(Icons.refresh, size: 16),
-                                label: const Text('刷新'),
+                                label: Text(l10n.refresh),
                               ),
                           ],
                         ),
@@ -416,9 +429,9 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                           children: [
                             const Icon(Icons.monitor_heart),
                             const SizedBox(width: 8),
-                            const Text(
-                              '系统状态',
-                              style: TextStyle(
+                            Text(
+                              AppLocalizations.of(context)!.systemStatus,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -434,24 +447,24 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                               TextButton.icon(
                                 onPressed: _loadSystemStatus,
                                 icon: const Icon(Icons.refresh, size: 16),
-                                label: const Text('刷新'),
+                                label: Text(AppLocalizations.of(context)!.refresh),
                               ),
                           ],
                         ),
                         if (_systemStatus != null) ...[
                           const SizedBox(height: 16),
-                          _buildStatusItem('文档引擎', _systemStatus!.docEngine),
+                          _buildStatusItem(l10n.documentEngine, _systemStatus!.docEngine, l10n),
                           const SizedBox(height: 12),
-                          _buildStatusItem('存储', _systemStatus!.storage),
+                          _buildStatusItem(l10n.storage, _systemStatus!.storage, l10n),
                           const SizedBox(height: 12),
-                          _buildStatusItem('数据库', _systemStatus!.database),
+                          _buildStatusItem(l10n.database, _systemStatus!.database, l10n),
                           const SizedBox(height: 12),
-                          _buildStatusItem('Redis', _systemStatus!.redis),
+                          _buildStatusItem(l10n.redis, _systemStatus!.redis, l10n),
                         ] else if (!_isLoadingStatus) ...[
                           const SizedBox(height: 8),
-                          const Text(
-                            '无法获取系统状态',
-                            style: TextStyle(color: Colors.grey),
+                          Text(
+                            l10n.cannotGetSystemStatus,
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ],
                       ],
@@ -459,9 +472,9 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  '提示: 服务器地址应该是完整的URL，例如:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                Text(
+                  l10n.serverAddressHint,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               ],
             ),
@@ -471,7 +484,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
     );
   }
 
-  Widget _buildServerCard(ServerConfig server) {
+  Widget _buildServerCard(ServerConfig server, AppLocalizations l10n) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: server.isActive ? 4 : 1,
@@ -521,14 +534,14 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.blue),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check_circle, size: 16, color: Colors.blue),
-                        SizedBox(width: 4),
+                        const Icon(Icons.check_circle, size: 16, color: Colors.blue),
+                        const SizedBox(width: 4),
                         Text(
-                          '已激活',
-                          style: TextStyle(
+                          l10n.active,
+                          style: const TextStyle(
                             color: Colors.blue,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -547,7 +560,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                   TextButton.icon(
                     onPressed: () => _handleActivate(server),
                     icon: const Icon(Icons.power_settings_new, size: 18),
-                    label: const Text('激活'),
+                    label: Text(l10n.activate),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.blue,
                     ),
@@ -557,7 +570,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                   onPressed: () => _handleDelete(server),
                   icon: const Icon(Icons.delete_outline),
                   color: Colors.red,
-                  tooltip: '删除',
+                  tooltip: l10n.delete,
                 ),
               ],
             ),
@@ -567,19 +580,19 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
     );
   }
 
-  Widget _buildStatusItem(String label, ComponentStatus? status) {
+  Widget _buildStatusItem(String label, ComponentStatus? status, AppLocalizations l10n) {
     if (status == null) {
       return Row(
         children: [
           Expanded(child: Text(label)),
-          const Text('未知', style: TextStyle(color: Colors.grey)),
+          Text(l10n.unknown, style: const TextStyle(color: Colors.grey)),
         ],
       );
     }
 
     final isHealthy = status.isHealthy;
     final statusColor = isHealthy ? Colors.green : Colors.red;
-    final statusText = isHealthy ? '正常' : '异常';
+    final statusText = isHealthy ? l10n.normal : l10n.abnormal;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -622,7 +635,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.elapsed != null) ...[
           const SizedBox(height: 4),
           Text(
-            '响应时间: ${status.elapsed}ms',
+            l10n.responseTime(status.elapsed!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],
@@ -632,7 +645,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.type != null) ...[
           const SizedBox(height: 2),
           Text(
-            '类型: ${status.type}',
+            l10n.type(status.type!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],
@@ -642,7 +655,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.storage != null) ...[
           const SizedBox(height: 2),
           Text(
-            '存储: ${status.storage}',
+            l10n.storageInfo(status.storage!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],
@@ -652,7 +665,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.database != null) ...[
           const SizedBox(height: 2),
           Text(
-            '数据库: ${status.database}',
+            l10n.databaseInfo(status.database!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],
@@ -662,7 +675,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.error != null) ...[
           const SizedBox(height: 4),
           Text(
-            '错误: ${status.error}',
+            l10n.error(status.error!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.red[700],

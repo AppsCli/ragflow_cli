@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/knowledge_base.dart';
 import '../models/search_result.dart';
 import '../services/knowledge_service.dart';
@@ -58,8 +59,9 @@ class _SearchPageState extends State<SearchPage> {
         _isLoadingKb = false;
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('加载知识库失败: $e')),
+          SnackBar(content: Text(l10n.loadKnowledgeBaseFailed(e.toString()))),
         );
       }
     }
@@ -78,17 +80,18 @@ class _SearchPageState extends State<SearchPage> {
 
   /// 发送问题
   Future<void> _askQuestion() async {
+    final l10n = AppLocalizations.of(context)!;
     final question = _questionController.text.trim();
     if (question.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请输入问题')),
+        SnackBar(content: Text(l10n.enterQuestion)),
       );
       return;
     }
 
     if (_selectedKbIds.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请至少选择一个知识库')),
+        SnackBar(content: Text(l10n.pleaseSelectAtLeastOneKnowledgeBase)),
       );
       return;
     }
@@ -145,8 +148,9 @@ class _SearchPageState extends State<SearchPage> {
         _isLoadingRelated = false;
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('提问失败: $e')),
+          SnackBar(content: Text(l10n.askQuestionFailed(e.toString()))),
         );
       }
     }
@@ -162,7 +166,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('搜索'),
+        title: Text(AppLocalizations.of(context)!.search),
       ),
       body: Column(
         children: [
@@ -175,9 +179,9 @@ class _SearchPageState extends State<SearchPage> {
               children: [
                 Row(
                   children: [
-                    const Text(
-                      '选择知识库:',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.selectKnowledgeBase,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -186,7 +190,7 @@ class _SearchPageState extends State<SearchPage> {
                     TextButton.icon(
                       onPressed: _loadKnowledgeBases,
                       icon: const Icon(Icons.refresh, size: 18),
-                      label: const Text('刷新'),
+                      label: Text(AppLocalizations.of(context)!.refresh),
                     ),
                   ],
                 ),
@@ -194,9 +198,9 @@ class _SearchPageState extends State<SearchPage> {
                 _isLoadingKb
                     ? const Center(child: CircularProgressIndicator())
                     : _knowledgeBases.isEmpty
-                        ? const Text(
-                            '暂无知识库',
-                            style: TextStyle(color: Colors.grey),
+                        ? Text(
+                            AppLocalizations.of(context)!.noKnowledgeBase,
+                            style: const TextStyle(color: Colors.grey),
                           )
                         : Wrap(
                             spacing: 8,
@@ -222,9 +226,9 @@ class _SearchPageState extends State<SearchPage> {
                 Expanded(
                   child: TextField(
                     controller: _questionController,
-                    decoration: const InputDecoration(
-                      hintText: '输入问题...',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.enterQuestion,
+                      border: const OutlineInputBorder(),
                     ),
                     maxLines: 3,
                     enabled: !_isAsking,
@@ -240,7 +244,7 @@ class _SearchPageState extends State<SearchPage> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.search),
-                  label: const Text('提问'),
+                  label: Text(AppLocalizations.of(context)!.ask),
                 ),
               ],
             ),
@@ -256,9 +260,9 @@ class _SearchPageState extends State<SearchPage> {
                       children: [
                         // 答案显示
                         if (_currentAnswer.isNotEmpty) ...[
-                          const Text(
-                            '答案:',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.answer,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -282,9 +286,9 @@ class _SearchPageState extends State<SearchPage> {
 
                         // 相关文件
                         if (_relatedChunks.isNotEmpty) ...[
-                          const Text(
-                            '相关文件:',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.relatedFiles,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -305,7 +309,7 @@ class _SearchPageState extends State<SearchPage> {
                                   children: [
                                     if (chunk.similarity != null)
                                       Text(
-                                        '相似度: ${(chunk.similarity! * 100).toStringAsFixed(1)}%',
+                                        AppLocalizations.of(context)!.similarity((chunk.similarity! * 100).toStringAsFixed(1)),
                                         style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 12,
@@ -329,9 +333,9 @@ class _SearchPageState extends State<SearchPage> {
                         if (_isLoadingRelated)
                           const Center(child: CircularProgressIndicator())
                         else if (_relatedQuestions.isNotEmpty) ...[
-                          const Text(
-                            '相关问题:',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.relatedQuestions,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -351,10 +355,10 @@ class _SearchPageState extends State<SearchPage> {
                       ],
                     ),
                   )
-                : const Center(
+                : Center(
                     child: Text(
-                      '请选择知识库并输入问题进行搜索',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      AppLocalizations.of(context)!.pleaseSelectKnowledgeBaseAndEnterQuestion,
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
           ),

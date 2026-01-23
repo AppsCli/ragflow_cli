@@ -1,0 +1,488 @@
+{
+  "@@locale": "en",
+  "appTitle": "RAGFlow",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "login": "Login",
+  "email": "Email",
+  "password": "Password",
+  "serverSettings": "Server Settings",
+  "addServer": "Add Server",
+  "serverName": "Server Name (Optional)",
+  "serverAddress": "Server Address",
+  "exampleServerAddress": "e.g., http://192.168.1.100:9380",
+  "activate": "Activate",
+  "delete": "Delete",
+  "active": "Active",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "save": "Save",
+  "deleteServerConfirm": "Are you sure you want to delete server \"{serverName}\"?",
+  "@deleteServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "switchServerConfirm": "After switching to server \"{serverName}\", you need to log in again. Do you want to continue?",
+  "@switchServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "currentServer": "Current Server: {serverAddress}",
+  "@currentServer": {
+    "placeholders": {
+      "serverAddress": {
+        "type": "String"
+      }
+    }
+  },
+  "serverAdded": "Server added successfully",
+  "serverDeleted": "Server deleted",
+  "switchFailed": "Switch failed",
+  "addFailed": "Add failed, please check the address format",
+  "saveFailed": "Save failed, please check the address format",
+  "serverAddressRequired": "Please enter server address",
+  "serverAddressFormatError": "Address must start with http:// or https://",
+  "serverList": "Server List",
+  "noServerConfig": "No server configuration",
+  "addServerHint": "Click the button below to add a server",
+  "systemVersion": "RAGFlow Version",
+  "systemStatus": "System Status",
+  "refresh": "Refresh",
+  "cannotGetSystemStatus": "Cannot get system status",
+  "serverAddressHint": "The server address should be a complete URL, for example:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com",
+  "documentEngine": "Document Engine",
+  "storage": "Storage",
+  "database": "Database",
+  "redis": "Redis",
+  "normal": "Normal",
+  "abnormal": "Abnormal",
+  "unknown": "Unknown",
+  "responseTime": "Response Time: {elapsed}ms",
+  "@responseTime": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "type": "Type: {type}",
+  "@type": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "storageInfo": "Storage: {storage}",
+  "@storageInfo": {
+    "placeholders": {
+      "storage": {
+        "type": "String"
+      }
+    }
+  },
+  "databaseInfo": "Database: {database}",
+  "@databaseInfo": {
+    "placeholders": {
+      "database": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "Error: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "Language",
+  "languageSettings": "Language Settings",
+  "followSystem": "Follow System",
+  "chinese": "Chinese",
+  "english": "English",
+  "selectLanguage": "Select Language",
+  "account": "Account",
+  "changePassword": "Change Password",
+  "logout": "Logout",
+  "confirmLogout": "Are you sure you want to log out?",
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "confirmNewPassword": "Confirm New Password",
+  "passwordChanged": "Password changed successfully",
+  "passwordChangeFailed": "Password change failed, please check if the current password is correct",
+  "passwordRequired": "Please enter password",
+  "newPasswordRequired": "Please enter new password",
+  "confirmPasswordRequired": "Please confirm new password",
+  "passwordTooShort": "Password must be at least 8 characters",
+  "passwordsDoNotMatch": "The two passwords do not match",
+  "emailRequired": "Please enter email",
+  "invalidEmail": "Please enter a valid email address",
+  "loginFailed": "Login failed, please check email and password",
+  "configureServerAddress": "Configure Server Address",
+  "pleaseConfigureServer": "Please configure server address before logging in",
+  "goToSettings": "Go to Settings",
+  "setServerAddress": "Set Server Address",
+  "knowledgeBase": "Knowledge Base",
+  "chat": "Chat",
+  "search": "Search",
+  "agent": "Agent",
+  "file": "File",
+  "noData": "No Data",
+  "loading": "Loading...",
+  "error": "Error",
+  "retry": "Retry",
+  "create": "Create",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "name": "Name",
+  "description": "Description",
+  "status": "Status",
+  "actions": "Actions",
+  "details": "Details",
+  "back": "Back",
+  "submit": "Submit",
+  "close": "Close",
+  "searchPlaceholder": "Search...",
+  "noResults": "No results found",
+  "upload": "Upload",
+  "download": "Download",
+  "view": "View",
+  "edit": "Edit",
+  "delete": "Delete",
+  "createdAt": "Created At",
+  "updatedAt": "Updated At",
+  "size": "Size",
+  "type": "Type",
+  "operation": "Operation",
+  "success": "Success",
+  "failed": "Failed",
+  "pleaseWait": "Please wait...",
+  "areYouSure": "Are you sure?",
+  "deleteConfirm": "Are you sure you want to delete this item?",
+  "operationSuccess": "Operation successful",
+  "operationFailed": "Operation failed",
+  "networkError": "Network error, please check your connection",
+  "unknownError": "Unknown error occurred",
+  "createKnowledgeBase": "Create Knowledge Base",
+  "knowledgeBaseName": "Knowledge Base Name",
+  "enterKnowledgeBaseName": "Please enter knowledge base name",
+  "loadingFailed": "Loading failed",
+  "creating": "Creating...",
+  "createSuccess": "Create successful",
+  "createFailed": "Create failed, please try again",
+  "noKnowledgeBase": "No knowledge base",
+  "documents": "Documents",
+  "chunks": "Chunks",
+  "updated": "Updated",
+  "refresh": "Refresh",
+  "send": "Send",
+  "enterMessage": "Enter message...",
+  "noChatHistory": "No chat history",
+  "newChat": "New Chat",
+  "clear": "Clear",
+  "noAgents": "No agents",
+  "createAgent": "Create Agent",
+  "noFiles": "No files",
+  "uploadFile": "Upload File",
+  "fileName": "File Name",
+  "fileSize": "File Size",
+  "uploadTime": "Upload Time",
+  "resetAgent": "Reset Agent",
+  "resetAgentConfirm": "Are you sure you want to reset Agent? This will clear the current conversation history.",
+  "reset": "Reset",
+  "resetSuccess": "Reset successful",
+  "resetFailed": "Reset failed",
+  "thinking": "Thinking...",
+  "you": "You",
+  "sendFailed": "Send failed: {message}",
+  "@sendFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "requestFailed": "Request failed",
+  "stop": "Stop",
+  "createNewConversation": "Create New Conversation",
+  "conversationName": "Conversation Name",
+  "noConversations": "No conversations",
+  "hideList": "Hide List",
+  "showList": "Show List",
+  "refreshConversationList": "Refresh conversation list",
+  "selectConversation": "Please select a conversation",
+  "loadConversationListFailed": "Failed to load conversation list: {error}",
+  "@loadConversationListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "getConversationInfoFailed": "Failed to get conversation information",
+  "createSuccess": "Create successful",
+  "createFailed": "Create failed",
+  "knowledgeBaseDetail": "Knowledge Base Detail",
+  "dataset": "Dataset",
+  "retrievalTest": "Retrieval Test",
+  "config": "Config",
+  "searchDocuments": "Search documents...",
+  "noDocuments": "No documents",
+  "chunks": "Chunks",
+  "tokens": "Tokens",
+  "update": "Update",
+  "detail": "Detail",
+  "download": "Download",
+  "parse": "Parse",
+  "cancelParse": "Cancel Parse",
+  "deleteDocument": "Delete Document",
+  "confirmDelete": "Confirm Delete",
+  "confirmDeleteDocument": "Are you sure you want to delete this document?",
+  "deleteSuccess": "Delete successful",
+  "deleteFailed": "Delete failed",
+  "totalDocuments": "Total {count} documents",
+  "@totalDocuments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "Previous Page",
+  "nextPage": "Next Page",
+  "uploadFile": "Upload File",
+  "id": "ID",
+  "suffix": "Suffix",
+  "size": "Size",
+  "chunkCount": "Chunk Count",
+  "tokenCount": "Token Count",
+  "status": "Status",
+  "createTime": "Create Time",
+  "updateTime": "Update Time",
+  "unknown": "Unknown",
+  "notStarted": "Not Started",
+  "parsing": "Parsing",
+  "cancelled": "Cancelled",
+  "completed": "Completed",
+  "failed": "Failed",
+  "downloading": "Downloading...",
+  "downloadSuccess": "Download successful: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadFailed": "Download failed",
+  "startingParse": "Starting parse...",
+  "parseStarted": "Parse started",
+  "startParseFailed": "Failed to start parse",
+  "confirmCancel": "Confirm Cancel",
+  "confirmCancelParse": "Are you sure you want to cancel parsing document \"{name}\"?",
+  "@confirmCancelParse": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancellingParse": "Cancelling parse...",
+  "parseCancelled": "Parse cancelled",
+  "cancelParseFailed": "Failed to cancel parse",
+  "uploading": "Uploading...",
+  "uploadSuccess": "Upload successful, starting parse...",
+  "uploadFailed": "Upload failed",
+  "partialUploadFailed": "Some files failed to upload",
+  "loadDocumentsFailed": "Failed to load documents: {error}",
+  "@loadDocumentsFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterQuestionForRetrieval": "Enter question for retrieval test...",
+  "test": "Test",
+  "retrieving": "Retrieving...",
+  "enterQuestionForRetrievalTest": "Please enter question for retrieval test",
+  "retrievalResults": "Retrieval Results (Total {count})",
+  "@retrievalResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "similarity": "Similarity: {percent}%",
+  "@similarity": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "retrievalTestFailed": "Retrieval test failed: {error}",
+  "@retrievalTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "basicInfo": "Basic Info",
+  "knowledgeBaseNameRequired": "Please enter knowledge base name",
+  "knowledgeBaseImage": "Knowledge Base Image",
+  "uploadImage": "Upload Image",
+  "clear": "Clear",
+  "imageSelected": "Image selected",
+  "fileNotExists": "File does not exist",
+  "selectImageSource": "Select Image Source",
+  "selectFromGallery": "Select from Gallery",
+  "takePhoto": "Take Photo",
+  "imageTooLarge": "Image size cannot exceed 4MB",
+  "selectImageFailed": "Failed to select image: {error}",
+  "@selectImageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "permission": "Permission",
+  "documentLanguage": "Document Language",
+  "parseConfig": "Parse Config",
+  "sliceMethod": "Slice Method (Parser)",
+  "sliceMethodHelper": "Select document parsing and slicing method",
+  "embeddingModel": "Embedding Model",
+  "embeddingModelHelper": "Select model for generating embedding vectors",
+  "embeddingModelWarning": "Note: Changing embedding model when chunks exist requires deleting all chunks",
+  "noModelsAvailable": "No models available",
+  "suggestedChunkSize": "Suggested Chunk Size (Token Count)",
+  "chunkSizeHelper": "Set Token threshold for creating chunks",
+  "textDelimiter": "Text Delimiter",
+  "delimiterHelper": "Delimiter for splitting text, e.g. \\n",
+  "layoutRecognition": "Layout Recognition",
+  "layoutRecognitionHelper": "Select layout recognition method",
+  "plainText": "Plain Text",
+  "pageRank": "Page Rank",
+  "pageRankHelper": "Page rank value for search result sorting",
+  "advancedOptions": "Advanced Options",
+  "autoKeywordsCount": "Auto Keywords Extraction Count",
+  "autoKeywordsHelper": "0 means no extraction",
+  "autoQuestionsCount": "Auto Questions Extraction Count",
+  "autoQuestionsHelper": "0 means no extraction",
+  "tableToHtml": "Table to HTML",
+  "tableToHtmlSubtitle": "Convert Excel tables to HTML format",
+  "useRaptor": "Use RAPTOR Strategy for Enhanced Recall",
+  "useRaptorSubtitle": "Enable RAPTOR strategy to enhance recall effect",
+  "extractKnowledgeGraph": "Extract Knowledge Graph",
+  "extractKnowledgeGraphSubtitle": "Enable knowledge graph extraction",
+  "saveConfig": "Save Config",
+  "saveSuccess": "Save successful",
+  "saveFailed": "Save failed",
+  "fileManagement": "File Management",
+  "rootDirectory": "Root Directory",
+  "currentFolder": "Current Folder",
+  "searchFiles": "Search files...",
+  "noFiles": "No files",
+  "folder": "Folder",
+  "preview": "Preview",
+  "cannotOpenPreview": "Cannot open preview: {url}",
+  "@cannotOpenPreview": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "previewFailed": "Preview failed: {error}",
+  "@previewFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteFile": "Are you sure you want to delete \"{name}\"?",
+  "@confirmDeleteFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalFiles": "Total {count} files",
+  "@totalFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "Unnamed",
+  "type": "Type",
+  "loadFailed": "Load failed: {error}",
+  "@loadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAgents": "Total {count} agents",
+  "@totalAgents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAgents": "Search Agents...",
+  "noAgents": "No agents",
+  "noDescription": "No description",
+  "chat": "Chat",
+  "createNewDialog": "Create New Dialog",
+  "dialogName": "Dialog Name",
+  "descriptionOptional": "Description (Optional)",
+  "noDialogs": "No dialogs",
+  "search": "Search",
+  "selectKnowledgeBase": "Select Knowledge Base:",
+  "pleaseSelectAtLeastOneKnowledgeBase": "Please select at least one knowledge base",
+  "enterQuestion": "Enter question...",
+  "ask": "Ask",
+  "answer": "Answer:",
+  "relatedFiles": "Related Files:",
+  "relatedQuestions": "Related Questions:",
+  "pleaseSelectKnowledgeBaseAndEnterQuestion": "Please select knowledge base and enter question for search",
+  "loadKnowledgeBaseFailed": "Failed to load knowledge base: {error}",
+  "@loadKnowledgeBaseFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askQuestionFailed": "Failed to ask question: {error}",
+  "@askQuestionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exampleProduction": "e.g., Production",
+  "systemStatus": "System Status"
+}

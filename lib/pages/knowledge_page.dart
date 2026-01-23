@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/knowledge_base.dart';
 import '../services/knowledge_service.dart';
 import 'knowledge_detail_page.dart';
@@ -39,54 +40,59 @@ class _KnowledgePageState extends State<KnowledgePage> {
         _isLoading = false;
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('加载失败: $e')),
+          SnackBar(content: Text('${l10n.loadingFailed}: $e')),
         );
       }
     }
   }
 
   Future<void> _showCreateDialog() async {
+    final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('创建知识库'),
-        content: Form(
-          key: formKey,
-          child: TextFormField(
-            controller: nameController,
-            decoration: const InputDecoration(
-              labelText: '名称',
-              hintText: '请输入知识库名称',
-              border: OutlineInputBorder(),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.createKnowledgeBase),
+          content: Form(
+            key: formKey,
+            child: TextFormField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: l10n.name,
+                hintText: l10n.enterKnowledgeBaseName,
+                border: const OutlineInputBorder(),
+              ),
+              autofocus: true,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return l10n.enterKnowledgeBaseName;
+                }
+                return null;
+              },
             ),
-            autofocus: true,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return '请输入知识库名称';
-              }
-              return null;
-            },
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                Navigator.pop(context, true);
-              }
-            },
-            child: const Text('创建'),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  Navigator.pop(context, true);
+                }
+              },
+              child: Text(l10n.create),
+            ),
+          ],
+        );
+      },
     );
 
     if (result == true && nameController.text.trim().isNotEmpty) {
@@ -95,10 +101,11 @@ class _KnowledgePageState extends State<KnowledgePage> {
   }
 
   Future<void> _createKnowledgeBase(String name) async {
+    final l10n = AppLocalizations.of(context)!;
     // 显示加载提示
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('正在创建...')),
+        SnackBar(content: Text(l10n.creating)),
       );
     }
 
@@ -111,7 +118,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('创建成功')),
+            SnackBar(content: Text(l10n.createSuccess)),
           );
           
           // 导航到新创建的知识库详情页
@@ -127,14 +134,14 @@ class _KnowledgePageState extends State<KnowledgePage> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('创建失败，请重试')),
+            SnackBar(content: Text(l10n.createFailed)),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('创建失败: $e')),
+          SnackBar(content: Text('${l10n.createFailed}: $e')),
         );
       }
     }
@@ -142,21 +149,23 @@ class _KnowledgePageState extends State<KnowledgePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('知识库'),
+        title: Text(l10n.knowledgeBase),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadKnowledgeBases,
+            tooltip: l10n.refresh,
           ),
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _knowledgeBases.isEmpty
-              ? const Center(
-                  child: Text('暂无知识库', style: TextStyle(fontSize: 16)),
+              ? Center(
+                  child: Text(l10n.noKnowledgeBase, style: const TextStyle(fontSize: 16)),
                 )
               : RefreshIndicator(
                   onRefresh: _loadKnowledgeBases,
@@ -177,11 +186,11 @@ class _KnowledgePageState extends State<KnowledgePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '文档: ${kb.documentNum} | 片段: ${kb.chunkNum}',
+                                '${l10n.documents}: ${kb.documentNum} | ${l10n.chunks}: ${kb.chunkNum}',
                               ),
                               if (kb.updateTime != null)
                                 Text(
-                                  '更新: ${_formatDateTime(kb.updateTime!)}',
+                                  '${l10n.updated}: ${_formatDateTime(kb.updateTime!)}',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey[600],
@@ -208,6 +217,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _showCreateDialog,
         child: const Icon(Icons.add),
+        tooltip: l10n.createKnowledgeBase,
       ),
     );
   }

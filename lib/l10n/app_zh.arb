@@ -1,0 +1,429 @@
+{
+  "@@locale": "zh",
+  "appTitle": "RAGFlow",
+  "login": "登录",
+  "email": "邮箱",
+  "password": "密码",
+  "serverSettings": "服务器设置",
+  "addServer": "添加服务器",
+  "serverName": "服务器名称（可选）",
+  "serverAddress": "服务器地址",
+  "exampleServerAddress": "例如: http://192.168.1.100:9380",
+  "activate": "激活",
+  "delete": "删除",
+  "active": "已激活",
+  "confirm": "确定",
+  "cancel": "取消",
+  "save": "保存",
+  "deleteServerConfirm": "确定要删除服务器 \"{serverName}\" 吗？",
+  "switchServerConfirm": "切换到服务器 \"{serverName}\" 后需要重新登录，确定要继续吗？",
+  "currentServer": "当前服务器: {serverAddress}",
+  "serverAdded": "服务器添加成功",
+  "serverDeleted": "服务器已删除",
+  "switchFailed": "切换失败",
+  "addFailed": "添加失败，请检查地址格式",
+  "saveFailed": "保存失败，请检查地址格式",
+  "serverAddressRequired": "请输入服务器地址",
+  "serverAddressFormatError": "地址必须以 http:// 或 https:// 开头",
+  "serverList": "服务器列表",
+  "noServerConfig": "暂无服务器配置",
+  "addServerHint": "点击下方按钮添加服务器",
+  "systemVersion": "RAGFlow 版本",
+  "systemStatus": "系统状态",
+  "refresh": "刷新",
+  "cannotGetSystemStatus": "无法获取系统状态",
+  "serverAddressHint": "提示: 服务器地址应该是完整的URL，例如:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com",
+  "documentEngine": "文档引擎",
+  "storage": "存储",
+  "database": "数据库",
+  "redis": "Redis",
+  "normal": "正常",
+  "abnormal": "异常",
+  "unknown": "未知",
+  "responseTime": "响应时间: {elapsed}ms",
+  "type": "类型: {type}",
+  "storageInfo": "存储: {storage}",
+  "databaseInfo": "数据库: {database}",
+  "error": "错误: {error}",
+  "language": "语言",
+  "languageSettings": "语言设置",
+  "followSystem": "跟随系统",
+  "chinese": "中文",
+  "english": "英文",
+  "selectLanguage": "选择语言",
+  "account": "账号",
+  "changePassword": "修改密码",
+  "logout": "退出登录",
+  "confirmLogout": "确定要退出登录吗？",
+  "currentPassword": "当前密码",
+  "newPassword": "新密码",
+  "confirmNewPassword": "确认新密码",
+  "passwordChanged": "密码修改成功",
+  "passwordChangeFailed": "密码修改失败，请检查当前密码是否正确",
+  "passwordRequired": "请输入密码",
+  "newPasswordRequired": "请输入新密码",
+  "confirmPasswordRequired": "请确认新密码",
+  "passwordTooShort": "密码长度至少为8位",
+  "passwordsDoNotMatch": "两次输入的密码不一致",
+  "emailRequired": "请输入邮箱",
+  "invalidEmail": "请输入有效的邮箱地址",
+  "loginFailed": "登录失败，请检查邮箱和密码",
+  "configureServerAddress": "配置服务器地址",
+  "pleaseConfigureServer": "请先配置服务器地址才能登录",
+  "goToSettings": "去设置",
+  "setServerAddress": "设置服务器地址",
+  "knowledgeBase": "知识库",
+  "chat": "聊天",
+  "search": "搜索",
+  "agent": "Agent",
+  "file": "文件",
+  "noData": "暂无数据",
+  "loading": "加载中...",
+  "error": "错误",
+  "retry": "重试",
+  "create": "创建",
+  "edit": "编辑",
+  "delete": "删除",
+  "save": "保存",
+  "cancel": "取消",
+  "confirm": "确定",
+  "name": "名称",
+  "description": "描述",
+  "status": "状态",
+  "actions": "操作",
+  "details": "详情",
+  "back": "返回",
+  "submit": "提交",
+  "close": "关闭",
+  "searchPlaceholder": "搜索...",
+  "noResults": "未找到结果",
+  "upload": "上传",
+  "download": "下载",
+  "view": "查看",
+  "edit": "编辑",
+  "delete": "删除",
+  "createdAt": "创建时间",
+  "updatedAt": "更新时间",
+  "size": "大小",
+  "type": "类型",
+  "operation": "操作",
+  "success": "成功",
+  "failed": "失败",
+  "pleaseWait": "请稍候...",
+  "areYouSure": "确定吗？",
+  "deleteConfirm": "确定要删除此项吗？",
+  "operationSuccess": "操作成功",
+  "operationFailed": "操作失败",
+  "networkError": "网络错误，请检查您的连接",
+  "unknownError": "发生未知错误",
+  "createKnowledgeBase": "创建知识库",
+  "knowledgeBaseName": "知识库名称",
+  "enterKnowledgeBaseName": "请输入知识库名称",
+  "loadingFailed": "加载失败",
+  "creating": "正在创建...",
+  "createSuccess": "创建成功",
+  "createFailed": "创建失败，请重试",
+  "noKnowledgeBase": "暂无知识库",
+  "documents": "文档",
+  "chunks": "片段",
+  "updated": "更新",
+  "refresh": "刷新",
+  "send": "发送",
+  "enterMessage": "输入消息...",
+  "noChatHistory": "暂无聊天记录",
+  "newChat": "新建聊天",
+  "clear": "清空",
+  "noAgents": "暂无Agent",
+  "createAgent": "创建Agent",
+  "noFiles": "暂无文件",
+  "uploadFile": "上传文件",
+  "fileName": "文件名",
+  "fileSize": "文件大小",
+  "uploadTime": "上传时间",
+  "resetAgent": "重置 Agent",
+  "resetAgentConfirm": "确定要重置 Agent 吗？这将清除当前对话历史。",
+  "reset": "重置",
+  "resetSuccess": "重置成功",
+  "resetFailed": "重置失败",
+  "thinking": "思考中...",
+  "you": "你",
+  "sendFailed": "发送失败: {message}",
+  "@sendFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "requestFailed": "请求失败",
+  "stop": "终止",
+  "createNewConversation": "创建新对话",
+  "conversationName": "对话名称",
+  "noConversations": "暂无对话",
+  "hideList": "隐藏列表",
+  "showList": "显示列表",
+  "refreshConversationList": "刷新对话列表",
+  "selectConversation": "请选择一个对话",
+  "loadConversationListFailed": "加载对话列表失败: {error}",
+  "@loadConversationListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "getConversationInfoFailed": "获取对话信息失败",
+  "createSuccess": "创建成功",
+  "createFailed": "创建失败",
+  "knowledgeBaseDetail": "知识库详情",
+  "dataset": "数据集",
+  "retrievalTest": "检索测试",
+  "config": "配置",
+  "searchDocuments": "搜索文档...",
+  "noDocuments": "暂无文档",
+  "chunks": "片段",
+  "tokens": "Token",
+  "update": "更新",
+  "detail": "详情",
+  "download": "下载",
+  "parse": "解析",
+  "cancelParse": "取消解析",
+  "deleteDocument": "删除",
+  "confirmDelete": "确认删除",
+  "confirmDeleteDocument": "确定要删除这个文档吗？",
+  "deleteSuccess": "删除成功",
+  "deleteFailed": "删除失败",
+  "totalDocuments": "共 {count} 个文档",
+  "@totalDocuments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "上一页",
+  "nextPage": "下一页",
+  "uploadFile": "上传文件",
+  "id": "ID",
+  "suffix": "后缀",
+  "size": "大小",
+  "chunkCount": "片段数",
+  "tokenCount": "Token数",
+  "status": "状态",
+  "createTime": "创建时间",
+  "updateTime": "更新时间",
+  "unknown": "未知",
+  "notStarted": "未开始",
+  "parsing": "解析中",
+  "cancelled": "已取消",
+  "completed": "已完成",
+  "failed": "失败",
+  "downloading": "正在下载...",
+  "downloadSuccess": "下载成功: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadFailed": "下载失败",
+  "startingParse": "正在启动解析...",
+  "parseStarted": "解析已启动",
+  "startParseFailed": "启动解析失败",
+  "confirmCancel": "确认取消",
+  "confirmCancelParse": "确定要取消解析文档 \"{name}\" 吗？",
+  "@confirmCancelParse": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancellingParse": "正在取消解析...",
+  "parseCancelled": "已取消解析",
+  "cancelParseFailed": "取消解析失败",
+  "uploading": "正在上传...",
+  "uploadSuccess": "上传成功，正在启动解析...",
+  "uploadFailed": "上传失败",
+  "partialUploadFailed": "部分文件上传失败",
+  "loadDocumentsFailed": "加载文档失败: {error}",
+  "@loadDocumentsFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterQuestionForRetrieval": "输入问题进行检索测试...",
+  "test": "测试",
+  "retrieving": "检索中...",
+  "enterQuestionForRetrievalTest": "请输入问题进行检索测试",
+  "retrievalResults": "检索结果 (共 {count} 条)",
+  "@retrievalResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "similarity": "相似度: {percent}%",
+  "@similarity": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "retrievalTestFailed": "检索测试失败: {error}",
+  "@retrievalTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "basicInfo": "基本信息",
+  "knowledgeBaseNameRequired": "请输入知识库名称",
+  "knowledgeBaseImage": "知识库图片",
+  "uploadImage": "上传图片",
+  "clear": "清除",
+  "imageSelected": "图片已选择",
+  "fileNotExists": "文件不存在",
+  "selectImageSource": "选择图片来源",
+  "selectFromGallery": "从相册选择",
+  "takePhoto": "拍照",
+  "imageTooLarge": "图片大小不能超过 4MB",
+  "selectImageFailed": "选择图片失败: {error}",
+  "@selectImageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "permission": "权限",
+  "documentLanguage": "文档语言",
+  "parseConfig": "解析配置",
+  "sliceMethod": "切片方法（解析器）",
+  "sliceMethodHelper": "选择文档解析和切片的方法",
+  "embeddingModel": "嵌入模型",
+  "embeddingModelHelper": "选择用于生成嵌入向量的模型",
+  "embeddingModelWarning": "注意：已有分块时更改嵌入模型需要删除所有分块",
+  "noModelsAvailable": "暂无可用模型",
+  "suggestedChunkSize": "建议文本块大小（Token数）",
+  "chunkSizeHelper": "设置创建分块的Token阈值",
+  "textDelimiter": "文本分段标识符",
+  "delimiterHelper": "用于分割文本的标识符，如 \\n",
+  "layoutRecognition": "布局识别",
+  "layoutRecognitionHelper": "选择布局识别方式",
+  "plainText": "纯文本",
+  "pageRank": "页面排名",
+  "pageRankHelper": "页面排名值，用于搜索结果排序",
+  "advancedOptions": "高级选项",
+  "autoKeywordsCount": "自动关键词提取数量",
+  "autoKeywordsHelper": "0表示不提取",
+  "autoQuestionsCount": "自动问题提取数量",
+  "autoQuestionsHelper": "0表示不提取",
+  "tableToHtml": "表格转HTML",
+  "tableToHtmlSubtitle": "将Excel表格转换为HTML格式",
+  "useRaptor": "使用召回增强 RAPTOR 策略",
+  "useRaptorSubtitle": "启用RAPTOR策略以增强召回效果",
+  "extractKnowledgeGraph": "提取知识图谱",
+  "extractKnowledgeGraphSubtitle": "启用知识图谱提取功能",
+  "saveConfig": "保存配置",
+  "saveSuccess": "保存成功",
+  "saveFailed": "保存失败",
+  "fileManagement": "文件管理",
+  "rootDirectory": "根目录",
+  "currentFolder": "当前文件夹",
+  "searchFiles": "搜索文件...",
+  "noFiles": "暂无文件",
+  "folder": "文件夹",
+  "preview": "预览",
+  "cannotOpenPreview": "无法打开预览: {url}",
+  "@cannotOpenPreview": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "previewFailed": "预览失败: {error}",
+  "@previewFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteFile": "确定要删除 \"{name}\" 吗？",
+  "@confirmDeleteFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalFiles": "共 {count} 个文件",
+  "@totalFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "未命名",
+  "type": "类型",
+  "loadFailed": "加载失败: {error}",
+  "@loadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAgents": "共 {count} 个Agent",
+  "@totalAgents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAgents": "搜索Agent...",
+  "noAgents": "暂无Agent",
+  "noDescription": "暂无描述",
+  "chat": "聊天",
+  "createNewDialog": "创建新对话",
+  "dialogName": "对话名称",
+  "descriptionOptional": "描述（可选）",
+  "noDialogs": "暂无对话",
+  "search": "搜索",
+  "selectKnowledgeBase": "选择知识库:",
+  "pleaseSelectAtLeastOneKnowledgeBase": "请至少选择一个知识库",
+  "enterQuestion": "输入问题...",
+  "ask": "提问",
+  "answer": "答案:",
+  "relatedFiles": "相关文件:",
+  "relatedQuestions": "相关问题:",
+  "pleaseSelectKnowledgeBaseAndEnterQuestion": "请选择知识库并输入问题进行搜索",
+  "loadKnowledgeBaseFailed": "加载知识库失败: {error}",
+  "@loadKnowledgeBaseFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askQuestionFailed": "提问失败: {error}",
+  "@askQuestionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exampleProduction": "例如: 生产环境",
+  "systemStatus": "系统状态"
+}

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import '../l10n/app_localizations.dart';
 import '../models/dialog.dart';
 import '../services/chat_service.dart';
 
@@ -52,8 +53,9 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
         _isLoading = false;
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('加载对话列表失败: $e')),
+          SnackBar(content: Text(l10n.loadConversationListFailed(e.toString()))),
         );
       }
     }
@@ -68,50 +70,56 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
           _selectedConversation = conversation;
         });
       } else if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('获取对话信息失败')),
+          SnackBar(content: Text(l10n.getConversationInfoFailed)),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('获取对话信息失败: $e')),
+          SnackBar(content: Text('${l10n.getConversationInfoFailed}: $e')),
         );
       }
     }
   }
 
   Future<void> _createConversation() async {
+    final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController(text: 'New conversation');
 
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('创建新对话'),
-        content: TextField(
-          controller: nameController,
-          decoration: const InputDecoration(
-            labelText: '对话名称',
-            border: OutlineInputBorder(),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.createNewConversation),
+          content: TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              labelText: l10n.conversationName,
+              border: const OutlineInputBorder(),
+            ),
+            autofocus: true,
+            onSubmitted: (value) {
+              if (value.trim().isNotEmpty) {
+                Navigator.pop(context, true);
+              }
+            },
           ),
-          autofocus: true,
-          onSubmitted: (value) {
-            if (value.trim().isNotEmpty) {
-              Navigator.pop(context, true);
-            }
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('创建'),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.create),
+            ),
+          ],
+        );
+      },
     );
 
     if (result == true && nameController.text.trim().isNotEmpty) {
@@ -131,20 +139,23 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
             _selectedConversation = newConversation;
           });
 
+          final l10n = AppLocalizations.of(context)!;
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('创建成功')),
+              SnackBar(content: Text(l10n.createSuccess)),
             );
           }
         } else if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('创建失败')),
+            SnackBar(content: Text(l10n.createFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('创建失败: $e')),
+            SnackBar(content: Text('${l10n.createFailed}: $e')),
           );
         }
       }
@@ -171,13 +182,13 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
                 _isSidebarVisible = !_isSidebarVisible;
               });
             },
-            tooltip: _isSidebarVisible ? '隐藏列表' : '显示列表',
+            tooltip: _isSidebarVisible ? AppLocalizations.of(context)!.hideList : AppLocalizations.of(context)!.showList,
           ),
           // 刷新按钮
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadConversations,
-            tooltip: '刷新对话列表',
+            tooltip: AppLocalizations.of(context)!.refreshConversationList,
           ),
         ],
       ),
@@ -206,7 +217,7 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
                           child: ElevatedButton.icon(
                             onPressed: _isLoading ? null : _createConversation,
                             icon: const Icon(Icons.add, size: 20),
-                            label: const Text('新建对话'),
+                            label: Text(AppLocalizations.of(context)!.createNewConversation),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
@@ -219,8 +230,8 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
                         child: _isLoading
                             ? const Center(child: CircularProgressIndicator())
                             : _conversations.isEmpty
-                                ? const Center(
-                                    child: Text('暂无对话', style: TextStyle(fontSize: 16)),
+                                ? Center(
+                                    child: Text(AppLocalizations.of(context)!.noConversations, style: const TextStyle(fontSize: 16)),
                                   )
                                 : ListView.builder(
                                     itemCount: _conversations.length,
@@ -259,8 +270,8 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
                     conversation: _selectedConversation!,
                     dialogId: widget.dialogId,
                   )
-                : const Center(
-                    child: Text('请选择一个对话', style: TextStyle(fontSize: 16)),
+                : Center(
+                    child: Text(AppLocalizations.of(context)!.selectConversation, style: const TextStyle(fontSize: 16)),
                   ),
           ),
         ],
@@ -413,12 +424,13 @@ class _ChatViewState extends State<ChatView> {
           // print('Received SSE data: $data');
           
           if (data['error'] == true) {
+            final l10n = AppLocalizations.of(context)!;
             setState(() {
               _isSending = false;
               _streamingAnswer = '';
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('发送失败: ${data['message']}')),
+              SnackBar(content: Text(l10n.sendFailed(data['message'] ?? l10n.requestFailed))),
             );
             return;
           }
@@ -429,9 +441,10 @@ class _ChatViewState extends State<ChatView> {
               _isSending = false;
               _streamingAnswer = '';
             });
-            final errorMessage = data['message'] as String? ?? '请求失败';
+            final l10n = AppLocalizations.of(context)!;
+            final errorMessage = data['message'] as String? ?? l10n.requestFailed;
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('发送失败: $errorMessage')),
+              SnackBar(content: Text(l10n.sendFailed(errorMessage))),
             );
             return;
           }
@@ -487,8 +500,9 @@ class _ChatViewState extends State<ChatView> {
             _isSending = false;
             _streamingAnswer = '';
           });
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('发送失败: $error')),
+            SnackBar(content: Text(l10n.sendFailed(error.toString()))),
           );
         },
       );
@@ -498,8 +512,9 @@ class _ChatViewState extends State<ChatView> {
         _streamingAnswer = '';
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('发送失败: $e')),
+          SnackBar(content: Text(l10n.sendFailed(e.toString()))),
         );
       }
     }
@@ -552,9 +567,9 @@ class _ChatViewState extends State<ChatView> {
               Expanded(
                 child: TextField(
                   controller: _messageController,
-                  decoration: const InputDecoration(
-                    hintText: '输入消息...',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.enterMessage,
+                    border: const OutlineInputBorder(),
                   ),
                   maxLines: null,
                   enabled: !_isSending,
@@ -567,10 +582,10 @@ class _ChatViewState extends State<ChatView> {
                   backgroundColor: _isSending ? Colors.red : null,
                 ),
                 child: _isSending
-                    ? const Row(
+                    ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 16,
                             height: 16,
                             child: CircularProgressIndicator(
@@ -578,11 +593,11 @@ class _ChatViewState extends State<ChatView> {
                               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Text('终止', style: TextStyle(color: Colors.white)),
+                          const SizedBox(width: 8),
+                          Text(AppLocalizations.of(context)!.stop, style: const TextStyle(color: Colors.white)),
                         ],
                       )
-                    : const Text('发送'),
+                    : Text(AppLocalizations.of(context)!.send),
               ),
             ],
           ),

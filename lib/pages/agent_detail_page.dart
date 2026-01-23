@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import '../l10n/app_localizations.dart';
 import '../services/agent_service.dart';
 
 class AgentDetailPage extends StatefulWidget {
@@ -90,12 +91,13 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
       ).listen(
         (data) {
           if (data['error'] == true) {
+            final l10n = AppLocalizations.of(context)!;
             setState(() {
               _isSending = false;
               _streamingAnswer = '';
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('发送失败: ${data['message']}')),
+              SnackBar(content: Text(l10n.sendFailed(data['message'] ?? l10n.requestFailed))),
             );
             return;
           }
@@ -105,9 +107,10 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
               _isSending = false;
               _streamingAnswer = '';
             });
-            final errorMessage = data['message'] as String? ?? '请求失败';
+            final l10n = AppLocalizations.of(context)!;
+            final errorMessage = data['message'] as String? ?? l10n.requestFailed;
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('发送失败: $errorMessage')),
+              SnackBar(content: Text(l10n.sendFailed(errorMessage))),
             );
             return;
           }
@@ -146,8 +149,9 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
             _isSending = false;
             _streamingAnswer = '';
           });
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('发送失败: $error')),
+            SnackBar(content: Text(l10n.sendFailed(error.toString()))),
           );
         },
       );
@@ -157,35 +161,41 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
         _streamingAnswer = '';
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('发送失败: $e')),
+          SnackBar(content: Text(l10n.sendFailed(e.toString()))),
         );
       }
     }
   }
 
   Future<void> _resetAgent() async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('重置 Agent'),
-        content: const Text('确定要重置 Agent 吗？这将清除当前对话历史。'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('重置'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title: Text(l10n.resetAgent),
+          content: Text(l10n.resetAgentConfirm),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.reset),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed == true) {
       try {
         final success = await AgentService.resetAgent(widget.agentId);
+        final l10n = AppLocalizations.of(context)!;
         if (success && mounted) {
           setState(() {
             _messages.clear();
@@ -193,17 +203,18 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
             _streamingAnswer = '';
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('重置成功')),
+            SnackBar(content: Text(l10n.resetSuccess)),
           );
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('重置失败')),
+            SnackBar(content: Text(l10n.resetFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('重置失败: $e')),
+            SnackBar(content: Text('${l10n.resetFailed}: $e')),
           );
         }
       }
@@ -231,7 +242,7 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _resetAgent,
-            tooltip: '重置 Agent',
+            tooltip: AppLocalizations.of(context)!.resetAgent,
           ),
         ],
       ),
@@ -257,18 +268,18 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
             ),
           ),
           if (_isSending && _streamingAnswer.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                  SizedBox(width: 8),
-                  Text('思考中...'),
+                  const SizedBox(width: 8),
+                  Text(AppLocalizations.of(context)!.thinking),
                 ],
               ),
             ),
@@ -283,9 +294,9 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                   Expanded(
                     child: TextField(
                       controller: _messageController,
-                      decoration: const InputDecoration(
-                        hintText: '输入消息...',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.enterMessage,
+                        border: const OutlineInputBorder(),
                       ),
                       maxLines: null,
                       enabled: !_isSending,
@@ -298,10 +309,10 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                       backgroundColor: _isSending ? Colors.red : null,
                     ),
                     child: _isSending
-                        ? const Row(
+                        ? Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 16,
                                 height: 16,
                                 child: CircularProgressIndicator(
@@ -309,11 +320,11 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                 ),
                               ),
-                              SizedBox(width: 8),
-                              Text('终止', style: TextStyle(color: Colors.white)),
+                              const SizedBox(width: 8),
+                              Text(AppLocalizations.of(context)!.stop, style: const TextStyle(color: Colors.white)),
                             ],
                           )
-                        : const Text('发送'),
+                        : Text(AppLocalizations.of(context)!.send),
                   ),
                 ],
               ),
@@ -351,7 +362,7 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isUser ? '你' : 'Agent',
+                    isUser ? AppLocalizations.of(context)!.you : 'Agent',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: isUser ? Colors.blue[800] : Colors.grey[800],

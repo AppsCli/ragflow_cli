@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/user_service.dart';
 import '../services/api_client.dart';
 import 'knowledge_page.dart';
@@ -64,6 +65,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -82,30 +84,30 @@ class _HomePageState extends State<HomePage> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: '知识库',
+            icon: const Icon(Icons.library_books),
+            label: l10n.knowledgeBase,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: '聊天',
+            icon: const Icon(Icons.chat),
+            label: l10n.chat,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: '搜索',
+            icon: const Icon(Icons.search),
+            label: l10n.search,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.smart_toy),
-            label: 'Agent',
+            icon: const Icon(Icons.smart_toy),
+            label: l10n.agent,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.folder),
-            label: '文件',
+            icon: const Icon(Icons.folder),
+            label: l10n.file,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '账号',
+            icon: const Icon(Icons.person),
+            label: l10n.account,
           ),
         ],
       ),

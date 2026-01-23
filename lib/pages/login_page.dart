@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import 'server_config_page.dart';
+import 'language_settings_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -45,7 +47,8 @@ class _LoginPageState extends State<LoginPage> {
       if (success) {
         Navigator.of(context).pushReplacementNamed('/home');
       } else {
-        final errorMessage = authProvider.lastLoginError ?? '登录失败，请检查邮箱和密码';
+        final l10n = AppLocalizations.of(context)!;
+        final errorMessage = authProvider.lastLoginError ?? l10n.loginFailed;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(errorMessage),
@@ -57,15 +60,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showServerConfigDialog() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('配置服务器地址'),
-        content: const Text('请先配置服务器地址才能登录'),
+        title: Text(l10n.configureServerAddress),
+        content: Text(l10n.pleaseConfigureServer),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -75,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(builder: (_) => const ServerConfigPage()),
               );
             },
-            child: const Text('去设置'),
+            child: Text(l10n.goToSettings),
           ),
         ],
       ),
@@ -84,9 +88,24 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const LanguageSettingsPage()),
+              );
+            },
+            tooltip: l10n.languageSettings,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -97,9 +116,9 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'RAGFlow',
-                    style: TextStyle(
+                  Text(
+                    l10n.appTitle,
+                    style: const TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
                     ),
@@ -108,18 +127,18 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 48),
                   TextFormField(
                     controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: '邮箱',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email),
+                    decoration: InputDecoration(
+                      labelText: l10n.email,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.email),
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '请输入邮箱';
+                        return l10n.emailRequired;
                       }
                       if (!value.contains('@')) {
-                        return '请输入有效的邮箱地址';
+                        return l10n.invalidEmail;
                       }
                       return null;
                     },
@@ -128,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: '密码',
+                      labelText: l10n.password,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
@@ -145,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: _obscurePassword,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '请输入密码';
+                        return l10n.passwordRequired;
                       }
                       return null;
                     },
@@ -162,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('登录', style: TextStyle(fontSize: 16)),
+                        : Text(l10n.login, style: const TextStyle(fontSize: 16)),
                   ),
                   const SizedBox(height: 16),
                   TextButton.icon(
@@ -173,12 +192,12 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                     icon: const Icon(Icons.settings),
-                    label: const Text('设置服务器地址'),
+                    label: Text(l10n.setServerAddress),
                   ),
                   if (authProvider.serverConfig != null) ...[
                     const SizedBox(height: 8),
                     Text(
-                      '当前服务器: ${authProvider.serverConfig!.baseUrl}',
+                      l10n.currentServer(authProvider.serverConfig!.baseUrl),
                       style: Theme.of(context).textTheme.bodySmall,
                       textAlign: TextAlign.center,
                     ),

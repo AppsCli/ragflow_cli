@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../services/user_service.dart';
 import 'server_config_page.dart';
+import 'language_settings_page.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -16,12 +18,13 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.user;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('账号'),
+        title: Text(l10n.account),
       ),
       body: ListView(
         children: [
@@ -61,7 +64,7 @@ class _AccountPageState extends State<AccountPage> {
           ],
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text('服务器设置'),
+            title: Text(l10n.serverSettings),
             subtitle: authProvider.serverConfig != null
                 ? Text(authProvider.serverConfig!.baseUrl)
                 : null,
@@ -75,8 +78,20 @@ class _AccountPageState extends State<AccountPage> {
           ),
           const Divider(),
           ListTile(
+            leading: const Icon(Icons.language),
+            title: Text(l10n.language),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const LanguageSettingsPage()),
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
             leading: const Icon(Icons.lock),
-            title: const Text('修改密码'),
+            title: Text(l10n.changePassword),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               _showChangePasswordDialog(context);
@@ -85,24 +100,27 @@ class _AccountPageState extends State<AccountPage> {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('退出登录', style: TextStyle(color: Colors.red)),
+            title: Text(l10n.logout, style: const TextStyle(color: Colors.red)),
             onTap: () async {
               final confirmed = await showDialog<bool>(
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('确认退出'),
-                  content: const Text('确定要退出登录吗？'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text('取消'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text('退出'),
-                    ),
-                  ],
-                ),
+                builder: (context) {
+                  final l10n = AppLocalizations.of(context)!;
+                  return AlertDialog(
+                    title: Text(l10n.confirmLogout),
+                    content: Text(l10n.confirmLogout),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text(l10n.cancel),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: Text(l10n.logout),
+                      ),
+                    ],
+                  );
+                },
               );
 
               if (confirmed == true && context.mounted) {
@@ -119,6 +137,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   void _showChangePasswordDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final oldPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
@@ -132,7 +151,7 @@ class _AccountPageState extends State<AccountPage> {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('修改密码'),
+          title: Text(l10n.changePassword),
           content: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -142,7 +161,7 @@ class _AccountPageState extends State<AccountPage> {
                   TextFormField(
                     controller: oldPasswordController,
                     decoration: InputDecoration(
-                      labelText: '当前密码',
+                      labelText: l10n.currentPassword,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
@@ -162,7 +181,7 @@ class _AccountPageState extends State<AccountPage> {
                     enabled: !isChanging,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '请输入当前密码';
+                        return l10n.passwordRequired;
                       }
                       return null;
                     },
@@ -171,7 +190,7 @@ class _AccountPageState extends State<AccountPage> {
                   TextFormField(
                     controller: newPasswordController,
                     decoration: InputDecoration(
-                      labelText: '新密码',
+                      labelText: l10n.newPassword,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
@@ -191,10 +210,10 @@ class _AccountPageState extends State<AccountPage> {
                     enabled: !isChanging,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '请输入新密码';
+                        return l10n.newPasswordRequired;
                       }
                       if (value.length < 8) {
-                        return '密码长度至少为8位';
+                        return l10n.passwordTooShort;
                       }
                       return null;
                     },
@@ -203,7 +222,7 @@ class _AccountPageState extends State<AccountPage> {
                   TextFormField(
                     controller: confirmPasswordController,
                     decoration: InputDecoration(
-                      labelText: '确认新密码',
+                      labelText: l10n.confirmNewPassword,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
@@ -223,10 +242,10 @@ class _AccountPageState extends State<AccountPage> {
                     enabled: !isChanging,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '请确认新密码';
+                        return l10n.confirmPasswordRequired;
                       }
                       if (value != newPasswordController.text) {
-                        return '两次输入的密码不一致';
+                        return l10n.passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -242,7 +261,7 @@ class _AccountPageState extends State<AccountPage> {
                   : () {
                       Navigator.pop(dialogContext);
                     },
-              child: const Text('取消'),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: isChanging
@@ -268,8 +287,8 @@ class _AccountPageState extends State<AccountPage> {
                             SnackBar(
                               content: Text(
                                 success
-                                    ? '密码修改成功'
-                                    : '密码修改失败，请检查当前密码是否正确',
+                                    ? l10n.passwordChanged
+                                    : l10n.passwordChangeFailed,
                               ),
                               backgroundColor: success
                                   ? Colors.green
@@ -284,7 +303,7 @@ class _AccountPageState extends State<AccountPage> {
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('密码修改失败: $e'),
+                              content: Text('${l10n.passwordChangeFailed}: $e'),
                               backgroundColor: Colors.red,
                             ),
                           );
@@ -297,7 +316,7 @@ class _AccountPageState extends State<AccountPage> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('确定'),
+                  : Text(l10n.confirm),
             ),
           ],
         ),
