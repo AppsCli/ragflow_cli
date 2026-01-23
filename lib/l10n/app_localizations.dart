@@ -1382,6 +1382,18 @@ abstract class AppLocalizations {
   /// **'Permission'**
   String get permission;
 
+  /// No description provided for @permissionOnlyMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Only me'**
+  String get permissionOnlyMe;
+
+  /// No description provided for @permissionTeam.
+  ///
+  /// In en, this message translates to:
+  /// **'Team'**
+  String get permissionTeam;
+
   /// No description provided for @documentLanguage.
   ///
   /// In en, this message translates to:

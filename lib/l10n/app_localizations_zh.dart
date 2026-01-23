@@ -688,6 +688,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get permission => '权限';
 
   @override
+  String get permissionOnlyMe => '只有我';
+
+  @override
+  String get permissionTeam => '团队';
+
+  @override
   String get documentLanguage => '文档语言';
 
   @override

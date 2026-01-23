@@ -303,6 +303,8 @@
     }
   },
   "permission": "权限",
+  "permissionOnlyMe": "只有我",
+  "permissionTeam": "团队",
   "documentLanguage": "文档语言",
   "parseConfig": "解析配置",
   "sliceMethod": "切片方法（解析器）",

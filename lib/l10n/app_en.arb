@@ -362,6 +362,8 @@
     }
   },
   "permission": "Permission",
+  "permissionOnlyMe": "Only me",
+  "permissionTeam": "Team",
   "documentLanguage": "Document Language",
   "parseConfig": "Parse Config",
   "sliceMethod": "Slice Method (Parser)",

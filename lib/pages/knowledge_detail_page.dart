@@ -1549,11 +1549,12 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   }
 
   Widget _buildPermissionSelector() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.permission,
+          l10n.permission,
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -1561,7 +1562,12 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           segments: PermissionType.values.map((type) {
             return ButtonSegment<PermissionType>(
               value: type,
-              label: Text(type.label),
+              label: Text(
+                switch (type) {
+                  PermissionType.me => l10n.permissionOnlyMe,
+                  PermissionType.team => l10n.permissionTeam,
+                },
+              ),
             );
           }).toList(),
           selected: {_permission},

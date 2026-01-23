@@ -696,6 +696,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get permission => 'Permission';
 
   @override
+  String get permissionOnlyMe => 'Only me';
+
+  @override
+  String get permissionTeam => 'Team';
+
+  @override
   String get documentLanguage => 'Document Language';
 
   @override

@@ -34,8 +34,9 @@ enum DocumentParserType {
 
 /// 权限类型
 enum PermissionType {
-  me('me', '只有我'),
-  team('team', '团队');
+  // 注意：UI 显示请使用 AppLocalizations（不要直接用 label）
+  me('me', 'Only me'),
+  team('team', 'Team');
 
   final String value;
   final String label;
