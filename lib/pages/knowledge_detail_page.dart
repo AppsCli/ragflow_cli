@@ -1582,16 +1582,22 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   }
 
   Widget _buildLanguageSelector() {
+    final l10n = AppLocalizations.of(context)!;
     return DropdownButtonFormField<LanguageType>(
       value: _language,
       decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.documentLanguage,
+        labelText: l10n.documentLanguage,
         border: const OutlineInputBorder(),
       ),
       items: LanguageType.values.map((type) {
         return DropdownMenuItem<LanguageType>(
           value: type,
-          child: Text(type.label),
+          child: Text(
+            switch (type) {
+              LanguageType.chinese => l10n.languageChinese,
+              LanguageType.english => l10n.languageEnglish,
+            },
+          ),
         );
       }).toList(),
       onChanged: (value) {
@@ -1605,17 +1611,36 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   }
 
   Widget _buildParserSelector() {
+    final l10n = AppLocalizations.of(context)!;
     return DropdownButtonFormField<DocumentParserType>(
       value: _parserId,
       decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.sliceMethod,
+        labelText: l10n.sliceMethod,
         border: const OutlineInputBorder(),
-        helperText: AppLocalizations.of(context)!.sliceMethodHelper,
+        helperText: l10n.sliceMethodHelper,
       ),
       items: DocumentParserType.values.map((type) {
         return DropdownMenuItem<DocumentParserType>(
           value: type,
-          child: Text(type.label),
+          child: Text(
+            switch (type) {
+              DocumentParserType.naive => l10n.parserNaive,
+              DocumentParserType.qa => l10n.parserQa,
+              DocumentParserType.resume => l10n.parserResume,
+              DocumentParserType.manual => l10n.parserManual,
+              DocumentParserType.table => l10n.parserTable,
+              DocumentParserType.paper => l10n.parserPaper,
+              DocumentParserType.book => l10n.parserBook,
+              DocumentParserType.laws => l10n.parserLaws,
+              DocumentParserType.presentation => l10n.parserPresentation,
+              DocumentParserType.picture => l10n.parserPicture,
+              DocumentParserType.one => l10n.parserOne,
+              DocumentParserType.audio => l10n.parserAudio,
+              DocumentParserType.email => l10n.parserEmail,
+              DocumentParserType.tag => l10n.parserTag,
+              DocumentParserType.knowledgeGraph => l10n.parserKnowledgeGraph,
+            },
+          ),
         );
       }).toList(),
       onChanged: (value) {

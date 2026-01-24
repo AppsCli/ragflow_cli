@@ -697,6 +697,57 @@ class AppLocalizationsZh extends AppLocalizations {
   String get documentLanguage => '文档语言';
 
   @override
+  String get languageChinese => '中文';
+
+  @override
+  String get languageEnglish => '英文';
+
+  @override
+  String get parserNaive => '通用';
+
+  @override
+  String get parserQa => '问答';
+
+  @override
+  String get parserResume => '简历';
+
+  @override
+  String get parserManual => '手动';
+
+  @override
+  String get parserTable => '表格';
+
+  @override
+  String get parserPaper => '论文';
+
+  @override
+  String get parserBook => '书籍';
+
+  @override
+  String get parserLaws => '法律';
+
+  @override
+  String get parserPresentation => '演示文稿';
+
+  @override
+  String get parserPicture => '图片';
+
+  @override
+  String get parserOne => '单页';
+
+  @override
+  String get parserAudio => '音频';
+
+  @override
+  String get parserEmail => '邮件';
+
+  @override
+  String get parserTag => '标签';
+
+  @override
+  String get parserKnowledgeGraph => '知识图谱';
+
+  @override
   String get parseConfig => '解析配置';
 
   @override

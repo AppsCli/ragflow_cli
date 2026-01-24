@@ -705,6 +705,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get documentLanguage => 'Document Language';
 
   @override
+  String get languageChinese => 'Chinese';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get parserNaive => 'General';
+
+  @override
+  String get parserQa => 'Q&A';
+
+  @override
+  String get parserResume => 'Resume';
+
+  @override
+  String get parserManual => 'Manual';
+
+  @override
+  String get parserTable => 'Table';
+
+  @override
+  String get parserPaper => 'Paper';
+
+  @override
+  String get parserBook => 'Book';
+
+  @override
+  String get parserLaws => 'Laws';
+
+  @override
+  String get parserPresentation => 'Presentation';
+
+  @override
+  String get parserPicture => 'Picture';
+
+  @override
+  String get parserOne => 'One Page';
+
+  @override
+  String get parserAudio => 'Audio';
+
+  @override
+  String get parserEmail => 'Email';
+
+  @override
+  String get parserTag => 'Tag';
+
+  @override
+  String get parserKnowledgeGraph => 'Knowledge Graph';
+
+  @override
   String get parseConfig => 'Parse Config';
 
   @override

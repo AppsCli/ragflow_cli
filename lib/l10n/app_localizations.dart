@@ -1400,6 +1400,108 @@ abstract class AppLocalizations {
   /// **'Document Language'**
   String get documentLanguage;
 
+  /// No description provided for @languageChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese'**
+  String get languageChinese;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @parserNaive.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get parserNaive;
+
+  /// No description provided for @parserQa.
+  ///
+  /// In en, this message translates to:
+  /// **'Q&A'**
+  String get parserQa;
+
+  /// No description provided for @parserResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get parserResume;
+
+  /// No description provided for @parserManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get parserManual;
+
+  /// No description provided for @parserTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Table'**
+  String get parserTable;
+
+  /// No description provided for @parserPaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Paper'**
+  String get parserPaper;
+
+  /// No description provided for @parserBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get parserBook;
+
+  /// No description provided for @parserLaws.
+  ///
+  /// In en, this message translates to:
+  /// **'Laws'**
+  String get parserLaws;
+
+  /// No description provided for @parserPresentation.
+  ///
+  /// In en, this message translates to:
+  /// **'Presentation'**
+  String get parserPresentation;
+
+  /// No description provided for @parserPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Picture'**
+  String get parserPicture;
+
+  /// No description provided for @parserOne.
+  ///
+  /// In en, this message translates to:
+  /// **'One Page'**
+  String get parserOne;
+
+  /// No description provided for @parserAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio'**
+  String get parserAudio;
+
+  /// No description provided for @parserEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get parserEmail;
+
+  /// No description provided for @parserTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Tag'**
+  String get parserTag;
+
+  /// No description provided for @parserKnowledgeGraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Knowledge Graph'**
+  String get parserKnowledgeGraph;
+
   /// No description provided for @parseConfig.
   ///
   /// In en, this message translates to:
