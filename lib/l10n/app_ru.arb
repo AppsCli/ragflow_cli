@@ -1,0 +1,490 @@
+{
+  "@@locale": "ru",
+  "appTitle": "RAGFlow",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "login": "Войти",
+  "email": "Эл. почта",
+  "password": "Пароль",
+  "serverSettings": "Настройки сервера",
+  "addServer": "Добавить сервер",
+  "serverName": "Имя сервера (необяз.)",
+  "serverAddress": "Адрес сервера",
+  "exampleServerAddress": "напр. http://192.168.1.100:9380",
+  "activate": "Активировать",
+  "delete": "Удалить",
+  "active": "Активен",
+  "confirm": "Подтвердить",
+  "cancel": "Отмена",
+  "save": "Сохранить",
+  "deleteServerConfirm": "Удалить сервер \"{serverName}\"?",
+  "@deleteServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "switchServerConfirm": "После переключения на \"{serverName}\" потребуется повторный вход. Продолжить?",
+  "@switchServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "currentServer": "Текущий сервер: {serverAddress}",
+  "@currentServer": {
+    "placeholders": {
+      "serverAddress": {
+        "type": "String"
+      }
+    }
+  },
+  "serverAdded": "Сервер добавлен",
+  "serverDeleted": "Сервер удалён",
+  "switchFailed": "Ошибка переключения",
+  "addFailed": "Ошибка добавления. Проверьте формат адреса",
+  "saveFailed": "Ошибка сохранения",
+  "serverAddressRequired": "Введите адрес сервера",
+  "serverAddressFormatError": "Адрес должен начинаться с http:// или https://",
+  "serverList": "Список серверов",
+  "noServerConfig": "Нет конфигурации сервера",
+  "addServerHint": "Нажмите кнопку ниже, чтобы добавить сервер",
+  "systemVersion": "Версия RAGFlow",
+  "systemStatus": "Состояние системы",
+  "refresh": "Обновить",
+  "cannotGetSystemStatus": "Не удалось получить состояние системы",
+  "serverAddressHint": "La dirección debe ser una URL completa. Ej.:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com",
+  "documentEngine": "Motor de documentos",
+  "storage": "Almacenamiento",
+  "database": "Base de datos",
+  "redis": "Redis",
+  "normal": "Normal",
+  "abnormal": "Anormal",
+  "unknown": "Desconocido",
+  "responseTime": "Tiempo de respuesta: {elapsed}ms",
+  "@responseTime": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "type": "Tipo",
+  "@type": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "storageInfo": "Almacenamiento: {storage}",
+  "@storageInfo": {
+    "placeholders": {
+      "storage": {
+        "type": "String"
+      }
+    }
+  },
+  "databaseInfo": "Base de datos: {database}",
+  "@databaseInfo": {
+    "placeholders": {
+      "database": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "Error: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "Язык",
+  "languageSettings": "Настройки языка",
+  "followSystem": "Как в системе",
+  "chinese": "Китайский",
+  "english": "Английский",
+  "traditionalChinese": "Китайский (трад.)",
+  "japanese": "Японский",
+  "korean": "Корейский",
+  "german": "Немецкий",
+  "spanish": "Испанский",
+  "french": "Французский",
+  "italian": "Итальянский",
+  "russian": "Русский",
+  "arabic": "Arabic",
+  "selectLanguage": "Выбрать язык",
+  "account": "Аккаунт",
+  "changePassword": "Сменить пароль",
+  "logout": "Выйти",
+  "confirmLogout": "Выйти?",
+  "currentPassword": "Contraseña actual",
+  "newPassword": "Новый пароль",
+  "confirmNewPassword": "Подтвердите новый пароль",
+  "passwordChanged": "Contraseña cambiada",
+  "passwordChangeFailed": "Ошибка смены пароля. Проверьте текущий пароль",
+  "passwordRequired": "Введите пароль",
+  "newPasswordRequired": "Введите новый пароль",
+  "confirmPasswordRequired": "Подтвердите новый пароль",
+  "passwordTooShort": "Пароль должен быть не менее 8 символов",
+  "passwordsDoNotMatch": "Пароли не совпадают",
+  "emailRequired": "Введите адрес электронной почты",
+  "invalidEmail": "Введите правильный адрес электронной почты",
+  "loginFailed": "Ошибка входа. Проверьте почту и пароль",
+  "configureServerAddress": "Configurar dirección del servidor",
+  "pleaseConfigureServer": "Configure la dirección del servidor antes de iniciar sesión",
+  "goToSettings": "Ir a ajustes",
+  "setServerAddress": "Establecer dirección del servidor",
+  "knowledgeBase": "База знаний",
+  "chat": "Чат",
+  "search": "Поиск",
+  "agent": "Agente",
+  "file": "Archivo",
+  "noData": "Sin datos",
+  "loading": "Загрузка…",
+  "retry": "Reintentar",
+  "create": "Создать",
+  "edit": "Изменить",
+  "name": "Nombre",
+  "description": "Descripción",
+  "status": "Estado",
+  "actions": "Acciones",
+  "details": "Detalles",
+  "back": "Назад",
+  "submit": "Отправить",
+  "close": "Закрыть",
+  "searchPlaceholder": "Поиск…",
+  "noResults": "Ничего не найдено",
+  "upload": "Subir",
+  "download": "Descargar",
+  "view": "Просмотр",
+  "createdAt": "Дата создания",
+  "updatedAt": "Дата обновления",
+  "size": "Размер",
+  "operation": "Действие",
+  "success": "Успех",
+  "failed": "Сбой",
+  "pleaseWait": "Подождите…",
+  "areYouSure": "Вы уверены?",
+  "deleteConfirm": "Удалить этот элемент?",
+  "operationSuccess": "Операция выполнена",
+  "operationFailed": "Ошибка операции",
+  "networkError": "Сетевая ошибка. Проверьте подключение",
+  "unknownError": "Произошла неизвестная ошибка",
+  "createKnowledgeBase": "Создать базу знаний",
+  "knowledgeBaseName": "Название базы знаний",
+  "enterKnowledgeBaseName": "Введите название базы знаний",
+  "loadingFailed": "Ошибка загрузки",
+  "creating": "Создание…",
+  "createSuccess": "Создано",
+  "createFailed": "Ошибка создания. Попробуйте снова",
+  "noKnowledgeBase": "Нет базы знаний",
+  "documents": "Документы",
+  "chunks": "Фрагменты",
+  "updated": "Обновлено",
+  "send": "Отправить",
+  "enterMessage": "Введите сообщение…",
+  "noChatHistory": "Нет истории чата",
+  "newChat": "Новый чат",
+  "clear": "Очистить",
+  "noAgents": "Нет агентов",
+  "createAgent": "Создать агента",
+  "noFiles": "Нет файлов",
+  "uploadFile": "Загрузить файл",
+  "fileName": "Имя файла",
+  "fileSize": "Размер файла",
+  "uploadTime": "Время загрузки",
+  "resetAgent": "Сбросить агента",
+  "resetAgentConfirm": "Сбросить агента? Текущая история чата будет удалена.",
+  "reset": "Сбросить",
+  "resetSuccess": "Сброшено",
+  "resetFailed": "Ошибка сброса",
+  "thinking": "Думаю…",
+  "you": "Вы",
+  "sendFailed": "Ошибка отправки: {message}",
+  "@sendFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "requestFailed": "Ошибка запроса",
+  "stop": "Стоп",
+  "createNewConversation": "Новый диалог",
+  "conversationName": "Название диалога",
+  "noConversations": "Нет диалогов",
+  "hideList": "Скрыть список",
+  "showList": "Показать список",
+  "refreshConversationList": "Обновить список диалогов",
+  "selectConversation": "Выберите диалог",
+  "loadConversationListFailed": "Ошибка загрузки списка: {error}",
+  "@loadConversationListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "getConversationInfoFailed": "Не удалось загрузить информацию о диалоге",
+  "knowledgeBaseDetail": "Подробности базы знаний",
+  "dataset": "Набор данных",
+  "retrievalTest": "Тест поиска",
+  "config": "Настройки",
+  "searchDocuments": "Поиск документов…",
+  "noDocuments": "Нет документов",
+  "tokens": "Токены",
+  "update": "Обновить",
+  "detail": "Подробнее",
+  "parse": "Разбор",
+  "cancelParse": "Отменить разбор",
+  "deleteDocument": "Удалить документ",
+  "confirmDelete": "Подтвердить удаление",
+  "confirmDeleteDocument": "Удалить этот документ?",
+  "deleteSuccess": "Удалено",
+  "deleteFailed": "Ошибка удаления",
+  "totalDocuments": "Всего {count} документов",
+  "@totalDocuments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "Пред. страница",
+  "nextPage": "След. страница",
+  "id": "ID",
+  "suffix": "Суффикс",
+  "chunkCount": "Число фрагментов",
+  "tokenCount": "Число токенов",
+  "createTime": "Дата создания",
+  "updateTime": "Дата обновления",
+  "notStarted": "Не начато",
+  "parsing": "Разбор…",
+  "cancelled": "Отменено",
+  "completed": "Завершено",
+  "downloading": "Загрузка…",
+  "downloadSuccess": "Загружено: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadFailed": "Ошибка загрузки",
+  "startingParse": "Запуск разбора…",
+  "parseStarted": "Разбор запущен",
+  "startParseFailed": "Не удалось запустить разбор",
+  "confirmCancel": "Подтвердить отмену",
+  "confirmCancelParse": "Отменить разбор документа «{name}»?",
+  "@confirmCancelParse": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancellingParse": "Отмена разбора…",
+  "parseCancelled": "Разбор отменён",
+  "cancelParseFailed": "Не удалось отменить разбор",
+  "uploading": "Отправка…",
+  "uploadSuccess": "Загружено. Запуск разбора…",
+  "uploadFailed": "Ошибка отправки",
+  "partialUploadFailed": "Некоторые файлы не загружены",
+  "loadDocumentsFailed": "Ошибка загрузки документов: {error}",
+  "@loadDocumentsFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterQuestionForRetrieval": "Введите вопрос для теста…",
+  "test": "Тест",
+  "retrieving": "Поиск…",
+  "enterQuestionForRetrievalTest": "Введите вопрос для теста поиска",
+  "retrievalResults": "Результаты (всего {count})",
+  "@retrievalResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "similarity": "Сходство: {percent}%",
+  "@similarity": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "retrievalTestFailed": "Ошибка теста: {error}",
+  "@retrievalTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "basicInfo": "Основная информация",
+  "knowledgeBaseNameRequired": "Введите название базы знаний",
+  "knowledgeBaseImage": "Изображение базы знаний",
+  "uploadImage": "Загрузить изображение",
+  "imageSelected": "Изображение выбрано",
+  "fileNotExists": "Файл не найден",
+  "selectImageSource": "Выберите источник изображения",
+  "selectFromGallery": "Из галереи",
+  "takePhoto": "Сфотографировать",
+  "imageTooLarge": "Размер изображения не более 4 МБ",
+  "selectImageFailed": "Ошибка выбора изображения: {error}",
+  "@selectImageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "permission": "Доступ",
+  "permissionOnlyMe": "Только я",
+  "permissionTeam": "Команда",
+  "documentLanguage": "Язык документа",
+  "languageChinese": "Chino",
+  "languageEnglish": "Inglés",
+  "parserNaive": "General",
+  "parserQa": "P y R",
+  "parserResume": "Currículum",
+  "parserManual": "Manual",
+  "parserTable": "Tabla",
+  "parserPaper": "Artículo",
+  "parserBook": "Libro",
+  "parserLaws": "Legal",
+  "parserPresentation": "Presentación",
+  "parserPicture": "Imagen",
+  "parserOne": "Una página",
+  "parserAudio": "Audio",
+  "parserEmail": "Correo",
+  "parserTag": "Etiqueta",
+  "parserKnowledgeGraph": "Grafo de conocimiento",
+  "parseConfig": "Configuración de análisis",
+  "sliceMethod": "Método de fragmentación (parser)",
+  "sliceMethodHelper": "Seleccione el método de análisis y fragmentación",
+  "embeddingModel": "Modelo de embebido",
+  "embeddingModelHelper": "Modelo para vectores de embebido",
+  "embeddingModelWarning": "Cambiar el modelo con fragmentos existentes requiere borrarlos todos",
+  "noModelsAvailable": "No hay modelos disponibles",
+  "suggestedChunkSize": "Tamaño de fragmento sugerido (tokens)",
+  "chunkSizeHelper": "Umbral de tokens para fragmentos",
+  "textDelimiter": "Delimitador de texto",
+  "delimiterHelper": "Delimitador, p. ej. \\n",
+  "layoutRecognition": "Reconocimiento de diseño",
+  "layoutRecognitionHelper": "Método de reconocimiento de diseño",
+  "plainText": "Texto plano",
+  "pageRank": "Page Rank",
+  "pageRankHelper": "Valor de Page Rank para ordenar resultados",
+  "advancedOptions": "Opciones avanzadas",
+  "autoKeywordsCount": "N.º de palabras clave auto",
+  "autoKeywordsHelper": "0 = sin extracción",
+  "autoQuestionsCount": "N.º de preguntas auto",
+  "autoQuestionsHelper": "0 = sin extracción",
+  "tableToHtml": "Tabla a HTML",
+  "tableToHtmlSubtitle": "Convertir tablas Excel a HTML",
+  "useRaptor": "Usar estrategia RAPTOR",
+  "useRaptorSubtitle": "Activar RAPTOR para mejorar la recuperación",
+  "extractKnowledgeGraph": "Extraer grafo de conocimiento",
+  "extractKnowledgeGraphSubtitle": "Activar extracción de grafo de conocimiento",
+  "saveConfig": "Сохранить настройки",
+  "saveSuccess": "Сохранено",
+  "fileManagement": "Управление файлами",
+  "rootDirectory": "Корневая папка",
+  "currentFolder": "Текущая папка",
+  "searchFiles": "Поиск файлов…",
+  "folder": "Папка",
+  "preview": "Просмотр",
+  "cannotOpenPreview": "Не удалось открыть: {url}",
+  "@cannotOpenPreview": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "previewFailed": "Ошибка просмотра: {error}",
+  "@previewFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteFile": "Удалить \"{name}\"?",
+  "@confirmDeleteFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalFiles": "Всего {count} файлов",
+  "@totalFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "Без имени",
+  "loadFailed": "Ошибка загрузки: {error}",
+  "@loadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAgents": "Всего {count} агентов",
+  "@totalAgents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAgents": "Поиск агентов…",
+  "noDescription": "Нет описания",
+  "createNewDialog": "Новый диалог",
+  "dialogName": "Название диалога",
+  "descriptionOptional": "Описание (необяз.)",
+  "noDialogs": "Нет диалогов",
+  "selectKnowledgeBase": "Выберите базу знаний:",
+  "pleaseSelectAtLeastOneKnowledgeBase": "Выберите хотя бы одну базу знаний",
+  "enterQuestion": "Введите вопрос…",
+  "ask": "Спросить",
+  "answer": "Ответ:",
+  "relatedFiles": "Связанные файлы:",
+  "relatedQuestions": "Связанные вопросы:",
+  "pleaseSelectKnowledgeBaseAndEnterQuestion": "Выберите базу и введите вопрос",
+  "loadKnowledgeBaseFailed": "Ошибка загрузки базы: {error}",
+  "@loadKnowledgeBaseFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askQuestionFailed": "Ошибка запроса: {error}",
+  "@askQuestionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exampleProduction": "напр. Продакшен"
+}

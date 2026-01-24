@@ -176,6 +176,33 @@ class AppLocalizationsZh extends AppLocalizations {
   String get english => '英文';
 
   @override
+  String get traditionalChinese => '繁体中文';
+
+  @override
+  String get japanese => '日语';
+
+  @override
+  String get korean => '韩语';
+
+  @override
+  String get german => '德语';
+
+  @override
+  String get spanish => '西班牙语';
+
+  @override
+  String get french => '法语';
+
+  @override
+  String get italian => '意大利语';
+
+  @override
+  String get russian => '俄语';
+
+  @override
+  String get arabic => '阿拉伯语';
+
+  @override
   String get selectLanguage => '选择语言';
 
   @override
@@ -939,4 +966,968 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get exampleProduction => '例如: 生产环境';
+}
+
+/// The translations for Chinese, as used in Taiwan (`zh_TW`).
+class AppLocalizationsZhTw extends AppLocalizationsZh {
+  AppLocalizationsZhTw() : super('zh_TW');
+
+  @override
+  String get appTitle => 'RAGFlow';
+
+  @override
+  String get login => '登入';
+
+  @override
+  String get email => '郵箱';
+
+  @override
+  String get password => '密碼';
+
+  @override
+  String get serverSettings => '伺服器設定';
+
+  @override
+  String get addServer => '新增伺服器';
+
+  @override
+  String get serverName => '伺服器名稱（可選）';
+
+  @override
+  String get serverAddress => '伺服器地址';
+
+  @override
+  String get exampleServerAddress => '例如: http://192.168.1.100:9380';
+
+  @override
+  String get activate => '啟用';
+
+  @override
+  String get delete => '刪除';
+
+  @override
+  String get active => '已啟用';
+
+  @override
+  String get confirm => '確定';
+
+  @override
+  String get cancel => '取消';
+
+  @override
+  String get save => '儲存';
+
+  @override
+  String deleteServerConfirm(String serverName) {
+    return '確定要刪除伺服器 \"$serverName\" 嗎？';
+  }
+
+  @override
+  String switchServerConfirm(String serverName) {
+    return '切換到伺服器 \"$serverName\" 後需要重新登入，確定要繼續嗎？';
+  }
+
+  @override
+  String currentServer(String serverAddress) {
+    return '目前伺服器: $serverAddress';
+  }
+
+  @override
+  String get serverAdded => '伺服器新增成功';
+
+  @override
+  String get serverDeleted => '伺服器已刪除';
+
+  @override
+  String get switchFailed => '切換失敗';
+
+  @override
+  String get addFailed => '新增失敗，請檢查地址格式';
+
+  @override
+  String get saveFailed => '儲存失敗';
+
+  @override
+  String get serverAddressRequired => '請輸入伺服器地址';
+
+  @override
+  String get serverAddressFormatError => '地址必須以 http:// 或 https:// 開頭';
+
+  @override
+  String get serverList => '伺服器清單';
+
+  @override
+  String get noServerConfig => '暫無伺服器配置';
+
+  @override
+  String get addServerHint => '點擊下方按鈕新增伺服器';
+
+  @override
+  String get systemVersion => 'RAGFlow 版本';
+
+  @override
+  String get systemStatus => '系統狀態';
+
+  @override
+  String get refresh => '重新整理';
+
+  @override
+  String get cannotGetSystemStatus => '無法取得系統狀態';
+
+  @override
+  String get serverAddressHint =>
+      '提示: 伺服器地址應該是完整的URL，例如:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com';
+
+  @override
+  String get documentEngine => '文件引擎';
+
+  @override
+  String get storage => '儲存';
+
+  @override
+  String get database => '資料庫';
+
+  @override
+  String get redis => 'Redis';
+
+  @override
+  String get normal => '正常';
+
+  @override
+  String get abnormal => '異常';
+
+  @override
+  String get unknown => '未知';
+
+  @override
+  String responseTime(String elapsed) {
+    return '回應時間: ${elapsed}ms';
+  }
+
+  @override
+  String type(String type) {
+    return '類型';
+  }
+
+  @override
+  String storageInfo(String storage) {
+    return '儲存: $storage';
+  }
+
+  @override
+  String databaseInfo(String database) {
+    return '資料庫: $database';
+  }
+
+  @override
+  String error(String error) {
+    return '錯誤';
+  }
+
+  @override
+  String get language => '語言';
+
+  @override
+  String get languageSettings => '語言設定';
+
+  @override
+  String get followSystem => '跟隨系統';
+
+  @override
+  String get chinese => '中文';
+
+  @override
+  String get english => '英文';
+
+  @override
+  String get traditionalChinese => '繁體中文';
+
+  @override
+  String get japanese => '日語';
+
+  @override
+  String get korean => '韓語';
+
+  @override
+  String get german => '德語';
+
+  @override
+  String get spanish => '西班牙語';
+
+  @override
+  String get french => '法語';
+
+  @override
+  String get italian => '義大利語';
+
+  @override
+  String get russian => '俄語';
+
+  @override
+  String get arabic => '阿拉伯語';
+
+  @override
+  String get selectLanguage => '選擇語言';
+
+  @override
+  String get account => '帳號';
+
+  @override
+  String get changePassword => '修改密碼';
+
+  @override
+  String get logout => '登出';
+
+  @override
+  String get confirmLogout => '確定要登出嗎？';
+
+  @override
+  String get currentPassword => '目前密碼';
+
+  @override
+  String get newPassword => '新密碼';
+
+  @override
+  String get confirmNewPassword => '確認新密碼';
+
+  @override
+  String get passwordChanged => '密碼修改成功';
+
+  @override
+  String get passwordChangeFailed => '密碼修改失敗，請檢查目前密碼是否正確';
+
+  @override
+  String get passwordRequired => '請輸入密碼';
+
+  @override
+  String get newPasswordRequired => '請輸入新密碼';
+
+  @override
+  String get confirmPasswordRequired => '請確認新密碼';
+
+  @override
+  String get passwordTooShort => '密碼長度至少為8位';
+
+  @override
+  String get passwordsDoNotMatch => '兩次輸入的密碼不一致';
+
+  @override
+  String get emailRequired => '請輸入郵箱';
+
+  @override
+  String get invalidEmail => '請輸入有效的郵箱地址';
+
+  @override
+  String get loginFailed => '登入失敗，請檢查郵箱和密碼';
+
+  @override
+  String get configureServerAddress => '配置伺服器地址';
+
+  @override
+  String get pleaseConfigureServer => '請先配置伺服器地址才能登入';
+
+  @override
+  String get goToSettings => '前往設定';
+
+  @override
+  String get setServerAddress => '設定伺服器地址';
+
+  @override
+  String get knowledgeBase => '知識庫';
+
+  @override
+  String get chat => '聊天';
+
+  @override
+  String get search => '搜尋';
+
+  @override
+  String get agent => 'Agent';
+
+  @override
+  String get file => '檔案';
+
+  @override
+  String get noData => '暫無資料';
+
+  @override
+  String get loading => '載入中...';
+
+  @override
+  String get retry => '重試';
+
+  @override
+  String get create => '建立';
+
+  @override
+  String get edit => '編輯';
+
+  @override
+  String get name => '名稱';
+
+  @override
+  String get description => '描述';
+
+  @override
+  String get status => '狀態';
+
+  @override
+  String get actions => '操作';
+
+  @override
+  String get details => '詳情';
+
+  @override
+  String get back => '返回';
+
+  @override
+  String get submit => '提交';
+
+  @override
+  String get close => '關閉';
+
+  @override
+  String get searchPlaceholder => '搜尋...';
+
+  @override
+  String get noResults => '未找到結果';
+
+  @override
+  String get upload => '上傳';
+
+  @override
+  String get download => '下載';
+
+  @override
+  String get view => '查看';
+
+  @override
+  String get createdAt => '建立時間';
+
+  @override
+  String get updatedAt => '更新時間';
+
+  @override
+  String get size => '大小';
+
+  @override
+  String get operation => '操作';
+
+  @override
+  String get success => '成功';
+
+  @override
+  String get failed => '失敗';
+
+  @override
+  String get pleaseWait => '請稍候...';
+
+  @override
+  String get areYouSure => '確定嗎？';
+
+  @override
+  String get deleteConfirm => '確定要刪除此項目嗎？';
+
+  @override
+  String get operationSuccess => '操作成功';
+
+  @override
+  String get operationFailed => '操作失敗';
+
+  @override
+  String get networkError => '網路錯誤，請檢查您的連接';
+
+  @override
+  String get unknownError => '發生未知錯誤';
+
+  @override
+  String get createKnowledgeBase => '建立知識庫';
+
+  @override
+  String get knowledgeBaseName => '知識庫名稱';
+
+  @override
+  String get enterKnowledgeBaseName => '請輸入知識庫名稱';
+
+  @override
+  String get loadingFailed => '載入失敗';
+
+  @override
+  String get creating => '正在建立...';
+
+  @override
+  String get createSuccess => '建立成功';
+
+  @override
+  String get createFailed => '建立失敗';
+
+  @override
+  String get noKnowledgeBase => '暫無知識庫';
+
+  @override
+  String get documents => '文件';
+
+  @override
+  String get chunks => '片段';
+
+  @override
+  String get updated => '更新';
+
+  @override
+  String get send => '傳送';
+
+  @override
+  String get enterMessage => '輸入訊息...';
+
+  @override
+  String get noChatHistory => '暫無聊天記錄';
+
+  @override
+  String get newChat => '新建聊天';
+
+  @override
+  String get clear => '清除';
+
+  @override
+  String get noAgents => '暫無Agent';
+
+  @override
+  String get createAgent => '建立Agent';
+
+  @override
+  String get noFiles => '暫無檔案';
+
+  @override
+  String get uploadFile => '上傳檔案';
+
+  @override
+  String get fileName => '檔案名';
+
+  @override
+  String get fileSize => '檔案大小';
+
+  @override
+  String get uploadTime => '上傳時間';
+
+  @override
+  String get resetAgent => '重置 Agent';
+
+  @override
+  String get resetAgentConfirm => '確定要重置 Agent 嗎？这将清除目前對話历史。';
+
+  @override
+  String get reset => '重置';
+
+  @override
+  String get resetSuccess => '重置成功';
+
+  @override
+  String get resetFailed => '重置失敗';
+
+  @override
+  String get thinking => '思考中...';
+
+  @override
+  String get you => '您';
+
+  @override
+  String sendFailed(String message) {
+    return '傳送失敗: $message';
+  }
+
+  @override
+  String get requestFailed => '請求失敗';
+
+  @override
+  String get stop => '終止';
+
+  @override
+  String get createNewConversation => '建立新對話';
+
+  @override
+  String get conversationName => '對話名稱';
+
+  @override
+  String get noConversations => '暫無對話';
+
+  @override
+  String get hideList => '隱藏清單';
+
+  @override
+  String get showList => '顯示清單';
+
+  @override
+  String get refreshConversationList => '重新整理對話清單';
+
+  @override
+  String get selectConversation => '請選擇一個對話';
+
+  @override
+  String loadConversationListFailed(String error) {
+    return '載入對話清單失敗: $error';
+  }
+
+  @override
+  String get getConversationInfoFailed => '取得對話資訊失敗';
+
+  @override
+  String get knowledgeBaseDetail => '知識庫詳情';
+
+  @override
+  String get dataset => '資料集';
+
+  @override
+  String get retrievalTest => '檢索測試';
+
+  @override
+  String get config => '配置';
+
+  @override
+  String get searchDocuments => '搜尋文件...';
+
+  @override
+  String get noDocuments => '暫無文件';
+
+  @override
+  String get tokens => 'Token';
+
+  @override
+  String get update => '更新';
+
+  @override
+  String get detail => '詳情';
+
+  @override
+  String get parse => '解析';
+
+  @override
+  String get cancelParse => '取消解析';
+
+  @override
+  String get deleteDocument => '刪除';
+
+  @override
+  String get confirmDelete => '確認刪除';
+
+  @override
+  String get confirmDeleteDocument => '確定要刪除这個文件嗎？';
+
+  @override
+  String get deleteSuccess => '刪除成功';
+
+  @override
+  String get deleteFailed => '刪除失敗';
+
+  @override
+  String totalDocuments(int count) {
+    return '共 $count 個文件';
+  }
+
+  @override
+  String get previousPage => '上一頁';
+
+  @override
+  String get nextPage => '下一頁';
+
+  @override
+  String get id => 'ID';
+
+  @override
+  String get suffix => '後綴';
+
+  @override
+  String get chunkCount => '片段數';
+
+  @override
+  String get tokenCount => 'Token數';
+
+  @override
+  String get createTime => '建立時間';
+
+  @override
+  String get updateTime => '更新時間';
+
+  @override
+  String get notStarted => '未開始';
+
+  @override
+  String get parsing => '解析中';
+
+  @override
+  String get cancelled => '已取消';
+
+  @override
+  String get completed => '已完成';
+
+  @override
+  String get downloading => '正在下載...';
+
+  @override
+  String downloadSuccess(String path) {
+    return '下載成功: $path';
+  }
+
+  @override
+  String get downloadFailed => '下載失敗';
+
+  @override
+  String get startingParse => '正在啟動解析...';
+
+  @override
+  String get parseStarted => '解析已啟動';
+
+  @override
+  String get startParseFailed => '启动解析失敗';
+
+  @override
+  String get confirmCancel => '確認取消';
+
+  @override
+  String confirmCancelParse(String name) {
+    return '確定要取消解析文件 \"$name\" 嗎？';
+  }
+
+  @override
+  String get cancellingParse => '正在取消解析...';
+
+  @override
+  String get parseCancelled => '已取消解析';
+
+  @override
+  String get cancelParseFailed => '取消解析失敗';
+
+  @override
+  String get uploading => '正在上傳...';
+
+  @override
+  String get uploadSuccess => '上傳成功，正在啟動解析...';
+
+  @override
+  String get uploadFailed => '上傳失敗';
+
+  @override
+  String get partialUploadFailed => '部分檔案上傳失敗';
+
+  @override
+  String loadDocumentsFailed(String error) {
+    return '載入文件失敗: $error';
+  }
+
+  @override
+  String get enterQuestionForRetrieval => '輸入問題進行檢索測試...';
+
+  @override
+  String get test => '測試';
+
+  @override
+  String get retrieving => '檢索中...';
+
+  @override
+  String get enterQuestionForRetrievalTest => '請輸入問題進行檢索測試';
+
+  @override
+  String retrievalResults(int count) {
+    return '檢索結果 (共 $count 條)';
+  }
+
+  @override
+  String similarity(String percent) {
+    return '相似度: $percent%';
+  }
+
+  @override
+  String retrievalTestFailed(String error) {
+    return '檢索測試失敗: $error';
+  }
+
+  @override
+  String get basicInfo => '基本資訊';
+
+  @override
+  String get knowledgeBaseNameRequired => '請輸入知識庫名稱';
+
+  @override
+  String get knowledgeBaseImage => '知識庫圖片';
+
+  @override
+  String get uploadImage => '上傳圖片';
+
+  @override
+  String get imageSelected => '圖片已選擇';
+
+  @override
+  String get fileNotExists => '檔案不存在';
+
+  @override
+  String get selectImageSource => '選擇圖片來源';
+
+  @override
+  String get selectFromGallery => '從相簿選擇';
+
+  @override
+  String get takePhoto => '拍照';
+
+  @override
+  String get imageTooLarge => '圖片大小不能超過 4MB';
+
+  @override
+  String selectImageFailed(String error) {
+    return '選擇圖片失敗: $error';
+  }
+
+  @override
+  String get permission => '權限';
+
+  @override
+  String get permissionOnlyMe => '只有我';
+
+  @override
+  String get permissionTeam => '團隊';
+
+  @override
+  String get documentLanguage => '文件語言';
+
+  @override
+  String get languageChinese => '中文';
+
+  @override
+  String get languageEnglish => '英文';
+
+  @override
+  String get parserNaive => '通用';
+
+  @override
+  String get parserQa => '問答';
+
+  @override
+  String get parserResume => '履歷';
+
+  @override
+  String get parserManual => '手動';
+
+  @override
+  String get parserTable => '表格';
+
+  @override
+  String get parserPaper => '論文';
+
+  @override
+  String get parserBook => '書籍';
+
+  @override
+  String get parserLaws => '法律';
+
+  @override
+  String get parserPresentation => '簡報';
+
+  @override
+  String get parserPicture => '圖片';
+
+  @override
+  String get parserOne => '單頁';
+
+  @override
+  String get parserAudio => '音訊';
+
+  @override
+  String get parserEmail => '郵件';
+
+  @override
+  String get parserTag => '標籤';
+
+  @override
+  String get parserKnowledgeGraph => '知識圖譜';
+
+  @override
+  String get parseConfig => '解析配置';
+
+  @override
+  String get sliceMethod => '切片方法（解析器）';
+
+  @override
+  String get sliceMethodHelper => '選擇文件解析和切片的方法';
+
+  @override
+  String get embeddingModel => '嵌入模型';
+
+  @override
+  String get embeddingModelHelper => '選擇用於生成嵌入向量的模型';
+
+  @override
+  String get embeddingModelWarning => '注意：已有分塊时更改嵌入模型需要刪除所有分塊';
+
+  @override
+  String get noModelsAvailable => '暫無可用模型';
+
+  @override
+  String get suggestedChunkSize => '建議文字區塊大小（Token數）';
+
+  @override
+  String get chunkSizeHelper => '設定建立分塊的Token閾值';
+
+  @override
+  String get textDelimiter => '文本分段識別碼';
+
+  @override
+  String get delimiterHelper => '用於分割文本的識別碼，如 \\n';
+
+  @override
+  String get layoutRecognition => '版面識別';
+
+  @override
+  String get layoutRecognitionHelper => '選擇版面識別方式';
+
+  @override
+  String get plainText => '純文字';
+
+  @override
+  String get pageRank => '頁面排名';
+
+  @override
+  String get pageRankHelper => '頁面排名值，用於搜尋結果排序';
+
+  @override
+  String get advancedOptions => '進階選項';
+
+  @override
+  String get autoKeywordsCount => '自動關鍵字提取數量';
+
+  @override
+  String get autoKeywordsHelper => '0表示不提取';
+
+  @override
+  String get autoQuestionsCount => '自動問題提取數量';
+
+  @override
+  String get autoQuestionsHelper => '0表示不提取';
+
+  @override
+  String get tableToHtml => '表格转HTML';
+
+  @override
+  String get tableToHtmlSubtitle => '將Excel表格轉換為HTML格式';
+
+  @override
+  String get useRaptor => '使用召回增強 RAPTOR 策略';
+
+  @override
+  String get useRaptorSubtitle => '启用RAPTOR策略以增強召回效果';
+
+  @override
+  String get extractKnowledgeGraph => '提取知識圖譜';
+
+  @override
+  String get extractKnowledgeGraphSubtitle => '启用知識圖譜提取功能';
+
+  @override
+  String get saveConfig => '儲存配置';
+
+  @override
+  String get saveSuccess => '儲存成功';
+
+  @override
+  String get fileManagement => '檔案管理';
+
+  @override
+  String get rootDirectory => '根目錄';
+
+  @override
+  String get currentFolder => '目前檔案夹';
+
+  @override
+  String get searchFiles => '搜尋檔案...';
+
+  @override
+  String get folder => '檔案夹';
+
+  @override
+  String get preview => '預覽';
+
+  @override
+  String cannotOpenPreview(String url) {
+    return '無法打开預覽: $url';
+  }
+
+  @override
+  String previewFailed(String error) {
+    return '預覽失敗: $error';
+  }
+
+  @override
+  String confirmDeleteFile(String name) {
+    return '確定要刪除 \"$name\" 嗎？';
+  }
+
+  @override
+  String totalFiles(int count) {
+    return '共 $count 個檔案';
+  }
+
+  @override
+  String get unnamed => '未命名';
+
+  @override
+  String loadFailed(String error) {
+    return '載入失敗: $error';
+  }
+
+  @override
+  String totalAgents(int count) {
+    return '共 $count 個Agent';
+  }
+
+  @override
+  String get searchAgents => '搜尋Agent...';
+
+  @override
+  String get noDescription => '暫無描述';
+
+  @override
+  String get createNewDialog => '建立新對話';
+
+  @override
+  String get dialogName => '對話名稱';
+
+  @override
+  String get descriptionOptional => '描述（可選）';
+
+  @override
+  String get noDialogs => '暫無對話';
+
+  @override
+  String get selectKnowledgeBase => '選擇知識庫:';
+
+  @override
+  String get pleaseSelectAtLeastOneKnowledgeBase => '請至少選擇一個知識庫';
+
+  @override
+  String get enterQuestion => '輸入問題...';
+
+  @override
+  String get ask => '提问';
+
+  @override
+  String get answer => '答案:';
+
+  @override
+  String get relatedFiles => '相关檔案:';
+
+  @override
+  String get relatedQuestions => '相关問題:';
+
+  @override
+  String get pleaseSelectKnowledgeBaseAndEnterQuestion => '請選擇知識庫並輸入問題進行搜尋';
+
+  @override
+  String loadKnowledgeBaseFailed(String error) {
+    return '載入知識庫失敗: $error';
+  }
+
+  @override
+  String askQuestionFailed(String error) {
+    return '提问失敗: $error';
+  }
+
+  @override
+  String get exampleProduction => '例如: 生產環境';
 }

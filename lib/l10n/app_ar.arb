@@ -1,0 +1,490 @@
+{
+  "@@locale": "ar",
+  "appTitle": "RAGFlow",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "login": "تسجيل الدخول",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "serverSettings": "إعدادات الخادم",
+  "addServer": "إضافة خادم",
+  "serverName": "اسم الخادم (اختياري)",
+  "serverAddress": "عنوان الخادم",
+  "exampleServerAddress": "مثال: http://192.168.1.100:9380",
+  "activate": "تفعيل",
+  "delete": "حذف",
+  "active": "نشط",
+  "confirm": "تأكيد",
+  "cancel": "إلغاء",
+  "save": "حفظ",
+  "deleteServerConfirm": "هل أنت متأكد من حذف الخادم \"{serverName}\"?",
+  "@deleteServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "switchServerConfirm": "بعد التبديل إلى الخادم \"{serverName}\"، ستحتاج إلى تسجيل الدخول مرة أخرى. هل تريد المتابعة؟",
+  "@switchServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "currentServer": "الخادم الحالي: {serverAddress}",
+  "@currentServer": {
+    "placeholders": {
+      "serverAddress": {
+        "type": "String"
+      }
+    }
+  },
+  "serverAdded": "تمت إضافة الخادم بنجاح",
+  "serverDeleted": "تم حذف الخادم",
+  "switchFailed": "فشل التبديل",
+  "addFailed": "فشلت الإضافة، يرجى التحقق من تنسيق العنوان",
+  "saveFailed": "فشل الحفظ",
+  "serverAddressRequired": "يرجى إدخال عنوان الخادم",
+  "serverAddressFormatError": "يجب أن يبدأ العنوان بـ http:// أو https://",
+  "serverList": "قائمة الخوادم",
+  "noServerConfig": "لا توجد إعدادات خادم",
+  "addServerHint": "انقر على الزر أدناه لإضافة خادم",
+  "systemVersion": "إصدار RAGFlow",
+  "systemStatus": "حالة النظام",
+  "refresh": "تحديث",
+  "cannotGetSystemStatus": "لا يمكن الحصول على حالة النظام",
+  "serverAddressHint": "يجب أن يكون عنوان الخادم عنوان URL كاملاً، على سبيل المثال:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com",
+  "documentEngine": "محرك المستندات",
+  "storage": "التخزين",
+  "database": "قاعدة البيانات",
+  "redis": "Redis",
+  "normal": "طبيعي",
+  "abnormal": "غير طبيعي",
+  "unknown": "غير معروف",
+  "responseTime": "وقت الاستجابة: {elapsed}ms",
+  "@responseTime": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "type": "النوع",
+  "@type": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "storageInfo": "التخزين: {storage}",
+  "@storageInfo": {
+    "placeholders": {
+      "storage": {
+        "type": "String"
+      }
+    }
+  },
+  "databaseInfo": "قاعدة البيانات: {database}",
+  "@databaseInfo": {
+    "placeholders": {
+      "database": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "خطأ: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "اللغة",
+  "languageSettings": "إعدادات اللغة",
+  "followSystem": "اتباع النظام",
+  "chinese": "الصينية",
+  "english": "الإنجليزية",
+  "traditionalChinese": "الصينية التقليدية",
+  "japanese": "اليابانية",
+  "korean": "الكورية",
+  "german": "الألمانية",
+  "spanish": "الإسبانية",
+  "french": "الفرنسية",
+  "italian": "الإيطالية",
+  "russian": "الروسية",
+  "arabic": "العربية",
+  "selectLanguage": "اختر اللغة",
+  "account": "الحساب",
+  "changePassword": "تغيير كلمة المرور",
+  "logout": "تسجيل الخروج",
+  "confirmLogout": "هل أنت متأكد من تسجيل الخروج؟",
+  "currentPassword": "كلمة المرور الحالية",
+  "newPassword": "كلمة المرور الجديدة",
+  "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+  "passwordChanged": "تم تغيير كلمة المرور بنجاح",
+  "passwordChangeFailed": "فشل تغيير كلمة المرور، يرجى التحقق من صحة كلمة المرور الحالية",
+  "passwordRequired": "يرجى إدخال كلمة المرور",
+  "newPasswordRequired": "يرجى إدخال كلمة المرور الجديدة",
+  "confirmPasswordRequired": "يرجى تأكيد كلمة المرور الجديدة",
+  "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+  "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+  "emailRequired": "يرجى إدخال البريد الإلكتروني",
+  "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+  "loginFailed": "فشل تسجيل الدخول، يرجى التحقق من البريد الإلكتروني وكلمة المرور",
+  "configureServerAddress": "تكوين عنوان الخادم",
+  "pleaseConfigureServer": "يرجى تكوين عنوان الخادم قبل تسجيل الدخول",
+  "goToSettings": "انتقل إلى الإعدادات",
+  "setServerAddress": "تعيين عنوان الخادم",
+  "knowledgeBase": "قاعدة المعرفة",
+  "chat": "الدردشة",
+  "search": "البحث",
+  "agent": "الوكيل",
+  "file": "الملف",
+  "noData": "لا توجد بيانات",
+  "loading": "جاري التحميل...",
+  "retry": "إعادة المحاولة",
+  "create": "إنشاء",
+  "edit": "تعديل",
+  "name": "الاسم",
+  "description": "الوصف",
+  "status": "الحالة",
+  "actions": "الإجراءات",
+  "details": "التفاصيل",
+  "back": "رجوع",
+  "submit": "إرسال",
+  "close": "إغلاق",
+  "searchPlaceholder": "بحث...",
+  "noResults": "لا توجد نتائج",
+  "upload": "رفع",
+  "download": "تنزيل",
+  "view": "عرض",
+  "createdAt": "تاريخ الإنشاء",
+  "updatedAt": "تاريخ التحديث",
+  "size": "الحجم",
+  "operation": "العملية",
+  "success": "نجح",
+  "failed": "فشل",
+  "pleaseWait": "يرجى الانتظار...",
+  "areYouSure": "هل أنت متأكد؟",
+  "deleteConfirm": "هل أنت متأكد من حذف هذا العنصر؟",
+  "operationSuccess": "تمت العملية بنجاح",
+  "operationFailed": "فشلت العملية",
+  "networkError": "خطأ في الشبكة، يرجى التحقق من الاتصال",
+  "unknownError": "حدث خطأ غير معروف",
+  "createKnowledgeBase": "إنشاء قاعدة معرفة",
+  "knowledgeBaseName": "اسم قاعدة المعرفة",
+  "enterKnowledgeBaseName": "يرجى إدخال اسم قاعدة المعرفة",
+  "loadingFailed": "فشل التحميل",
+  "creating": "جاري الإنشاء...",
+  "createSuccess": "تم الإنشاء بنجاح",
+  "createFailed": "فشل الإنشاء، يرجى المحاولة مرة أخرى",
+  "noKnowledgeBase": "لا توجد قاعدة معرفة",
+  "documents": "المستندات",
+  "chunks": "الأجزاء",
+  "updated": "محدث",
+  "send": "إرسال",
+  "enterMessage": "أدخل الرسالة...",
+  "noChatHistory": "لا يوجد سجل محادثة",
+  "newChat": "محادثة جديدة",
+  "clear": "مسح",
+  "noAgents": "لا يوجد وكلاء",
+  "createAgent": "إنشاء وكيل",
+  "noFiles": "لا توجد ملفات",
+  "uploadFile": "رفع ملف",
+  "fileName": "اسم الملف",
+  "fileSize": "حجم الملف",
+  "uploadTime": "وقت الرفع",
+  "resetAgent": "إعادة تعيين الوكيل",
+  "resetAgentConfirm": "هل أنت متأكد من إعادة تعيين الوكيل؟ سيتم مسح سجل المحادثة الحالي.",
+  "reset": "إعادة تعيين",
+  "resetSuccess": "تمت إعادة التعيين بنجاح",
+  "resetFailed": "فشلت إعادة التعيين",
+  "thinking": "جاري التفكير...",
+  "you": "أنت",
+  "sendFailed": "فشل الإرسال: {message}",
+  "@sendFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "requestFailed": "فشل الطلب",
+  "stop": "إيقاف",
+  "createNewConversation": "إنشاء محادثة جديدة",
+  "conversationName": "اسم المحادثة",
+  "noConversations": "لا توجد محادثات",
+  "hideList": "إخفاء القائمة",
+  "showList": "إظهار القائمة",
+  "refreshConversationList": "تحديث قائمة المحادثات",
+  "selectConversation": "يرجى اختيار محادثة",
+  "loadConversationListFailed": "فشل تحميل قائمة المحادثات: {error}",
+  "@loadConversationListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "getConversationInfoFailed": "فشل الحصول على معلومات المحادثة",
+  "knowledgeBaseDetail": "تفاصيل قاعدة المعرفة",
+  "dataset": "مجموعة البيانات",
+  "retrievalTest": "اختبار الاسترجاع",
+  "config": "الإعدادات",
+  "searchDocuments": "البحث في المستندات...",
+  "noDocuments": "لا توجد مستندات",
+  "tokens": "الرموز",
+  "update": "تحديث",
+  "detail": "التفاصيل",
+  "parse": "تحليل",
+  "cancelParse": "إلغاء التحليل",
+  "deleteDocument": "حذف المستند",
+  "confirmDelete": "تأكيد الحذف",
+  "confirmDeleteDocument": "هل أنت متأكد من حذف هذا المستند؟",
+  "deleteSuccess": "تم الحذف بنجاح",
+  "deleteFailed": "فشل الحذف",
+  "totalDocuments": "إجمالي {count} مستند",
+  "@totalDocuments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "الصفحة السابقة",
+  "nextPage": "الصفحة التالية",
+  "id": "المعرف",
+  "suffix": "اللاحقة",
+  "chunkCount": "عدد الأجزاء",
+  "tokenCount": "عدد الرموز",
+  "createTime": "وقت الإنشاء",
+  "updateTime": "وقت التحديث",
+  "notStarted": "لم يبدأ",
+  "parsing": "جاري التحليل",
+  "cancelled": "ملغى",
+  "completed": "مكتمل",
+  "downloading": "جاري التنزيل...",
+  "downloadSuccess": "تم التنزيل بنجاح: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadFailed": "فشل التنزيل",
+  "startingParse": "جاري بدء التحليل...",
+  "parseStarted": "تم بدء التحليل",
+  "startParseFailed": "فشل بدء التحليل",
+  "confirmCancel": "تأكيد الإلغاء",
+  "confirmCancelParse": "هل أنت متأكد من إلغاء تحليل المستند \"{name}\"?",
+  "@confirmCancelParse": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancellingParse": "جاري إلغاء التحليل...",
+  "parseCancelled": "تم إلغاء التحليل",
+  "cancelParseFailed": "فشل إلغاء التحليل",
+  "uploading": "جاري الرفع...",
+  "uploadSuccess": "تم الرفع بنجاح، جاري بدء التحليل...",
+  "uploadFailed": "فشل الرفع",
+  "partialUploadFailed": "فشل رفع بعض الملفات",
+  "loadDocumentsFailed": "فشل تحميل المستندات: {error}",
+  "@loadDocumentsFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterQuestionForRetrieval": "أدخل سؤالاً لاختبار الاسترجاع...",
+  "test": "اختبار",
+  "retrieving": "جاري الاسترجاع...",
+  "enterQuestionForRetrievalTest": "يرجى إدخال سؤال لاختبار الاسترجاع",
+  "retrievalResults": "نتائج الاسترجاع (إجمالي {count})",
+  "@retrievalResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "similarity": "التشابه: {percent}%",
+  "@similarity": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "retrievalTestFailed": "فشل اختبار الاسترجاع: {error}",
+  "@retrievalTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "basicInfo": "المعلومات الأساسية",
+  "knowledgeBaseNameRequired": "يرجى إدخال اسم قاعدة المعرفة",
+  "knowledgeBaseImage": "صورة قاعدة المعرفة",
+  "uploadImage": "رفع صورة",
+  "imageSelected": "تم اختيار الصورة",
+  "fileNotExists": "الملف غير موجود",
+  "selectImageSource": "اختر مصدر الصورة",
+  "selectFromGallery": "اختر من المعرض",
+  "takePhoto": "التقاط صورة",
+  "imageTooLarge": "حجم الصورة لا يمكن أن يتجاوز 4 ميجابايت",
+  "selectImageFailed": "فشل اختيار الصورة: {error}",
+  "@selectImageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "permission": "الصلاحية",
+  "permissionOnlyMe": "أنا فقط",
+  "permissionTeam": "الفريق",
+  "documentLanguage": "لغة المستند",
+  "languageChinese": "الصينية",
+  "languageEnglish": "الإنجليزية",
+  "parserNaive": "عام",
+  "parserQa": "سؤال وجواب",
+  "parserResume": "السيرة الذاتية",
+  "parserManual": "يدوي",
+  "parserTable": "جدول",
+  "parserPaper": "ورقة",
+  "parserBook": "كتاب",
+  "parserLaws": "القوانين",
+  "parserPresentation": "عرض تقديمي",
+  "parserPicture": "صورة",
+  "parserOne": "صفحة واحدة",
+  "parserAudio": "صوتي",
+  "parserEmail": "بريد إلكتروني",
+  "parserTag": "علامة",
+  "parserKnowledgeGraph": "رسم بياني للمعرفة",
+  "parseConfig": "إعدادات التحليل",
+  "sliceMethod": "طريقة التقطيع (المحلل)",
+  "sliceMethodHelper": "اختر طريقة تحليل وتقطيع المستند",
+  "embeddingModel": "نموذج التضمين",
+  "embeddingModelHelper": "اختر نموذجاً لإنشاء متجهات التضمين",
+  "embeddingModelWarning": "ملاحظة: تغيير نموذج التضمين عند وجود أجزاء يتطلب حذف جميع الأجزاء",
+  "noModelsAvailable": "لا توجد نماذج متاحة",
+  "suggestedChunkSize": "حجم الجزء المقترح (عدد الرموز)",
+  "chunkSizeHelper": "تعيين عتبة الرموز لإنشاء الأجزاء",
+  "textDelimiter": "محدد النص",
+  "delimiterHelper": "محدد لتقسيم النص، على سبيل المثال \\n",
+  "layoutRecognition": "التعرف على التخطيط",
+  "layoutRecognitionHelper": "اختر طريقة التعرف على التخطيط",
+  "plainText": "نص عادي",
+  "pageRank": "ترتيب الصفحة",
+  "pageRankHelper": "قيمة ترتيب الصفحة لترتيب نتائج البحث",
+  "advancedOptions": "خيارات متقدمة",
+  "autoKeywordsCount": "عدد الكلمات المفتاحية المستخرجة تلقائياً",
+  "autoKeywordsHelper": "0 يعني عدم الاستخراج",
+  "autoQuestionsCount": "عدد الأسئلة المستخرجة تلقائياً",
+  "autoQuestionsHelper": "0 يعني عدم الاستخراج",
+  "tableToHtml": "جدول إلى HTML",
+  "tableToHtmlSubtitle": "تحويل جداول Excel إلى تنسيق HTML",
+  "useRaptor": "استخدام استراتيجية RAPTOR لتحسين الاسترجاع",
+  "useRaptorSubtitle": "تفعيل استراتيجية RAPTOR لتحسين تأثير الاسترجاع",
+  "extractKnowledgeGraph": "استخراج رسم بياني للمعرفة",
+  "extractKnowledgeGraphSubtitle": "تفعيل استخراج رسم بياني للمعرفة",
+  "saveConfig": "حفظ الإعدادات",
+  "saveSuccess": "تم الحفظ بنجاح",
+  "fileManagement": "إدارة الملفات",
+  "rootDirectory": "الدليل الجذري",
+  "currentFolder": "المجلد الحالي",
+  "searchFiles": "البحث في الملفات...",
+  "folder": "مجلد",
+  "preview": "معاينة",
+  "cannotOpenPreview": "لا يمكن فتح المعاينة: {url}",
+  "@cannotOpenPreview": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "previewFailed": "فشلت المعاينة: {error}",
+  "@previewFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteFile": "هل أنت متأكد من حذف \"{name}\"?",
+  "@confirmDeleteFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalFiles": "إجمالي {count} ملف",
+  "@totalFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "بدون اسم",
+  "loadFailed": "فشل التحميل: {error}",
+  "@loadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAgents": "إجمالي {count} وكيل",
+  "@totalAgents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAgents": "البحث في الوكلاء...",
+  "noDescription": "لا يوجد وصف",
+  "createNewDialog": "إنشاء حوار جديد",
+  "dialogName": "اسم الحوار",
+  "descriptionOptional": "الوصف (اختياري)",
+  "noDialogs": "لا توجد حوارات",
+  "selectKnowledgeBase": "اختر قاعدة المعرفة:",
+  "pleaseSelectAtLeastOneKnowledgeBase": "يرجى اختيار قاعدة معرفة واحدة على الأقل",
+  "enterQuestion": "أدخل سؤالاً...",
+  "ask": "اسأل",
+  "answer": "الإجابة:",
+  "relatedFiles": "الملفات ذات الصلة:",
+  "relatedQuestions": "الأسئلة ذات الصلة:",
+  "pleaseSelectKnowledgeBaseAndEnterQuestion": "يرجى اختيار قاعدة المعرفة وإدخال سؤال للبحث",
+  "loadKnowledgeBaseFailed": "فشل تحميل قاعدة المعرفة: {error}",
+  "@loadKnowledgeBaseFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askQuestionFailed": "فشل طرح السؤال: {error}",
+  "@askQuestionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exampleProduction": "مثال: الإنتاج"
+}

@@ -17,9 +17,33 @@ class LocaleProvider with ChangeNotifier {
     final systemLocales = ui.PlatformDispatcher.instance.locales;
     if (systemLocales.isNotEmpty) {
       final systemLocale = systemLocales.first;
-      // 检查是否支持中文
-      if (systemLocale.languageCode == 'zh') {
+      final languageCode = systemLocale.languageCode;
+      final countryCode = systemLocale.countryCode;
+      
+      // 检查支持的语言
+      if (languageCode == 'zh') {
+        // 繁体中文
+        if (countryCode == 'TW' || countryCode == 'HK' || countryCode == 'MO') {
+          return const Locale('zh', 'TW');
+        }
+        // 简体中文
         return const Locale('zh');
+      } else if (languageCode == 'ja') {
+        return const Locale('ja');
+      } else if (languageCode == 'ko') {
+        return const Locale('ko');
+      } else if (languageCode == 'de') {
+        return const Locale('de');
+      } else if (languageCode == 'es') {
+        return const Locale('es');
+      } else if (languageCode == 'fr') {
+        return const Locale('fr');
+      } else if (languageCode == 'it') {
+        return const Locale('it');
+      } else if (languageCode == 'ru') {
+        return const Locale('ru');
+      } else if (languageCode == 'ar') {
+        return const Locale('ar');
       }
       // 默认返回英文
       return const Locale('en');
@@ -38,7 +62,13 @@ class LocaleProvider with ChangeNotifier {
           // 使用系统语言
           _locale = null; // null 表示使用系统语言
         } else {
-          _locale = Locale(localeCode);
+          // 解析语言代码（可能包含国家代码）
+          final parts = localeCode.split('_');
+          if (parts.length == 2) {
+            _locale = Locale(parts[0], parts[1]);
+          } else {
+            _locale = Locale(localeCode);
+          }
         }
       } else {
         // 如果没有保存的设置，使用系统语言
@@ -62,7 +92,11 @@ class LocaleProvider with ChangeNotifier {
         await prefs.setString(_localeKey, 'system');
         _locale = null;
       } else {
-        await prefs.setString(_localeKey, locale.languageCode);
+        // 保存完整的语言代码（包括国家代码）
+        final localeCode = locale.countryCode != null 
+            ? '${locale.languageCode}_${locale.countryCode}'
+            : locale.languageCode;
+        await prefs.setString(_localeKey, localeCode);
         _locale = locale;
       }
       notifyListeners();

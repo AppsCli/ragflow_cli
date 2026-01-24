@@ -1,0 +1,490 @@
+{
+  "@@locale": "ko",
+  "appTitle": "RAGFlow",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "login": "로그인",
+  "email": "이메일",
+  "password": "비밀번호",
+  "serverSettings": "서버 설정",
+  "addServer": "서버 추가",
+  "serverName": "서버 이름 (선택사항)",
+  "serverAddress": "서버 주소",
+  "exampleServerAddress": "예: http://192.168.1.100:9380",
+  "activate": "활성화",
+  "delete": "삭제",
+  "active": "활성",
+  "confirm": "확인",
+  "cancel": "취소",
+  "save": "저장",
+  "deleteServerConfirm": "서버 \"{serverName}\"을(를) 삭제하시겠습니까?",
+  "@deleteServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "switchServerConfirm": "서버 \"{serverName}\"(으)로 전환하면 다시 로그인해야 합니다. 계속하시겠습니까?",
+  "@switchServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "currentServer": "현재 서버: {serverAddress}",
+  "@currentServer": {
+    "placeholders": {
+      "serverAddress": {
+        "type": "String"
+      }
+    }
+  },
+  "serverAdded": "서버가 추가되었습니다",
+  "serverDeleted": "서버가 삭제되었습니다",
+  "switchFailed": "전환 실패",
+  "addFailed": "추가 실패, 주소 형식을 확인하세요",
+  "saveFailed": "저장 실패",
+  "serverAddressRequired": "서버 주소를 입력하세요",
+  "serverAddressFormatError": "주소는 http:// 또는 https://로 시작해야 합니다",
+  "serverList": "서버 목록",
+  "noServerConfig": "서버 설정 없음",
+  "addServerHint": "아래 버튼을 눌러 서버를 추가하세요",
+  "systemVersion": "RAGFlow 버전",
+  "systemStatus": "시스템 상태",
+  "refresh": "새로고침",
+  "cannotGetSystemStatus": "시스템 상태를 가져올 수 없습니다",
+  "serverAddressHint": "서버 주소는 전체 URL이어야 합니다. 예:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com",
+  "documentEngine": "문서 엔진",
+  "storage": "스토리지",
+  "database": "데이터베이스",
+  "redis": "Redis",
+  "normal": "정상",
+  "abnormal": "이상",
+  "unknown": "알 수 없음",
+  "responseTime": "응답 시간: {elapsed}ms",
+  "@responseTime": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "type": "유형",
+  "@type": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "storageInfo": "스토리지: {storage}",
+  "@storageInfo": {
+    "placeholders": {
+      "storage": {
+        "type": "String"
+      }
+    }
+  },
+  "databaseInfo": "데이터베이스: {database}",
+  "@databaseInfo": {
+    "placeholders": {
+      "database": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "오류: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "언어",
+  "languageSettings": "언어 설정",
+  "followSystem": "시스템 따라가기",
+  "chinese": "중국어",
+  "english": "영어",
+  "traditionalChinese": "번체 중국어",
+  "japanese": "일본어",
+  "korean": "한국어",
+  "german": "독일어",
+  "spanish": "스페인어",
+  "french": "프랑스어",
+  "italian": "이탈리아어",
+  "russian": "러시아어",
+  "arabic": "아랍어",
+  "selectLanguage": "언어 선택",
+  "account": "계정",
+  "changePassword": "비밀번호 변경",
+  "logout": "로그아웃",
+  "confirmLogout": "로그아웃하시겠습니까?",
+  "currentPassword": "현재 비밀번호",
+  "newPassword": "새 비밀번호",
+  "confirmNewPassword": "새 비밀번호 확인",
+  "passwordChanged": "비밀번호가 변경되었습니다",
+  "passwordChangeFailed": "비밀번호 변경 실패, 현재 비밀번호를 확인하세요",
+  "passwordRequired": "비밀번호를 입력하세요",
+  "newPasswordRequired": "새 비밀번호를 입력하세요",
+  "confirmPasswordRequired": "새 비밀번호를 확인하세요",
+  "passwordTooShort": "비밀번호는 8자 이상이어야 합니다",
+  "passwordsDoNotMatch": "두 비밀번호가 일치하지 않습니다",
+  "emailRequired": "이메일을 입력하세요",
+  "invalidEmail": "유효한 이메일 주소를 입력하세요",
+  "loginFailed": "로그인 실패, 이메일과 비밀번호를 확인하세요",
+  "configureServerAddress": "서버 주소 설정",
+  "pleaseConfigureServer": "로그인 전에 서버 주소를 설정하세요",
+  "goToSettings": "설정으로 이동",
+  "setServerAddress": "서버 주소 설정",
+  "knowledgeBase": "지식 베이스",
+  "chat": "채팅",
+  "search": "검색",
+  "agent": "에이전트",
+  "file": "파일",
+  "noData": "데이터 없음",
+  "loading": "로딩 중...",
+  "retry": "재시도",
+  "create": "만들기",
+  "edit": "편집",
+  "name": "이름",
+  "description": "설명",
+  "status": "상태",
+  "actions": "작업",
+  "details": "세부정보",
+  "back": "뒤로",
+  "submit": "제출",
+  "close": "닫기",
+  "searchPlaceholder": "검색...",
+  "noResults": "결과 없음",
+  "upload": "업로드",
+  "download": "다운로드",
+  "view": "보기",
+  "createdAt": "생성일",
+  "updatedAt": "수정일",
+  "size": "크기",
+  "operation": "작업",
+  "success": "성공",
+  "failed": "실패",
+  "pleaseWait": "잠시만 기다려 주세요...",
+  "areYouSure": "확인하시겠습니까?",
+  "deleteConfirm": "이 항목을 삭제하시겠습니까?",
+  "operationSuccess": "작업이 완료되었습니다",
+  "operationFailed": "작업 실패",
+  "networkError": "네트워크 오류, 연결을 확인하세요",
+  "unknownError": "알 수 없는 오류가 발생했습니다",
+  "createKnowledgeBase": "지식 베이스 만들기",
+  "knowledgeBaseName": "지식 베이스 이름",
+  "enterKnowledgeBaseName": "지식 베이스 이름을 입력하세요",
+  "loadingFailed": "로딩 실패",
+  "creating": "만드는 중...",
+  "createSuccess": "생성되었습니다",
+  "createFailed": "생성 실패, 다시 시도하세요",
+  "noKnowledgeBase": "지식 베이스 없음",
+  "documents": "문서",
+  "chunks": "청크",
+  "updated": "업데이트됨",
+  "send": "보내기",
+  "enterMessage": "메시지 입력...",
+  "noChatHistory": "대화 기록 없음",
+  "newChat": "새 채팅",
+  "clear": "지우기",
+  "noAgents": "에이전트 없음",
+  "createAgent": "에이전트 만들기",
+  "noFiles": "파일 없음",
+  "uploadFile": "파일 업로드",
+  "fileName": "파일 이름",
+  "fileSize": "파일 크기",
+  "uploadTime": "업로드 시간",
+  "resetAgent": "에이전트 초기화",
+  "resetAgentConfirm": "에이전트를 초기화하시겠습니까? 현재 대화 기록이 삭제됩니다.",
+  "reset": "초기화",
+  "resetSuccess": "초기화되었습니다",
+  "resetFailed": "초기화 실패",
+  "thinking": "생각 중...",
+  "you": "사용자",
+  "sendFailed": "전송 실패: {message}",
+  "@sendFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "requestFailed": "요청 실패",
+  "stop": "중지",
+  "createNewConversation": "새 대화 만들기",
+  "conversationName": "대화 이름",
+  "noConversations": "대화 없음",
+  "hideList": "목록 숨기기",
+  "showList": "목록 표시",
+  "refreshConversationList": "대화 목록 새로고침",
+  "selectConversation": "대화를 선택하세요",
+  "loadConversationListFailed": "대화 목록 로드 실패: {error}",
+  "@loadConversationListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "getConversationInfoFailed": "대화 정보를 가져오지 못했습니다",
+  "knowledgeBaseDetail": "지식 베이스 세부정보",
+  "dataset": "데이터셋",
+  "retrievalTest": "검색 테스트",
+  "config": "설정",
+  "searchDocuments": "문서 검색...",
+  "noDocuments": "문서 없음",
+  "tokens": "토큰",
+  "update": "업데이트",
+  "detail": "세부정보",
+  "parse": "파싱",
+  "cancelParse": "파싱 취소",
+  "deleteDocument": "문서 삭제",
+  "confirmDelete": "삭제 확인",
+  "confirmDeleteDocument": "이 문서를 삭제하시겠습니까?",
+  "deleteSuccess": "삭제되었습니다",
+  "deleteFailed": "삭제 실패",
+  "totalDocuments": "총 {count}개 문서",
+  "@totalDocuments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "이전 페이지",
+  "nextPage": "다음 페이지",
+  "id": "ID",
+  "suffix": "접미사",
+  "chunkCount": "청크 수",
+  "tokenCount": "토큰 수",
+  "createTime": "생성 시간",
+  "updateTime": "수정 시간",
+  "notStarted": "시작 안 함",
+  "parsing": "파싱 중",
+  "cancelled": "취소됨",
+  "completed": "완료",
+  "downloading": "다운로드 중...",
+  "downloadSuccess": "다운로드 완료: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadFailed": "다운로드 실패",
+  "startingParse": "파싱 시작 중...",
+  "parseStarted": "파싱이 시작되었습니다",
+  "startParseFailed": "파싱 시작 실패",
+  "confirmCancel": "취소 확인",
+  "confirmCancelParse": "문서 \"{name}\" 파싱을 취소하시겠습니까?",
+  "@confirmCancelParse": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancellingParse": "파싱 취소 중...",
+  "parseCancelled": "파싱이 취소되었습니다",
+  "cancelParseFailed": "파싱 취소 실패",
+  "uploading": "업로드 중...",
+  "uploadSuccess": "업로드 완료, 파싱 시작 중...",
+  "uploadFailed": "업로드 실패",
+  "partialUploadFailed": "일부 파일 업로드 실패",
+  "loadDocumentsFailed": "문서 로드 실패: {error}",
+  "@loadDocumentsFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterQuestionForRetrieval": "검색 테스트용 질문 입력...",
+  "test": "테스트",
+  "retrieving": "검색 중...",
+  "enterQuestionForRetrievalTest": "검색 테스트용 질문을 입력하세요",
+  "retrievalResults": "검색 결과 (총 {count}건)",
+  "@retrievalResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "similarity": "유사도: {percent}%",
+  "@similarity": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "retrievalTestFailed": "검색 테스트 실패: {error}",
+  "@retrievalTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "basicInfo": "기본 정보",
+  "knowledgeBaseNameRequired": "지식 베이스 이름을 입력하세요",
+  "knowledgeBaseImage": "지식 베이스 이미지",
+  "uploadImage": "이미지 업로드",
+  "imageSelected": "이미지 선택됨",
+  "fileNotExists": "파일이 없습니다",
+  "selectImageSource": "이미지 소스 선택",
+  "selectFromGallery": "갤러리에서 선택",
+  "takePhoto": "사진 촬영",
+  "imageTooLarge": "이미지 크기는 4MB를 초과할 수 없습니다",
+  "selectImageFailed": "이미지 선택 실패: {error}",
+  "@selectImageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "permission": "권한",
+  "permissionOnlyMe": "나만",
+  "permissionTeam": "팀",
+  "documentLanguage": "문서 언어",
+  "languageChinese": "중국어",
+  "languageEnglish": "영어",
+  "parserNaive": "일반",
+  "parserQa": "Q&A",
+  "parserResume": "이력서",
+  "parserManual": "수동",
+  "parserTable": "표",
+  "parserPaper": "논문",
+  "parserBook": "책",
+  "parserLaws": "법률",
+  "parserPresentation": "프레젠테이션",
+  "parserPicture": "이미지",
+  "parserOne": "한 페이지",
+  "parserAudio": "오디오",
+  "parserEmail": "이메일",
+  "parserTag": "태그",
+  "parserKnowledgeGraph": "지식 그래프",
+  "parseConfig": "파싱 설정",
+  "sliceMethod": "슬라이스 방법(파서)",
+  "sliceMethodHelper": "문서 파싱 및 슬라이싱 방법 선택",
+  "embeddingModel": "임베딩 모델",
+  "embeddingModelHelper": "임베딩 벡터 생성용 모델 선택",
+  "embeddingModelWarning": "참고: 청크가 있을 때 임베딩 모델 변경 시 모든 청크를 삭제해야 합니다",
+  "noModelsAvailable": "사용 가능한 모델 없음",
+  "suggestedChunkSize": "권장 청크 크기(토큰 수)",
+  "chunkSizeHelper": "청크 생성용 토큰 임계값 설정",
+  "textDelimiter": "텍스트 구분자",
+  "delimiterHelper": "텍스트 분할용 구분자, 예: \\n",
+  "layoutRecognition": "레이아웃 인식",
+  "layoutRecognitionHelper": "레이아웃 인식 방법 선택",
+  "plainText": "일반 텍스트",
+  "pageRank": "페이지 순위",
+  "pageRankHelper": "검색 결과 정렬용 페이지 순위 값",
+  "advancedOptions": "고급 옵션",
+  "autoKeywordsCount": "자동 키워드 추출 수",
+  "autoKeywordsHelper": "0은 추출 안 함",
+  "autoQuestionsCount": "자동 질문 추출 수",
+  "autoQuestionsHelper": "0은 추출 안 함",
+  "tableToHtml": "표를 HTML로",
+  "tableToHtmlSubtitle": "Excel 표를 HTML 형식으로 변환",
+  "useRaptor": "RAPTOR 전략으로 검색 향상",
+  "useRaptorSubtitle": "RAPTOR 전략 사용으로 검색 효과 향상",
+  "extractKnowledgeGraph": "지식 그래프 추출",
+  "extractKnowledgeGraphSubtitle": "지식 그래프 추출 사용",
+  "saveConfig": "설정 저장",
+  "saveSuccess": "저장되었습니다",
+  "fileManagement": "파일 관리",
+  "rootDirectory": "루트 디렉토리",
+  "currentFolder": "현재 폴더",
+  "searchFiles": "파일 검색...",
+  "folder": "폴더",
+  "preview": "미리보기",
+  "cannotOpenPreview": "미리보기를 열 수 없습니다: {url}",
+  "@cannotOpenPreview": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "previewFailed": "미리보기 실패: {error}",
+  "@previewFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteFile": "\"{name}\"을(를) 삭제하시겠습니까?",
+  "@confirmDeleteFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalFiles": "총 {count}개 파일",
+  "@totalFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "이름 없음",
+  "loadFailed": "로드 실패: {error}",
+  "@loadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAgents": "총 {count}개 에이전트",
+  "@totalAgents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAgents": "에이전트 검색...",
+  "noDescription": "설명 없음",
+  "createNewDialog": "새 대화 만들기",
+  "dialogName": "대화 이름",
+  "descriptionOptional": "설명 (선택사항)",
+  "noDialogs": "대화 없음",
+  "selectKnowledgeBase": "지식 베이스 선택:",
+  "pleaseSelectAtLeastOneKnowledgeBase": "최소 하나의 지식 베이스를 선택하세요",
+  "enterQuestion": "질문 입력...",
+  "ask": "질문",
+  "answer": "답변:",
+  "relatedFiles": "관련 파일:",
+  "relatedQuestions": "관련 질문:",
+  "pleaseSelectKnowledgeBaseAndEnterQuestion": "지식 베이스를 선택하고 검색할 질문을 입력하세요",
+  "loadKnowledgeBaseFailed": "지식 베이스 로드 실패: {error}",
+  "@loadKnowledgeBaseFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askQuestionFailed": "질문 실패: {error}",
+  "@askQuestionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exampleProduction": "예: 프로덕션"
+}

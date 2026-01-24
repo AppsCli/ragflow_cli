@@ -1,0 +1,490 @@
+{
+  "@@locale": "ja",
+  "appTitle": "RAGFlow",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "login": "ログイン",
+  "email": "メール",
+  "password": "パスワード",
+  "serverSettings": "サーバー設定",
+  "addServer": "サーバーを追加",
+  "serverName": "サーバー名（任意）",
+  "serverAddress": "サーバーアドレス",
+  "exampleServerAddress": "例: http://192.168.1.100:9380",
+  "activate": "有効化",
+  "delete": "削除",
+  "active": "有効",
+  "confirm": "確認",
+  "cancel": "キャンセル",
+  "save": "保存",
+  "deleteServerConfirm": "サーバー「{serverName}」を削除してもよろしいですか？",
+  "@deleteServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "switchServerConfirm": "サーバー「{serverName}」に切り替えると再ログインが必要です。続行しますか？",
+  "@switchServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "currentServer": "現在のサーバー: {serverAddress}",
+  "@currentServer": {
+    "placeholders": {
+      "serverAddress": {
+        "type": "String"
+      }
+    }
+  },
+  "serverAdded": "サーバーを追加しました",
+  "serverDeleted": "サーバーを削除しました",
+  "switchFailed": "切り替えに失敗しました",
+  "addFailed": "追加に失敗しました。アドレス形式を確認してください",
+  "saveFailed": "保存に失敗しました",
+  "serverAddressRequired": "サーバーアドレスを入力してください",
+  "serverAddressFormatError": "アドレスは http:// または https:// で始める必要があります",
+  "serverList": "サーバー一覧",
+  "noServerConfig": "サーバー設定がありません",
+  "addServerHint": "下のボタンをクリックしてサーバーを追加",
+  "systemVersion": "RAGFlow バージョン",
+  "systemStatus": "システム状態",
+  "refresh": "更新",
+  "cannotGetSystemStatus": "システム状態を取得できません",
+  "serverAddressHint": "サーバーアドレスは完全なURLにしてください。例:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com",
+  "documentEngine": "ドキュメントエンジン",
+  "storage": "ストレージ",
+  "database": "データベース",
+  "redis": "Redis",
+  "normal": "正常",
+  "abnormal": "異常",
+  "unknown": "不明",
+  "responseTime": "応答時間: {elapsed}ms",
+  "@responseTime": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "type": "タイプ",
+  "@type": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "storageInfo": "ストレージ: {storage}",
+  "@storageInfo": {
+    "placeholders": {
+      "storage": {
+        "type": "String"
+      }
+    }
+  },
+  "databaseInfo": "データベース: {database}",
+  "@databaseInfo": {
+    "placeholders": {
+      "database": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "エラー: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "言語",
+  "languageSettings": "言語設定",
+  "followSystem": "システムに合わせる",
+  "chinese": "中国語",
+  "english": "英語",
+  "traditionalChinese": "繁体字中国語",
+  "japanese": "日本語",
+  "korean": "韓国語",
+  "german": "ドイツ語",
+  "spanish": "スペイン語",
+  "french": "フランス語",
+  "italian": "イタリア語",
+  "russian": "ロシア語",
+  "arabic": "アラビア語",
+  "selectLanguage": "言語を選択",
+  "account": "アカウント",
+  "changePassword": "パスワード変更",
+  "logout": "ログアウト",
+  "confirmLogout": "ログアウトしますか？",
+  "currentPassword": "現在のパスワード",
+  "newPassword": "新しいパスワード",
+  "confirmNewPassword": "新しいパスワード（確認）",
+  "passwordChanged": "パスワードを変更しました",
+  "passwordChangeFailed": "パスワードの変更に失敗しました。現在のパスワードを確認してください",
+  "passwordRequired": "パスワードを入力してください",
+  "newPasswordRequired": "新しいパスワードを入力してください",
+  "confirmPasswordRequired": "新しいパスワードを確認してください",
+  "passwordTooShort": "パスワードは8文字以上にしてください",
+  "passwordsDoNotMatch": "パスワードが一致しません",
+  "emailRequired": "メールアドレスを入力してください",
+  "invalidEmail": "有効なメールアドレスを入力してください",
+  "loginFailed": "ログインに失敗しました。メールとパスワードを確認してください",
+  "configureServerAddress": "サーバーアドレスを設定",
+  "pleaseConfigureServer": "ログインする前にサーバーアドレスを設定してください",
+  "goToSettings": "設定へ",
+  "setServerAddress": "サーバーアドレスを設定",
+  "knowledgeBase": "ナレッジベース",
+  "chat": "チャット",
+  "search": "検索",
+  "agent": "エージェント",
+  "file": "ファイル",
+  "noData": "データがありません",
+  "loading": "読み込み中...",
+  "retry": "再試行",
+  "create": "作成",
+  "edit": "編集",
+  "name": "名前",
+  "description": "説明",
+  "status": "状態",
+  "actions": "操作",
+  "details": "詳細",
+  "back": "戻る",
+  "submit": "送信",
+  "close": "閉じる",
+  "searchPlaceholder": "検索...",
+  "noResults": "結果がありません",
+  "upload": "アップロード",
+  "download": "ダウンロード",
+  "view": "表示",
+  "createdAt": "作成日時",
+  "updatedAt": "更新日時",
+  "size": "サイズ",
+  "operation": "操作",
+  "success": "成功",
+  "failed": "失敗",
+  "pleaseWait": "お待ちください...",
+  "areYouSure": "よろしいですか？",
+  "deleteConfirm": "この項目を削除しますか？",
+  "operationSuccess": "操作が完了しました",
+  "operationFailed": "操作に失敗しました",
+  "networkError": "ネットワークエラー。接続を確認してください",
+  "unknownError": "不明なエラーが発生しました",
+  "createKnowledgeBase": "ナレッジベースを作成",
+  "knowledgeBaseName": "ナレッジベース名",
+  "enterKnowledgeBaseName": "ナレッジベース名を入力してください",
+  "loadingFailed": "読み込みに失敗しました",
+  "creating": "作成中...",
+  "createSuccess": "作成しました",
+  "createFailed": "作成に失敗しました。もう一度お試しください",
+  "noKnowledgeBase": "ナレッジベースがありません",
+  "documents": "ドキュメント",
+  "chunks": "チャンク",
+  "updated": "更新",
+  "send": "送信",
+  "enterMessage": "メッセージを入力...",
+  "noChatHistory": "チャット履歴がありません",
+  "newChat": "新しいチャット",
+  "clear": "クリア",
+  "noAgents": "エージェントがありません",
+  "createAgent": "エージェントを作成",
+  "noFiles": "ファイルがありません",
+  "uploadFile": "ファイルをアップロード",
+  "fileName": "ファイル名",
+  "fileSize": "ファイルサイズ",
+  "uploadTime": "アップロード日時",
+  "resetAgent": "エージェントをリセット",
+  "resetAgentConfirm": "エージェントをリセットしますか？現在の会話履歴が削除されます。",
+  "reset": "リセット",
+  "resetSuccess": "リセットしました",
+  "resetFailed": "リセットに失敗しました",
+  "thinking": "考え中...",
+  "you": "あなた",
+  "sendFailed": "送信に失敗しました: {message}",
+  "@sendFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "requestFailed": "リクエストに失敗しました",
+  "stop": "停止",
+  "createNewConversation": "新しい会話を作成",
+  "conversationName": "会話名",
+  "noConversations": "会話がありません",
+  "hideList": "リストを隠す",
+  "showList": "リストを表示",
+  "refreshConversationList": "会話リストを更新",
+  "selectConversation": "会話を選択してください",
+  "loadConversationListFailed": "会話リストの読み込みに失敗しました: {error}",
+  "@loadConversationListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "getConversationInfoFailed": "会話情報の取得に失敗しました",
+  "knowledgeBaseDetail": "ナレッジベース詳細",
+  "dataset": "データセット",
+  "retrievalTest": "検索テスト",
+  "config": "設定",
+  "searchDocuments": "ドキュメントを検索...",
+  "noDocuments": "ドキュメントがありません",
+  "tokens": "トークン",
+  "update": "更新",
+  "detail": "詳細",
+  "parse": "解析",
+  "cancelParse": "解析をキャンセル",
+  "deleteDocument": "ドキュメントを削除",
+  "confirmDelete": "削除の確認",
+  "confirmDeleteDocument": "このドキュメントを削除しますか？",
+  "deleteSuccess": "削除しました",
+  "deleteFailed": "削除に失敗しました",
+  "totalDocuments": "合計 {count} 件のドキュメント",
+  "@totalDocuments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "前のページ",
+  "nextPage": "次のページ",
+  "id": "ID",
+  "suffix": "拡張子",
+  "chunkCount": "チャンク数",
+  "tokenCount": "トークン数",
+  "createTime": "作成日時",
+  "updateTime": "更新日時",
+  "notStarted": "未開始",
+  "parsing": "解析中",
+  "cancelled": "キャンセル済み",
+  "completed": "完了",
+  "downloading": "ダウンロード中...",
+  "downloadSuccess": "ダウンロードしました: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadFailed": "ダウンロードに失敗しました",
+  "startingParse": "解析を開始しています...",
+  "parseStarted": "解析を開始しました",
+  "startParseFailed": "解析の開始に失敗しました",
+  "confirmCancel": "キャンセルの確認",
+  "confirmCancelParse": "ドキュメント「{name}」の解析をキャンセルしますか？",
+  "@confirmCancelParse": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancellingParse": "解析をキャンセルしています...",
+  "parseCancelled": "解析をキャンセルしました",
+  "cancelParseFailed": "解析のキャンセルに失敗しました",
+  "uploading": "アップロード中...",
+  "uploadSuccess": "アップロードしました。解析を開始しています...",
+  "uploadFailed": "アップロードに失敗しました",
+  "partialUploadFailed": "一部のファイルのアップロードに失敗しました",
+  "loadDocumentsFailed": "ドキュメントの読み込みに失敗しました: {error}",
+  "@loadDocumentsFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterQuestionForRetrieval": "検索テスト用の質問を入力...",
+  "test": "テスト",
+  "retrieving": "検索中...",
+  "enterQuestionForRetrievalTest": "検索テスト用の質問を入力してください",
+  "retrievalResults": "検索結果（合計 {count} 件）",
+  "@retrievalResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "similarity": "類似度: {percent}%",
+  "@similarity": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "retrievalTestFailed": "検索テストに失敗しました: {error}",
+  "@retrievalTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "basicInfo": "基本情報",
+  "knowledgeBaseNameRequired": "ナレッジベース名を入力してください",
+  "knowledgeBaseImage": "ナレッジベース画像",
+  "uploadImage": "画像をアップロード",
+  "imageSelected": "画像を選択しました",
+  "fileNotExists": "ファイルが存在しません",
+  "selectImageSource": "画像の取得元を選択",
+  "selectFromGallery": "ギャラリーから選択",
+  "takePhoto": "写真を撮る",
+  "imageTooLarge": "画像サイズは4MB以下にしてください",
+  "selectImageFailed": "画像の選択に失敗しました: {error}",
+  "@selectImageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "permission": "権限",
+  "permissionOnlyMe": "自分のみ",
+  "permissionTeam": "チーム",
+  "documentLanguage": "ドキュメント言語",
+  "languageChinese": "中国語",
+  "languageEnglish": "英語",
+  "parserNaive": "汎用",
+  "parserQa": "Q&A",
+  "parserResume": "履歴書",
+  "parserManual": "手動",
+  "parserTable": "表",
+  "parserPaper": "論文",
+  "parserBook": "書籍",
+  "parserLaws": "法令",
+  "parserPresentation": "プレゼン",
+  "parserPicture": "画像",
+  "parserOne": "1ページ",
+  "parserAudio": "音声",
+  "parserEmail": "メール",
+  "parserTag": "タグ",
+  "parserKnowledgeGraph": "知識グラフ",
+  "parseConfig": "解析設定",
+  "sliceMethod": "スライス方法（パーサー）",
+  "sliceMethodHelper": "ドキュメントの解析・スライス方法を選択",
+  "embeddingModel": "埋め込みモデル",
+  "embeddingModelHelper": "埋め込みベクトル生成用モデルを選択",
+  "embeddingModelWarning": "注意: チャンクがある状態で埋め込みモデルを変更するには、全チャンクの削除が必要です",
+  "noModelsAvailable": "利用可能なモデルがありません",
+  "suggestedChunkSize": "推奨チャンクサイズ（トークン数）",
+  "chunkSizeHelper": "チャンク作成のトークン閾値を設定",
+  "textDelimiter": "テキスト区切り",
+  "delimiterHelper": "テキスト分割用の区切り文字（例: \\n）",
+  "layoutRecognition": "レイアウト認識",
+  "layoutRecognitionHelper": "レイアウト認識方法を選択",
+  "plainText": "プレーンテキスト",
+  "pageRank": "ページランク",
+  "pageRankHelper": "検索結果の並び替え用ページランク値",
+  "advancedOptions": "詳細オプション",
+  "autoKeywordsCount": "自動キーワード抽出数",
+  "autoKeywordsHelper": "0は抽出しない",
+  "autoQuestionsCount": "自動質問抽出数",
+  "autoQuestionsHelper": "0は抽出しない",
+  "tableToHtml": "表をHTMLに",
+  "tableToHtmlSubtitle": "Excel表をHTML形式に変換",
+  "useRaptor": "RAPTOR戦略で検索を強化",
+  "useRaptorSubtitle": "RAPTOR戦略を有効にして検索効果を向上",
+  "extractKnowledgeGraph": "知識グラフを抽出",
+  "extractKnowledgeGraphSubtitle": "知識グラフ抽出を有効にする",
+  "saveConfig": "設定を保存",
+  "saveSuccess": "保存しました",
+  "fileManagement": "ファイル管理",
+  "rootDirectory": "ルートディレクトリ",
+  "currentFolder": "現在のフォルダ",
+  "searchFiles": "ファイルを検索...",
+  "folder": "フォルダ",
+  "preview": "プレビュー",
+  "cannotOpenPreview": "プレビューを開けません: {url}",
+  "@cannotOpenPreview": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "previewFailed": "プレビューに失敗しました: {error}",
+  "@previewFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteFile": "「{name}」を削除しますか？",
+  "@confirmDeleteFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalFiles": "合計 {count} 件のファイル",
+  "@totalFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "名前なし",
+  "loadFailed": "読み込みに失敗しました: {error}",
+  "@loadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAgents": "合計 {count} 件のエージェント",
+  "@totalAgents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAgents": "エージェントを検索...",
+  "noDescription": "説明なし",
+  "createNewDialog": "新しいダイアログを作成",
+  "dialogName": "ダイアログ名",
+  "descriptionOptional": "説明（任意）",
+  "noDialogs": "ダイアログがありません",
+  "selectKnowledgeBase": "ナレッジベースを選択:",
+  "pleaseSelectAtLeastOneKnowledgeBase": "1つ以上のナレッジベースを選択してください",
+  "enterQuestion": "質問を入力...",
+  "ask": "質問",
+  "answer": "回答:",
+  "relatedFiles": "関連ファイル:",
+  "relatedQuestions": "関連質問:",
+  "pleaseSelectKnowledgeBaseAndEnterQuestion": "ナレッジベースを選択し、検索する質問を入力してください",
+  "loadKnowledgeBaseFailed": "ナレッジベースの読み込みに失敗しました: {error}",
+  "@loadKnowledgeBaseFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askQuestionFailed": "質問に失敗しました: {error}",
+  "@askQuestionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exampleProduction": "例: 本番環境"
+}

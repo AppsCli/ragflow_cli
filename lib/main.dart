@@ -42,7 +42,16 @@ class MyApp extends StatelessWidget {
             ],
             supportedLocales: const [
               Locale('en'), // 英文
-              Locale('zh'), // 中文
+              Locale('zh'), // 简体中文
+              Locale('zh', 'TW'), // 繁体中文
+              Locale('ja'), // 日语
+              Locale('ko'), // 韩语
+              Locale('de'), // 德语
+              Locale('es'), // 西班牙语
+              Locale('fr'), // 法语
+              Locale('it'), // 意大利语
+              Locale('ru'), // 俄语
+              Locale('ar'), // 阿拉伯语
             ],
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),

@@ -1,0 +1,490 @@
+{
+  "@@locale": "es",
+  "appTitle": "RAGFlow",
+  "@appTitle": {
+    "description": "The application title"
+  },
+  "login": "Iniciar sesión",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "serverSettings": "Configuración del servidor",
+  "addServer": "Añadir servidor",
+  "serverName": "Nombre del servidor (opcional)",
+  "serverAddress": "Dirección del servidor",
+  "exampleServerAddress": "ej.: http://192.168.1.100:9380",
+  "activate": "Activar",
+  "delete": "Eliminar",
+  "active": "Activo",
+  "confirm": "Confirmar",
+  "cancel": "Cancelar",
+  "save": "Guardar",
+  "deleteServerConfirm": "¿Eliminar el servidor \"{serverName}\"?",
+  "@deleteServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "switchServerConfirm": "Al cambiar a \"{serverName}\" deberá iniciar sesión de nuevo. ¿Continuar?",
+  "@switchServerConfirm": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "currentServer": "Servidor actual: {serverAddress}",
+  "@currentServer": {
+    "placeholders": {
+      "serverAddress": {
+        "type": "String"
+      }
+    }
+  },
+  "serverAdded": "Servidor añadido",
+  "serverDeleted": "Servidor eliminado",
+  "switchFailed": "Error al cambiar",
+  "addFailed": "Error al añadir. Compruebe el formato de la dirección",
+  "saveFailed": "Error al guardar",
+  "serverAddressRequired": "Introduzca la dirección del servidor",
+  "serverAddressFormatError": "La dirección debe comenzar por http:// o https://",
+  "serverList": "Lista de servidores",
+  "noServerConfig": "Sin configuración de servidor",
+  "addServerHint": "Pulse el botón inferior para añadir un servidor",
+  "systemVersion": "Versión RAGFlow",
+  "systemStatus": "Estado del sistema",
+  "refresh": "Actualizar",
+  "cannotGetSystemStatus": "No se puede obtener el estado del sistema",
+  "serverAddressHint": "La dirección debe ser una URL completa. Ej.:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com",
+  "documentEngine": "Motor de documentos",
+  "storage": "Almacenamiento",
+  "database": "Base de datos",
+  "redis": "Redis",
+  "normal": "Normal",
+  "abnormal": "Anormal",
+  "unknown": "Desconocido",
+  "responseTime": "Tiempo de respuesta: {elapsed}ms",
+  "@responseTime": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "type": "Tipo",
+  "@type": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "storageInfo": "Almacenamiento: {storage}",
+  "@storageInfo": {
+    "placeholders": {
+      "storage": {
+        "type": "String"
+      }
+    }
+  },
+  "databaseInfo": "Base de datos: {database}",
+  "@databaseInfo": {
+    "placeholders": {
+      "database": {
+        "type": "String"
+      }
+    }
+  },
+  "error": "Error: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "Idioma",
+  "languageSettings": "Configuración de idioma",
+  "followSystem": "Usar el del sistema",
+  "chinese": "Chino",
+  "english": "Inglés",
+  "traditionalChinese": "Chino tradicional",
+  "japanese": "Japonés",
+  "korean": "Coreano",
+  "german": "Alemán",
+  "spanish": "Español",
+  "french": "Francés",
+  "italian": "Italiano",
+  "russian": "Ruso",
+  "arabic": "Arabic",
+  "selectLanguage": "Seleccionar idioma",
+  "account": "Cuenta",
+  "changePassword": "Cambiar contraseña",
+  "logout": "Cerrar sesión",
+  "confirmLogout": "¿Cerrar sesión?",
+  "currentPassword": "Contraseña actual",
+  "newPassword": "Nueva contraseña",
+  "confirmNewPassword": "Confirmar nueva contraseña",
+  "passwordChanged": "Contraseña cambiada",
+  "passwordChangeFailed": "Error al cambiar. Compruebe la contraseña actual",
+  "passwordRequired": "Introduzca la contraseña",
+  "newPasswordRequired": "Introduzca la nueva contraseña",
+  "confirmPasswordRequired": "Confirme la nueva contraseña",
+  "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+  "passwordsDoNotMatch": "Las contraseñas no coinciden",
+  "emailRequired": "Introduzca el correo",
+  "invalidEmail": "Introduzca un correo válido",
+  "loginFailed": "Error al iniciar sesión. Compruebe correo y contraseña",
+  "configureServerAddress": "Configurar dirección del servidor",
+  "pleaseConfigureServer": "Configure la dirección del servidor antes de iniciar sesión",
+  "goToSettings": "Ir a ajustes",
+  "setServerAddress": "Establecer dirección del servidor",
+  "knowledgeBase": "Base de conocimiento",
+  "chat": "Chat",
+  "search": "Buscar",
+  "agent": "Agente",
+  "file": "Archivo",
+  "noData": "Sin datos",
+  "loading": "Cargando…",
+  "retry": "Reintentar",
+  "create": "Crear",
+  "edit": "Editar",
+  "name": "Nombre",
+  "description": "Descripción",
+  "status": "Estado",
+  "actions": "Acciones",
+  "details": "Detalles",
+  "back": "Atrás",
+  "submit": "Enviar",
+  "close": "Cerrar",
+  "searchPlaceholder": "Buscar…",
+  "noResults": "Sin resultados",
+  "upload": "Subir",
+  "download": "Descargar",
+  "view": "Ver",
+  "createdAt": "Creado",
+  "updatedAt": "Actualizado",
+  "size": "Tamaño",
+  "operation": "Operación",
+  "success": "Éxito",
+  "failed": "Fallido",
+  "pleaseWait": "Espere…",
+  "areYouSure": "¿Está seguro?",
+  "deleteConfirm": "¿Eliminar este elemento?",
+  "operationSuccess": "Operación correcta",
+  "operationFailed": "Operación fallida",
+  "networkError": "Error de red. Compruebe la conexión",
+  "unknownError": "Error desconocido",
+  "createKnowledgeBase": "Crear base de conocimiento",
+  "knowledgeBaseName": "Nombre de la base de conocimiento",
+  "enterKnowledgeBaseName": "Introduzca el nombre de la base de conocimiento",
+  "loadingFailed": "Error al cargar",
+  "creating": "Creando…",
+  "createSuccess": "Creado",
+  "createFailed": "Error al crear. Inténtelo de nuevo",
+  "noKnowledgeBase": "Sin base de conocimiento",
+  "documents": "Documentos",
+  "chunks": "Fragmentos",
+  "updated": "Actualizado",
+  "send": "Enviar",
+  "enterMessage": "Escriba un mensaje…",
+  "noChatHistory": "Sin historial de chat",
+  "newChat": "Nuevo chat",
+  "clear": "Borrar",
+  "noAgents": "Sin agentes",
+  "createAgent": "Crear agente",
+  "noFiles": "Sin archivos",
+  "uploadFile": "Subir archivo",
+  "fileName": "Nombre del archivo",
+  "fileSize": "Tamaño del archivo",
+  "uploadTime": "Fecha de subida",
+  "resetAgent": "Restablecer agente",
+  "resetAgentConfirm": "¿Restablecer agente? Se borrará el historial de chat actual.",
+  "reset": "Restablecer",
+  "resetSuccess": "Restablecido",
+  "resetFailed": "Error al restablecer",
+  "thinking": "Pensando…",
+  "you": "Usted",
+  "sendFailed": "Error al enviar: {message}",
+  "@sendFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "requestFailed": "Error en la solicitud",
+  "stop": "Detener",
+  "createNewConversation": "Nueva conversación",
+  "conversationName": "Nombre de la conversación",
+  "noConversations": "Sin conversaciones",
+  "hideList": "Ocultar lista",
+  "showList": "Mostrar lista",
+  "refreshConversationList": "Actualizar lista de conversaciones",
+  "selectConversation": "Seleccione una conversación",
+  "loadConversationListFailed": "Error al cargar la lista: {error}",
+  "@loadConversationListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "getConversationInfoFailed": "Error al obtener la información de la conversación",
+  "knowledgeBaseDetail": "Detalles de la base de conocimiento",
+  "dataset": "Conjunto de datos",
+  "retrievalTest": "Prueba de recuperación",
+  "config": "Configuración",
+  "searchDocuments": "Buscar documentos…",
+  "noDocuments": "Sin documentos",
+  "tokens": "Tokens",
+  "update": "Actualizar",
+  "detail": "Detalle",
+  "parse": "Analizar",
+  "cancelParse": "Cancelar análisis",
+  "deleteDocument": "Eliminar documento",
+  "confirmDelete": "Confirmar eliminación",
+  "confirmDeleteDocument": "¿Eliminar este documento?",
+  "deleteSuccess": "Eliminado",
+  "deleteFailed": "Error al eliminar",
+  "totalDocuments": "Total {count} documentos",
+  "@totalDocuments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "Página anterior",
+  "nextPage": "Página siguiente",
+  "id": "ID",
+  "suffix": "Sufijo",
+  "chunkCount": "N.º de fragmentos",
+  "tokenCount": "N.º de tokens",
+  "createTime": "Fecha de creación",
+  "updateTime": "Fecha de actualización",
+  "notStarted": "No iniciado",
+  "parsing": "Analizando…",
+  "cancelled": "Cancelado",
+  "completed": "Completado",
+  "downloading": "Descargando…",
+  "downloadSuccess": "Descargado: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadFailed": "Error al descargar",
+  "startingParse": "Iniciando análisis…",
+  "parseStarted": "Análisis iniciado",
+  "startParseFailed": "Error al iniciar el análisis",
+  "confirmCancel": "Confirmar cancelación",
+  "confirmCancelParse": "¿Cancelar el análisis de \"{name}\"?",
+  "@confirmCancelParse": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancellingParse": "Cancelando análisis…",
+  "parseCancelled": "Análisis cancelado",
+  "cancelParseFailed": "Error al cancelar el análisis",
+  "uploading": "Subiendo…",
+  "uploadSuccess": "Subido. Iniciando análisis…",
+  "uploadFailed": "Error al subir",
+  "partialUploadFailed": "Algunos archivos no se pudieron subir",
+  "loadDocumentsFailed": "Error al cargar documentos: {error}",
+  "@loadDocumentsFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterQuestionForRetrieval": "Introduzca una pregunta para la prueba…",
+  "test": "Prueba",
+  "retrieving": "Recuperando…",
+  "enterQuestionForRetrievalTest": "Introduzca una pregunta para la prueba de recuperación",
+  "retrievalResults": "Resultados (total {count})",
+  "@retrievalResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "similarity": "Similitud: {percent}%",
+  "@similarity": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "retrievalTestFailed": "Error en la prueba: {error}",
+  "@retrievalTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "basicInfo": "Información básica",
+  "knowledgeBaseNameRequired": "Introduzca el nombre de la base de conocimiento",
+  "knowledgeBaseImage": "Imagen de la base de conocimiento",
+  "uploadImage": "Subir imagen",
+  "imageSelected": "Imagen seleccionada",
+  "fileNotExists": "El archivo no existe",
+  "selectImageSource": "Seleccionar origen de la imagen",
+  "selectFromGallery": "Desde la galería",
+  "takePhoto": "Tomar foto",
+  "imageTooLarge": "La imagen no puede superar 4 MB",
+  "selectImageFailed": "Error al seleccionar imagen: {error}",
+  "@selectImageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "permission": "Permiso",
+  "permissionOnlyMe": "Solo yo",
+  "permissionTeam": "Equipo",
+  "documentLanguage": "Idioma del documento",
+  "languageChinese": "Chino",
+  "languageEnglish": "Inglés",
+  "parserNaive": "General",
+  "parserQa": "P y R",
+  "parserResume": "Currículum",
+  "parserManual": "Manual",
+  "parserTable": "Tabla",
+  "parserPaper": "Artículo",
+  "parserBook": "Libro",
+  "parserLaws": "Legal",
+  "parserPresentation": "Presentación",
+  "parserPicture": "Imagen",
+  "parserOne": "Una página",
+  "parserAudio": "Audio",
+  "parserEmail": "Correo",
+  "parserTag": "Etiqueta",
+  "parserKnowledgeGraph": "Grafo de conocimiento",
+  "parseConfig": "Configuración de análisis",
+  "sliceMethod": "Método de fragmentación (parser)",
+  "sliceMethodHelper": "Seleccione el método de análisis y fragmentación",
+  "embeddingModel": "Modelo de embebido",
+  "embeddingModelHelper": "Modelo para vectores de embebido",
+  "embeddingModelWarning": "Cambiar el modelo con fragmentos existentes requiere borrarlos todos",
+  "noModelsAvailable": "No hay modelos disponibles",
+  "suggestedChunkSize": "Tamaño de fragmento sugerido (tokens)",
+  "chunkSizeHelper": "Umbral de tokens para fragmentos",
+  "textDelimiter": "Delimitador de texto",
+  "delimiterHelper": "Delimitador, p. ej. \\n",
+  "layoutRecognition": "Reconocimiento de diseño",
+  "layoutRecognitionHelper": "Método de reconocimiento de diseño",
+  "plainText": "Texto plano",
+  "pageRank": "Page Rank",
+  "pageRankHelper": "Valor de Page Rank para ordenar resultados",
+  "advancedOptions": "Opciones avanzadas",
+  "autoKeywordsCount": "N.º de palabras clave auto",
+  "autoKeywordsHelper": "0 = sin extracción",
+  "autoQuestionsCount": "N.º de preguntas auto",
+  "autoQuestionsHelper": "0 = sin extracción",
+  "tableToHtml": "Tabla a HTML",
+  "tableToHtmlSubtitle": "Convertir tablas Excel a HTML",
+  "useRaptor": "Usar estrategia RAPTOR",
+  "useRaptorSubtitle": "Activar RAPTOR para mejorar la recuperación",
+  "extractKnowledgeGraph": "Extraer grafo de conocimiento",
+  "extractKnowledgeGraphSubtitle": "Activar extracción de grafo de conocimiento",
+  "saveConfig": "Guardar configuración",
+  "saveSuccess": "Guardado",
+  "fileManagement": "Gestión de archivos",
+  "rootDirectory": "Directorio raíz",
+  "currentFolder": "Carpeta actual",
+  "searchFiles": "Buscar archivos…",
+  "folder": "Carpeta",
+  "preview": "Vista previa",
+  "cannotOpenPreview": "No se puede abrir la vista previa: {url}",
+  "@cannotOpenPreview": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "previewFailed": "Error en la vista previa: {error}",
+  "@previewFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteFile": "¿Eliminar \"{name}\"?",
+  "@confirmDeleteFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalFiles": "Total {count} archivos",
+  "@totalFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "Sin nombre",
+  "loadFailed": "Error al cargar: {error}",
+  "@loadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAgents": "Total {count} agentes",
+  "@totalAgents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAgents": "Buscar agentes…",
+  "noDescription": "Sin descripción",
+  "createNewDialog": "Nuevo diálogo",
+  "dialogName": "Nombre del diálogo",
+  "descriptionOptional": "Descripción (opcional)",
+  "noDialogs": "Sin diálogos",
+  "selectKnowledgeBase": "Seleccionar base de conocimiento:",
+  "pleaseSelectAtLeastOneKnowledgeBase": "Seleccione al menos una base de conocimiento",
+  "enterQuestion": "Escriba una pregunta…",
+  "ask": "Preguntar",
+  "answer": "Respuesta:",
+  "relatedFiles": "Archivos relacionados:",
+  "relatedQuestions": "Preguntas relacionadas:",
+  "pleaseSelectKnowledgeBaseAndEnterQuestion": "Seleccione una base e introduzca una pregunta",
+  "loadKnowledgeBaseFailed": "Error al cargar la base: {error}",
+  "@loadKnowledgeBaseFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askQuestionFailed": "Error al formular la pregunta: {error}",
+  "@askQuestionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exampleProduction": "ej.: Producción"
+}

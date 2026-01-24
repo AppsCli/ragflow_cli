@@ -1,0 +1,431 @@
+{
+  "@@locale": "zh_TW",
+  "appTitle": "RAGFlow",
+  "login": "登入",
+  "email": "郵箱",
+  "password": "密碼",
+  "serverSettings": "伺服器設定",
+  "addServer": "新增伺服器",
+  "serverName": "伺服器名稱（可選）",
+  "serverAddress": "伺服器地址",
+  "exampleServerAddress": "例如: http://192.168.1.100:9380",
+  "activate": "啟用",
+  "delete": "刪除",
+  "active": "已啟用",
+  "confirm": "確定",
+  "cancel": "取消",
+  "save": "儲存",
+  "deleteServerConfirm": "確定要刪除伺服器 \"{serverName}\" 嗎？",
+  "switchServerConfirm": "切換到伺服器 \"{serverName}\" 後需要重新登入，確定要繼續嗎？",
+  "currentServer": "目前伺服器: {serverAddress}",
+  "serverAdded": "伺服器新增成功",
+  "serverDeleted": "伺服器已刪除",
+  "switchFailed": "切換失敗",
+  "addFailed": "新增失敗，請檢查地址格式",
+  "saveFailed": "儲存失敗",
+  "serverAddressRequired": "請輸入伺服器地址",
+  "serverAddressFormatError": "地址必須以 http:// 或 https:// 開頭",
+  "serverList": "伺服器清單",
+  "noServerConfig": "暫無伺服器配置",
+  "addServerHint": "點擊下方按鈕新增伺服器",
+  "systemVersion": "RAGFlow 版本",
+  "systemStatus": "系統狀態",
+  "refresh": "重新整理",
+  "cannotGetSystemStatus": "無法取得系統狀態",
+  "serverAddressHint": "提示: 伺服器地址應該是完整的URL，例如:\nhttp://192.168.1.100:9380\nhttps://ragflow.example.com",
+  "documentEngine": "文件引擎",
+  "storage": "儲存",
+  "database": "資料庫",
+  "redis": "Redis",
+  "normal": "正常",
+  "abnormal": "異常",
+  "unknown": "未知",
+  "responseTime": "回應時間: {elapsed}ms",
+  "type": "類型",
+  "storageInfo": "儲存: {storage}",
+  "databaseInfo": "資料庫: {database}",
+  "error": "錯誤",
+  "language": "語言",
+  "languageSettings": "語言設定",
+  "followSystem": "跟隨系統",
+  "chinese": "中文",
+  "english": "英文",
+  "traditionalChinese": "繁體中文",
+  "japanese": "日語",
+  "korean": "韓語",
+  "german": "德語",
+  "spanish": "西班牙語",
+  "french": "法語",
+  "italian": "義大利語",
+  "russian": "俄語",
+  "arabic": "阿拉伯語",
+  "selectLanguage": "選擇語言",
+  "account": "帳號",
+  "changePassword": "修改密碼",
+  "logout": "登出",
+  "confirmLogout": "確定要登出嗎？",
+  "currentPassword": "目前密碼",
+  "newPassword": "新密碼",
+  "confirmNewPassword": "確認新密碼",
+  "passwordChanged": "密碼修改成功",
+  "passwordChangeFailed": "密碼修改失敗，請檢查目前密碼是否正確",
+  "passwordRequired": "請輸入密碼",
+  "newPasswordRequired": "請輸入新密碼",
+  "confirmPasswordRequired": "請確認新密碼",
+  "passwordTooShort": "密碼長度至少為8位",
+  "passwordsDoNotMatch": "兩次輸入的密碼不一致",
+  "emailRequired": "請輸入郵箱",
+  "invalidEmail": "請輸入有效的郵箱地址",
+  "loginFailed": "登入失敗，請檢查郵箱和密碼",
+  "configureServerAddress": "配置伺服器地址",
+  "pleaseConfigureServer": "請先配置伺服器地址才能登入",
+  "goToSettings": "前往設定",
+  "setServerAddress": "設定伺服器地址",
+  "knowledgeBase": "知識庫",
+  "chat": "聊天",
+  "search": "搜尋",
+  "agent": "Agent",
+  "file": "檔案",
+  "noData": "暫無資料",
+  "loading": "載入中...",
+  "retry": "重試",
+  "create": "建立",
+  "edit": "編輯",
+  "name": "名稱",
+  "description": "描述",
+  "status": "狀態",
+  "actions": "操作",
+  "details": "詳情",
+  "back": "返回",
+  "submit": "提交",
+  "close": "關閉",
+  "searchPlaceholder": "搜尋...",
+  "noResults": "未找到結果",
+  "upload": "上傳",
+  "download": "下載",
+  "view": "查看",
+  "createdAt": "建立時間",
+  "updatedAt": "更新時間",
+  "size": "大小",
+  "operation": "操作",
+  "success": "成功",
+  "failed": "失敗",
+  "pleaseWait": "請稍候...",
+  "areYouSure": "確定嗎？",
+  "deleteConfirm": "確定要刪除此項目嗎？",
+  "operationSuccess": "操作成功",
+  "operationFailed": "操作失敗",
+  "networkError": "網路錯誤，請檢查您的連接",
+  "unknownError": "發生未知錯誤",
+  "createKnowledgeBase": "建立知識庫",
+  "knowledgeBaseName": "知識庫名稱",
+  "enterKnowledgeBaseName": "請輸入知識庫名稱",
+  "loadingFailed": "載入失敗",
+  "creating": "正在建立...",
+  "createSuccess": "建立成功",
+  "createFailed": "建立失敗",
+  "noKnowledgeBase": "暫無知識庫",
+  "documents": "文件",
+  "chunks": "片段",
+  "updated": "更新",
+  "send": "傳送",
+  "enterMessage": "輸入訊息...",
+  "noChatHistory": "暫無聊天記錄",
+  "newChat": "新建聊天",
+  "clear": "清除",
+  "noAgents": "暫無Agent",
+  "createAgent": "建立Agent",
+  "noFiles": "暫無檔案",
+  "uploadFile": "上傳檔案",
+  "fileName": "檔案名",
+  "fileSize": "檔案大小",
+  "uploadTime": "上傳時間",
+  "resetAgent": "重置 Agent",
+  "resetAgentConfirm": "確定要重置 Agent 嗎？这将清除目前對話历史。",
+  "reset": "重置",
+  "resetSuccess": "重置成功",
+  "resetFailed": "重置失敗",
+  "thinking": "思考中...",
+  "you": "您",
+  "sendFailed": "傳送失敗: {message}",
+  "@sendFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "requestFailed": "請求失敗",
+  "stop": "終止",
+  "createNewConversation": "建立新對話",
+  "conversationName": "對話名稱",
+  "noConversations": "暫無對話",
+  "hideList": "隱藏清單",
+  "showList": "顯示清單",
+  "refreshConversationList": "重新整理對話清單",
+  "selectConversation": "請選擇一個對話",
+  "loadConversationListFailed": "載入對話清單失敗: {error}",
+  "@loadConversationListFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "getConversationInfoFailed": "取得對話資訊失敗",
+  "knowledgeBaseDetail": "知識庫詳情",
+  "dataset": "資料集",
+  "retrievalTest": "檢索測試",
+  "config": "配置",
+  "searchDocuments": "搜尋文件...",
+  "noDocuments": "暫無文件",
+  "tokens": "Token",
+  "update": "更新",
+  "detail": "詳情",
+  "parse": "解析",
+  "cancelParse": "取消解析",
+  "deleteDocument": "刪除",
+  "confirmDelete": "確認刪除",
+  "confirmDeleteDocument": "確定要刪除这個文件嗎？",
+  "deleteSuccess": "刪除成功",
+  "deleteFailed": "刪除失敗",
+  "totalDocuments": "共 {count} 個文件",
+  "@totalDocuments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "上一頁",
+  "nextPage": "下一頁",
+  "id": "ID",
+  "suffix": "後綴",
+  "chunkCount": "片段數",
+  "tokenCount": "Token數",
+  "createTime": "建立時間",
+  "updateTime": "更新時間",
+  "notStarted": "未開始",
+  "parsing": "解析中",
+  "cancelled": "已取消",
+  "completed": "已完成",
+  "downloading": "正在下載...",
+  "downloadSuccess": "下載成功: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadFailed": "下載失敗",
+  "startingParse": "正在啟動解析...",
+  "parseStarted": "解析已啟動",
+  "startParseFailed": "启动解析失敗",
+  "confirmCancel": "確認取消",
+  "confirmCancelParse": "確定要取消解析文件 \"{name}\" 嗎？",
+  "@confirmCancelParse": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancellingParse": "正在取消解析...",
+  "parseCancelled": "已取消解析",
+  "cancelParseFailed": "取消解析失敗",
+  "uploading": "正在上傳...",
+  "uploadSuccess": "上傳成功，正在啟動解析...",
+  "uploadFailed": "上傳失敗",
+  "partialUploadFailed": "部分檔案上傳失敗",
+  "loadDocumentsFailed": "載入文件失敗: {error}",
+  "@loadDocumentsFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "enterQuestionForRetrieval": "輸入問題進行檢索測試...",
+  "test": "測試",
+  "retrieving": "檢索中...",
+  "enterQuestionForRetrievalTest": "請輸入問題進行檢索測試",
+  "retrievalResults": "檢索結果 (共 {count} 條)",
+  "@retrievalResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "similarity": "相似度: {percent}%",
+  "@similarity": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "retrievalTestFailed": "檢索測試失敗: {error}",
+  "@retrievalTestFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "basicInfo": "基本資訊",
+  "knowledgeBaseNameRequired": "請輸入知識庫名稱",
+  "knowledgeBaseImage": "知識庫圖片",
+  "uploadImage": "上傳圖片",
+  "imageSelected": "圖片已選擇",
+  "fileNotExists": "檔案不存在",
+  "selectImageSource": "選擇圖片來源",
+  "selectFromGallery": "從相簿選擇",
+  "takePhoto": "拍照",
+  "imageTooLarge": "圖片大小不能超過 4MB",
+  "selectImageFailed": "選擇圖片失敗: {error}",
+  "@selectImageFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "permission": "權限",
+  "permissionOnlyMe": "只有我",
+  "permissionTeam": "團隊",
+  "documentLanguage": "文件語言",
+  "languageChinese": "中文",
+  "languageEnglish": "英文",
+  "parserNaive": "通用",
+  "parserQa": "問答",
+  "parserResume": "履歷",
+  "parserManual": "手動",
+  "parserTable": "表格",
+  "parserPaper": "論文",
+  "parserBook": "書籍",
+  "parserLaws": "法律",
+  "parserPresentation": "簡報",
+  "parserPicture": "圖片",
+  "parserOne": "單頁",
+  "parserAudio": "音訊",
+  "parserEmail": "郵件",
+  "parserTag": "標籤",
+  "parserKnowledgeGraph": "知識圖譜",
+  "parseConfig": "解析配置",
+  "sliceMethod": "切片方法（解析器）",
+  "sliceMethodHelper": "選擇文件解析和切片的方法",
+  "embeddingModel": "嵌入模型",
+  "embeddingModelHelper": "選擇用於生成嵌入向量的模型",
+  "embeddingModelWarning": "注意：已有分塊时更改嵌入模型需要刪除所有分塊",
+  "noModelsAvailable": "暫無可用模型",
+  "suggestedChunkSize": "建議文字區塊大小（Token數）",
+  "chunkSizeHelper": "設定建立分塊的Token閾值",
+  "textDelimiter": "文本分段識別碼",
+  "delimiterHelper": "用於分割文本的識別碼，如 \\n",
+  "layoutRecognition": "版面識別",
+  "layoutRecognitionHelper": "選擇版面識別方式",
+  "plainText": "純文字",
+  "pageRank": "頁面排名",
+  "pageRankHelper": "頁面排名值，用於搜尋結果排序",
+  "advancedOptions": "進階選項",
+  "autoKeywordsCount": "自動關鍵字提取數量",
+  "autoKeywordsHelper": "0表示不提取",
+  "autoQuestionsCount": "自動問題提取數量",
+  "autoQuestionsHelper": "0表示不提取",
+  "tableToHtml": "表格转HTML",
+  "tableToHtmlSubtitle": "將Excel表格轉換為HTML格式",
+  "useRaptor": "使用召回增強 RAPTOR 策略",
+  "useRaptorSubtitle": "启用RAPTOR策略以增強召回效果",
+  "extractKnowledgeGraph": "提取知識圖譜",
+  "extractKnowledgeGraphSubtitle": "启用知識圖譜提取功能",
+  "saveConfig": "儲存配置",
+  "saveSuccess": "儲存成功",
+  "fileManagement": "檔案管理",
+  "rootDirectory": "根目錄",
+  "currentFolder": "目前檔案夹",
+  "searchFiles": "搜尋檔案...",
+  "folder": "檔案夹",
+  "preview": "預覽",
+  "cannotOpenPreview": "無法打开預覽: {url}",
+  "@cannotOpenPreview": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "previewFailed": "預覽失敗: {error}",
+  "@previewFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmDeleteFile": "確定要刪除 \"{name}\" 嗎？",
+  "@confirmDeleteFile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalFiles": "共 {count} 個檔案",
+  "@totalFiles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unnamed": "未命名",
+  "loadFailed": "載入失敗: {error}",
+  "@loadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "totalAgents": "共 {count} 個Agent",
+  "@totalAgents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchAgents": "搜尋Agent...",
+  "noDescription": "暫無描述",
+  "createNewDialog": "建立新對話",
+  "dialogName": "對話名稱",
+  "descriptionOptional": "描述（可選）",
+  "noDialogs": "暫無對話",
+  "selectKnowledgeBase": "選擇知識庫:",
+  "pleaseSelectAtLeastOneKnowledgeBase": "請至少選擇一個知識庫",
+  "enterQuestion": "輸入問題...",
+  "ask": "提问",
+  "answer": "答案:",
+  "relatedFiles": "相关檔案:",
+  "relatedQuestions": "相关問題:",
+  "pleaseSelectKnowledgeBaseAndEnterQuestion": "請選擇知識庫並輸入問題進行搜尋",
+  "loadKnowledgeBaseFailed": "載入知識庫失敗: {error}",
+  "@loadKnowledgeBaseFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "askQuestionFailed": "提问失敗: {error}",
+  "@askQuestionFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exampleProduction": "例如: 生產環境"
+}
