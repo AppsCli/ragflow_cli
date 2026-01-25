@@ -171,6 +171,42 @@ class AppLocalizationsJa extends AppLocalizations {
   String get followSystem => 'システムに合わせる';
 
   @override
+  String get theme => 'テーマ';
+
+  @override
+  String get themeSettings => 'テーマ設定';
+
+  @override
+  String get colorSchemeBlue => '青';
+
+  @override
+  String get colorSchemeGreen => '緑';
+
+  @override
+  String get colorSchemePurple => '紫';
+
+  @override
+  String get colorSchemeOrange => 'オレンジ';
+
+  @override
+  String get colorSchemeRed => '赤';
+
+  @override
+  String get colorSchemeTeal => 'ティール';
+
+  @override
+  String get colorSchemePink => 'ピンク';
+
+  @override
+  String get colorSchemeIndigo => 'インディゴ';
+
+  @override
+  String get colorSchemeBrown => '茶色';
+
+  @override
+  String get colorSchemeCyan => 'シアン';
+
+  @override
   String get chinese => '中国語';
 
   @override

@@ -171,6 +171,42 @@ class AppLocalizationsAr extends AppLocalizations {
   String get followSystem => 'اتباع النظام';
 
   @override
+  String get theme => 'المظهر';
+
+  @override
+  String get themeSettings => 'إعدادات المظهر';
+
+  @override
+  String get colorSchemeBlue => 'أزرق';
+
+  @override
+  String get colorSchemeGreen => 'أخضر';
+
+  @override
+  String get colorSchemePurple => 'بنفسجي';
+
+  @override
+  String get colorSchemeOrange => 'برتقالي';
+
+  @override
+  String get colorSchemeRed => 'أحمر';
+
+  @override
+  String get colorSchemeTeal => 'تركوازي';
+
+  @override
+  String get colorSchemePink => 'وردي';
+
+  @override
+  String get colorSchemeIndigo => 'نيلي';
+
+  @override
+  String get colorSchemeBrown => 'بني';
+
+  @override
+  String get colorSchemeCyan => 'سماوي';
+
+  @override
   String get chinese => 'الصينية';
 
   @override

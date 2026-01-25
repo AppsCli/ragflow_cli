@@ -7,6 +7,7 @@ import '../providers/auth_provider.dart';
 import '../services/user_service.dart';
 import 'server_config_page.dart';
 import 'language_settings_page.dart';
+import 'theme_settings_page.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -85,6 +86,18 @@ class _AccountPageState extends State<AccountPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const LanguageSettingsPage()),
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.palette),
+            title: Text(l10n.theme),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ThemeSettingsPage()),
               );
             },
           ),

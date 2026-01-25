@@ -172,6 +172,42 @@ class AppLocalizationsDe extends AppLocalizations {
   String get followSystem => 'Systemsprache';
 
   @override
+  String get theme => 'Design';
+
+  @override
+  String get themeSettings => 'Design-Einstellungen';
+
+  @override
+  String get colorSchemeBlue => 'Blau';
+
+  @override
+  String get colorSchemeGreen => 'Grün';
+
+  @override
+  String get colorSchemePurple => 'Lila';
+
+  @override
+  String get colorSchemeOrange => 'Orange';
+
+  @override
+  String get colorSchemeRed => 'Rot';
+
+  @override
+  String get colorSchemeTeal => 'Türkis';
+
+  @override
+  String get colorSchemePink => 'Rosa';
+
+  @override
+  String get colorSchemeIndigo => 'Indigo';
+
+  @override
+  String get colorSchemeBrown => 'Braun';
+
+  @override
+  String get colorSchemeCyan => 'Cyan';
+
+  @override
   String get chinese => 'Chinesisch';
 
   @override

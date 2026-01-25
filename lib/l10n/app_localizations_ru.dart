@@ -171,6 +171,42 @@ class AppLocalizationsRu extends AppLocalizations {
   String get followSystem => 'Как в системе';
 
   @override
+  String get theme => 'Тема';
+
+  @override
+  String get themeSettings => 'Настройки темы';
+
+  @override
+  String get colorSchemeBlue => 'Синий';
+
+  @override
+  String get colorSchemeGreen => 'Зелёный';
+
+  @override
+  String get colorSchemePurple => 'Фиолетовый';
+
+  @override
+  String get colorSchemeOrange => 'Оранжевый';
+
+  @override
+  String get colorSchemeRed => 'Красный';
+
+  @override
+  String get colorSchemeTeal => 'Бирюзовый';
+
+  @override
+  String get colorSchemePink => 'Розовый';
+
+  @override
+  String get colorSchemeIndigo => 'Индиго';
+
+  @override
+  String get colorSchemeBrown => 'Коричневый';
+
+  @override
+  String get colorSchemeCyan => 'Голубой';
+
+  @override
   String get chinese => 'Китайский';
 
   @override

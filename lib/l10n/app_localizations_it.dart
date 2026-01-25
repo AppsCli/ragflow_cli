@@ -173,6 +173,42 @@ class AppLocalizationsIt extends AppLocalizations {
   String get followSystem => 'Segui sistema';
 
   @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeSettings => 'Impostazioni tema';
+
+  @override
+  String get colorSchemeBlue => 'Blu';
+
+  @override
+  String get colorSchemeGreen => 'Verde';
+
+  @override
+  String get colorSchemePurple => 'Viola';
+
+  @override
+  String get colorSchemeOrange => 'Arancione';
+
+  @override
+  String get colorSchemeRed => 'Rosso';
+
+  @override
+  String get colorSchemeTeal => 'Verde acqua';
+
+  @override
+  String get colorSchemePink => 'Rosa';
+
+  @override
+  String get colorSchemeIndigo => 'Indaco';
+
+  @override
+  String get colorSchemeBrown => 'Marrone';
+
+  @override
+  String get colorSchemeCyan => 'Ciano';
+
+  @override
   String get chinese => 'Cinese';
 
   @override

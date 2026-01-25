@@ -427,5 +427,17 @@
       }
     }
   },
-  "exampleProduction": "例如: 生產環境"
+  "exampleProduction": "例如: 生產環境",
+  "theme": "主題",
+  "themeSettings": "主題設定",
+  "colorSchemeBlue": "藍色",
+  "colorSchemeGreen": "綠色",
+  "colorSchemePurple": "紫色",
+  "colorSchemeOrange": "橙色",
+  "colorSchemeRed": "紅色",
+  "colorSchemeTeal": "青色",
+  "colorSchemePink": "粉色",
+  "colorSchemeIndigo": "靛藍色",
+  "colorSchemeBrown": "棕色",
+  "colorSchemeCyan": "青色"
 }

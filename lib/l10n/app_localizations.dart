@@ -403,6 +403,78 @@ abstract class AppLocalizations {
   /// **'Follow System'**
   String get followSystem;
 
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @themeSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Settings'**
+  String get themeSettings;
+
+  /// No description provided for @colorSchemeBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get colorSchemeBlue;
+
+  /// No description provided for @colorSchemeGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get colorSchemeGreen;
+
+  /// No description provided for @colorSchemePurple.
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get colorSchemePurple;
+
+  /// No description provided for @colorSchemeOrange.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get colorSchemeOrange;
+
+  /// No description provided for @colorSchemeRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get colorSchemeRed;
+
+  /// No description provided for @colorSchemeTeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get colorSchemeTeal;
+
+  /// No description provided for @colorSchemePink.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get colorSchemePink;
+
+  /// No description provided for @colorSchemeIndigo.
+  ///
+  /// In en, this message translates to:
+  /// **'Indigo'**
+  String get colorSchemeIndigo;
+
+  /// No description provided for @colorSchemeBrown.
+  ///
+  /// In en, this message translates to:
+  /// **'Brown'**
+  String get colorSchemeBrown;
+
+  /// No description provided for @colorSchemeCyan.
+  ///
+  /// In en, this message translates to:
+  /// **'Cyan'**
+  String get colorSchemeCyan;
+
   /// No description provided for @chinese.
   ///
   /// In en, this message translates to:

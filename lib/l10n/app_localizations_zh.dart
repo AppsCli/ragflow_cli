@@ -170,6 +170,42 @@ class AppLocalizationsZh extends AppLocalizations {
   String get followSystem => '跟随系统';
 
   @override
+  String get theme => '主题';
+
+  @override
+  String get themeSettings => '主题设置';
+
+  @override
+  String get colorSchemeBlue => '蓝色';
+
+  @override
+  String get colorSchemeGreen => '绿色';
+
+  @override
+  String get colorSchemePurple => '紫色';
+
+  @override
+  String get colorSchemeOrange => '橙色';
+
+  @override
+  String get colorSchemeRed => '红色';
+
+  @override
+  String get colorSchemeTeal => '青色';
+
+  @override
+  String get colorSchemePink => '粉色';
+
+  @override
+  String get colorSchemeIndigo => '靛蓝色';
+
+  @override
+  String get colorSchemeBrown => '棕色';
+
+  @override
+  String get colorSchemeCyan => '青色';
+
+  @override
   String get chinese => '中文';
 
   @override
@@ -1132,6 +1168,42 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get followSystem => '跟隨系統';
+
+  @override
+  String get theme => '主題';
+
+  @override
+  String get themeSettings => '主題設定';
+
+  @override
+  String get colorSchemeBlue => '藍色';
+
+  @override
+  String get colorSchemeGreen => '綠色';
+
+  @override
+  String get colorSchemePurple => '紫色';
+
+  @override
+  String get colorSchemeOrange => '橙色';
+
+  @override
+  String get colorSchemeRed => '紅色';
+
+  @override
+  String get colorSchemeTeal => '青色';
+
+  @override
+  String get colorSchemePink => '粉色';
+
+  @override
+  String get colorSchemeIndigo => '靛藍色';
+
+  @override
+  String get colorSchemeBrown => '棕色';
+
+  @override
+  String get colorSchemeCyan => '青色';
 
   @override
   String get chinese => '中文';

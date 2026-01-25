@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/auth_provider.dart';
 import 'providers/locale_provider.dart';
+import 'providers/theme_provider.dart';
 import 'services/api_client.dart';
 import 'pages/login_page.dart';
 import 'pages/home_page.dart';
@@ -26,9 +27,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
-      child: Consumer<LocaleProvider>(
-        builder: (context, localeProvider, child) {
+      child: Consumer2<LocaleProvider, ThemeProvider>(
+        builder: (context, localeProvider, themeProvider, child) {
           return MaterialApp(
             title: 'RAGFlow',
             debugShowCheckedModeBanner: false,
@@ -53,10 +55,8 @@ class MyApp extends StatelessWidget {
               Locale('ru'), // 俄语
               Locale('ar'), // 阿拉伯语
             ],
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-              useMaterial3: true,
-            ),
+            theme: themeProvider.themeData,
+            darkTheme: themeProvider.darkThemeData,
             // 始终显示登录界面，不自动登录
             // 即使用户已保存，也需要重新登录
             home: const LoginPage(),

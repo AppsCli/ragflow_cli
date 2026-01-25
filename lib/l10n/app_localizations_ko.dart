@@ -170,6 +170,42 @@ class AppLocalizationsKo extends AppLocalizations {
   String get followSystem => '시스템 따라가기';
 
   @override
+  String get theme => '테마';
+
+  @override
+  String get themeSettings => '테마 설정';
+
+  @override
+  String get colorSchemeBlue => '파란색';
+
+  @override
+  String get colorSchemeGreen => '초록색';
+
+  @override
+  String get colorSchemePurple => '보라색';
+
+  @override
+  String get colorSchemeOrange => '주황색';
+
+  @override
+  String get colorSchemeRed => '빨간색';
+
+  @override
+  String get colorSchemeTeal => '청록색';
+
+  @override
+  String get colorSchemePink => '분홍색';
+
+  @override
+  String get colorSchemeIndigo => '남색';
+
+  @override
+  String get colorSchemeBrown => '갈색';
+
+  @override
+  String get colorSchemeCyan => '시안';
+
+  @override
   String get chinese => '중국어';
 
   @override
