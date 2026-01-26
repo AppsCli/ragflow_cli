@@ -11,7 +11,7 @@ class UserService {
 
   static Future<LoginResult> login(String email, String password) async {
     // 使用 RSA 加密密码（与 web 前端保持一致）
-    final encryptedPassword = rsaEncryptPassword(password);
+    final encryptedPassword = await rsaEncryptPassword(password);
     
     final response = await ApiClient.post(
       loginEndpoint,
@@ -88,7 +88,7 @@ class UserService {
 
   static Future<bool> register(String email, String password, String nickname) async {
     // 注册时也需要加密密码
-    final encryptedPassword = rsaEncryptPassword(password);
+    final encryptedPassword = await rsaEncryptPassword(password);
     
     final response = await ApiClient.post(
       registerEndpoint,
@@ -103,8 +103,8 @@ class UserService {
 
   static Future<bool> changePassword(String oldPassword, String newPassword) async {
     // 加密旧密码和新密码
-    final encryptedOldPassword = rsaEncryptPassword(oldPassword);
-    final encryptedNewPassword = rsaEncryptPassword(newPassword);
+    final encryptedOldPassword = await rsaEncryptPassword(oldPassword);
+    final encryptedNewPassword = await rsaEncryptPassword(newPassword);
     
     final response = await ApiClient.post(
       '/v1/user/setting',

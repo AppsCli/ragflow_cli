@@ -4,6 +4,8 @@ import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import '../services/system_service.dart';
 import '../models/server_config.dart';
+import '../utils/storage.dart';
+import '../utils/rsa_encrypt.dart';
 
 class ServerConfigPage extends StatefulWidget {
   const ServerConfigPage({super.key});
@@ -476,12 +478,163 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                   l10n.serverAddressHint,
                   style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
+                const SizedBox(height: 32),
+                const Divider(),
+                const SizedBox(height: 16),
+                // RSA 公钥设置
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.vpn_key),
+                            const SizedBox(width: 8),
+                            Text(
+                              l10n.rsaPublicKeySettings,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.rsaPublicKeyHint,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        FutureBuilder<String?>(
+                          future: Storage.getRsaPublicKey(),
+                          builder: (context, snapshot) {
+                            final hasCustomKey = snapshot.hasData && snapshot.data != null;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                if (hasCustomKey) ...[
+                                  Text(
+                                    l10n.currentRsaPublicKey,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.grey[300]!),
+                                    ),
+                                    child: Text(
+                                      snapshot.data!,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'monospace',
+                                      ),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                ] else ...[
+                                  Text(
+                                    l10n.defaultRsaPublicKey,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.grey[300]!),
+                                    ),
+                                    child: Text(
+                                      getDefaultRsaPublicKey(),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: 'monospace',
+                                      ),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                ],
+                                ElevatedButton.icon(
+                                  onPressed: () => _handleResetRsaPublicKey(context),
+                                  icon: const Icon(Icons.restore),
+                                  label: Text(l10n.resetToDefault),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _handleResetRsaPublicKey(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.resetToDefault),
+        content: Text(l10n.resetToDefaultConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.confirm),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await Storage.removeRsaPublicKey();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.resetToDefaultSuccess)),
+          );
+          // 刷新界面
+          setState(() {});
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${l10n.resetToDefaultFailed}: $e')),
+          );
+        }
+      }
+    }
   }
 
   Widget _buildServerCard(ServerConfig server, AppLocalizations l10n) {

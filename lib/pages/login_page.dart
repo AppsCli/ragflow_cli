@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
+import '../utils/storage.dart';
+import '../utils/rsa_encrypt.dart';
 import 'server_config_page.dart';
 import 'language_settings_page.dart';
 
@@ -16,13 +18,136 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _rsaPublicKeyController = TextEditingController();
   bool _obscurePassword = true;
+  bool _showRsaPublicKeySettings = false;
+  bool _isLoadingRsaKey = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRsaPublicKey();
+  }
+
+  Future<void> _loadRsaPublicKey() async {
+    final storedKey = await Storage.getRsaPublicKey();
+    if (storedKey != null && mounted) {
+      setState(() {
+        _rsaPublicKeyController.text = storedKey;
+      });
+    } else {
+      // 如果没有存储的公钥，显示默认公钥
+      if (mounted) {
+        setState(() {
+          _rsaPublicKeyController.text = getDefaultRsaPublicKey();
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _rsaPublicKeyController.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveRsaPublicKey() async {
+    final l10n = AppLocalizations.of(context)!;
+    final publicKey = _rsaPublicKeyController.text.trim();
+    
+    if (publicKey.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.rsaPublicKeyRequired)),
+      );
+      return;
+    }
+
+    // 验证公钥格式（简单检查是否包含 BEGIN PUBLIC KEY）
+    if (!publicKey.contains('BEGIN PUBLIC KEY') || !publicKey.contains('END PUBLIC KEY')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.rsaPublicKeyInvalid)),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoadingRsaKey = true;
+    });
+
+    try {
+      await Storage.saveRsaPublicKey(publicKey);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.rsaPublicKeySaved)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${l10n.rsaPublicKeySaveFailed}: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingRsaKey = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _resetToDefaultRsaPublicKey() async {
+    final l10n = AppLocalizations.of(context)!;
+    
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.resetToDefault),
+        content: Text(l10n.resetToDefaultConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.confirm),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      setState(() {
+        _isLoadingRsaKey = true;
+      });
+
+      try {
+        await Storage.removeRsaPublicKey();
+        setState(() {
+          _rsaPublicKeyController.text = getDefaultRsaPublicKey();
+        });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.resetToDefaultSuccess)),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${l10n.resetToDefaultFailed}: $e')),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoadingRsaKey = false;
+          });
+        }
+      }
+    }
   }
 
   Future<void> _handleLogin() async {
@@ -182,6 +307,74 @@ class _LoginPageState extends State<LoginPage> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : Text(l10n.login, style: const TextStyle(fontSize: 16)),
+                  ),
+                  const SizedBox(height: 16),
+                  // RSA 公钥设置（可展开/折叠）
+                  ExpansionTile(
+                    title: Text(_showRsaPublicKeySettings 
+                        ? l10n.hideRsaPublicKeySettings 
+                        : l10n.showRsaPublicKeySettings),
+                    leading: const Icon(Icons.vpn_key),
+                    initiallyExpanded: false,
+                    onExpansionChanged: (expanded) {
+                      setState(() {
+                        _showRsaPublicKeySettings = expanded;
+                      });
+                    },
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              l10n.rsaPublicKeyHint,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              controller: _rsaPublicKeyController,
+                              decoration: InputDecoration(
+                                labelText: l10n.rsaPublicKey,
+                                border: const OutlineInputBorder(),
+                                hintText: l10n.rsaPublicKeyHint,
+                              ),
+                              maxLines: 5,
+                              enabled: !_isLoadingRsaKey,
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton.icon(
+                                    onPressed: _isLoadingRsaKey ? null : _resetToDefaultRsaPublicKey,
+                                    icon: const Icon(Icons.restore),
+                                    label: Text(l10n.resetToDefault),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: _isLoadingRsaKey ? null : _saveRsaPublicKey,
+                                    icon: _isLoadingRsaKey
+                                        ? const SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(strokeWidth: 2),
+                                          )
+                                        : const Icon(Icons.save),
+                                    label: Text(l10n.save),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   TextButton.icon(

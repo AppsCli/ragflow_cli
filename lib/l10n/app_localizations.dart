@@ -1998,6 +1998,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g., Production'**
   String get exampleProduction;
+
+  /// No description provided for @rsaPublicKey.
+  ///
+  /// In en, this message translates to:
+  /// **'RSA Public Key'**
+  String get rsaPublicKey;
+
+  /// No description provided for @rsaPublicKeySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'RSA Public Key Settings'**
+  String get rsaPublicKeySettings;
+
+  /// No description provided for @rsaPublicKeyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'RSA public key used to encrypt login password'**
+  String get rsaPublicKeyHint;
+
+  /// No description provided for @rsaPublicKeyRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter RSA public key'**
+  String get rsaPublicKeyRequired;
+
+  /// No description provided for @rsaPublicKeyInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid RSA public key format'**
+  String get rsaPublicKeyInvalid;
+
+  /// No description provided for @rsaPublicKeySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'RSA public key saved'**
+  String get rsaPublicKeySaved;
+
+  /// No description provided for @rsaPublicKeySaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save RSA public key'**
+  String get rsaPublicKeySaveFailed;
+
+  /// No description provided for @resetToDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to Default'**
+  String get resetToDefault;
+
+  /// No description provided for @resetToDefaultConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reset to the default public key?'**
+  String get resetToDefaultConfirm;
+
+  /// No description provided for @resetToDefaultSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to default public key'**
+  String get resetToDefaultSuccess;
+
+  /// No description provided for @resetToDefaultFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset failed'**
+  String get resetToDefaultFailed;
+
+  /// No description provided for @showRsaPublicKeySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Show RSA Public Key Settings'**
+  String get showRsaPublicKeySettings;
+
+  /// No description provided for @hideRsaPublicKeySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide RSA Public Key Settings'**
+  String get hideRsaPublicKeySettings;
+
+  /// No description provided for @currentRsaPublicKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Public Key'**
+  String get currentRsaPublicKey;
+
+  /// No description provided for @defaultRsaPublicKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Public Key'**
+  String get defaultRsaPublicKey;
 }
 
 class _AppLocalizationsDelegate

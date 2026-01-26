@@ -524,5 +524,20 @@
     }
   },
   "exampleProduction": "e.g., Production",
-  "systemStatus": "System Status"
+  "systemStatus": "System Status",
+  "rsaPublicKey": "RSA Public Key",
+  "rsaPublicKeySettings": "RSA Public Key Settings",
+  "rsaPublicKeyHint": "RSA public key used to encrypt login password",
+  "rsaPublicKeyRequired": "Please enter RSA public key",
+  "rsaPublicKeyInvalid": "Invalid RSA public key format",
+  "rsaPublicKeySaved": "RSA public key saved",
+  "rsaPublicKeySaveFailed": "Failed to save RSA public key",
+  "resetToDefault": "Reset to Default",
+  "resetToDefaultConfirm": "Are you sure you want to reset to the default public key?",
+  "resetToDefaultSuccess": "Reset to default public key",
+  "resetToDefaultFailed": "Reset failed",
+  "showRsaPublicKeySettings": "Show RSA Public Key Settings",
+  "hideRsaPublicKeySettings": "Hide RSA Public Key Settings",
+  "currentRsaPublicKey": "Current Public Key",
+  "defaultRsaPublicKey": "Default Public Key"
 }

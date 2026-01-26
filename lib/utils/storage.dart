@@ -8,6 +8,7 @@ class Storage {
   static const String _serverConfigsKey = 'server_configs';
   static const String _userKey = 'user';
   static const String _tokenKey = 'token';
+  static const String _rsaPublicKeyKey = 'rsa_public_key';
 
   /// 保存单个服务器配置（向后兼容，已废弃，使用 saveServerConfigs）
   @Deprecated('Use saveServerConfigs instead')
@@ -125,5 +126,23 @@ class Storage {
     await prefs.remove(_serverConfigKey);
     await prefs.remove(_userKey);
     await prefs.remove(_tokenKey);
+  }
+
+  /// 保存 RSA 公钥
+  static Future<void> saveRsaPublicKey(String publicKey) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_rsaPublicKeyKey, publicKey);
+  }
+
+  /// 获取 RSA 公钥
+  static Future<String?> getRsaPublicKey() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_rsaPublicKeyKey);
+  }
+
+  /// 删除 RSA 公钥（重置为默认值）
+  static Future<void> removeRsaPublicKey() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_rsaPublicKeyKey);
   }
 }

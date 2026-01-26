@@ -1020,4 +1020,51 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get exampleProduction => 'ej.: Producción';
+
+  @override
+  String get rsaPublicKey => 'RSA Public Key';
+
+  @override
+  String get rsaPublicKeySettings => 'RSA Public Key Settings';
+
+  @override
+  String get rsaPublicKeyHint =>
+      'RSA public key used to encrypt login password';
+
+  @override
+  String get rsaPublicKeyRequired => 'Please enter RSA public key';
+
+  @override
+  String get rsaPublicKeyInvalid => 'Invalid RSA public key format';
+
+  @override
+  String get rsaPublicKeySaved => 'RSA public key saved';
+
+  @override
+  String get rsaPublicKeySaveFailed => 'Failed to save RSA public key';
+
+  @override
+  String get resetToDefault => 'Reset to Default';
+
+  @override
+  String get resetToDefaultConfirm =>
+      'Are you sure you want to reset to the default public key?';
+
+  @override
+  String get resetToDefaultSuccess => 'Reset to default public key';
+
+  @override
+  String get resetToDefaultFailed => 'Reset failed';
+
+  @override
+  String get showRsaPublicKeySettings => 'Show RSA Public Key Settings';
+
+  @override
+  String get hideRsaPublicKeySettings => 'Hide RSA Public Key Settings';
+
+  @override
+  String get currentRsaPublicKey => 'Current Public Key';
+
+  @override
+  String get defaultRsaPublicKey => 'Default Public Key';
 }

@@ -465,5 +465,20 @@
     }
   },
   "exampleProduction": "例如: 生产环境",
-  "systemStatus": "系统状态"
+  "systemStatus": "系统状态",
+  "rsaPublicKey": "RSA 公钥",
+  "rsaPublicKeySettings": "RSA 公钥设置",
+  "rsaPublicKeyHint": "用于加密登录密码的 RSA 公钥",
+  "rsaPublicKeyRequired": "请输入 RSA 公钥",
+  "rsaPublicKeyInvalid": "RSA 公钥格式无效",
+  "rsaPublicKeySaved": "RSA 公钥已保存",
+  "rsaPublicKeySaveFailed": "保存 RSA 公钥失败",
+  "resetToDefault": "重置为默认公钥",
+  "resetToDefaultConfirm": "确定要重置为默认公钥吗？",
+  "resetToDefaultSuccess": "已重置为默认公钥",
+  "resetToDefaultFailed": "重置失败",
+  "showRsaPublicKeySettings": "显示 RSA 公钥设置",
+  "hideRsaPublicKeySettings": "隐藏 RSA 公钥设置",
+  "currentRsaPublicKey": "当前公钥",
+  "defaultRsaPublicKey": "默认公钥"
 }

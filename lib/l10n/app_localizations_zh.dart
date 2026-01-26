@@ -1002,6 +1002,51 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get exampleProduction => '例如: 生产环境';
+
+  @override
+  String get rsaPublicKey => 'RSA 公钥';
+
+  @override
+  String get rsaPublicKeySettings => 'RSA 公钥设置';
+
+  @override
+  String get rsaPublicKeyHint => '用于加密登录密码的 RSA 公钥';
+
+  @override
+  String get rsaPublicKeyRequired => '请输入 RSA 公钥';
+
+  @override
+  String get rsaPublicKeyInvalid => 'RSA 公钥格式无效';
+
+  @override
+  String get rsaPublicKeySaved => 'RSA 公钥已保存';
+
+  @override
+  String get rsaPublicKeySaveFailed => '保存 RSA 公钥失败';
+
+  @override
+  String get resetToDefault => '重置为默认公钥';
+
+  @override
+  String get resetToDefaultConfirm => '确定要重置为默认公钥吗？';
+
+  @override
+  String get resetToDefaultSuccess => '已重置为默认公钥';
+
+  @override
+  String get resetToDefaultFailed => '重置失败';
+
+  @override
+  String get showRsaPublicKeySettings => '显示 RSA 公钥设置';
+
+  @override
+  String get hideRsaPublicKeySettings => '隐藏 RSA 公钥设置';
+
+  @override
+  String get currentRsaPublicKey => '当前公钥';
+
+  @override
+  String get defaultRsaPublicKey => '默认公钥';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
