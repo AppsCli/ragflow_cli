@@ -8,11 +8,12 @@ class ApiClient {
   static String? _token;
 
   static Future<void> initialize() async {
-    final config = await Storage.getServerConfig();
+    // 优先从激活的服务器配置中加载token
+    final config = await Storage.getActiveServerConfig();
     _baseUrl = config?.baseUrl;
     
     // 优先使用 ServerConfig 中的 token（应该是从响应headers中获取的完整Authorization值）
-    // 如果没有，从 Storage 获取 token
+    // 如果没有，从 Storage 获取 token（向后兼容）
     _token = config?.token ?? await Storage.getToken();
     
     // 如果token存在但没有Bearer前缀，添加前缀（兼容旧数据或access_token）
@@ -31,6 +32,11 @@ class ApiClient {
   
   static String? getToken() {
     return _token;
+  }
+
+  /// 清除token（当token失效时调用）
+  static void _clearToken() {
+    _token = null;
   }
 
   static String get baseUrl => _baseUrl ?? '';
@@ -127,6 +133,10 @@ class ApiClient {
       
       // 检查 HTTP 状态码
       if (response.statusCode < 200 || response.statusCode >= 300) {
+        // 如果是401未授权错误，清除token
+        if (response.statusCode == 401) {
+          _clearToken();
+        }
         return ApiResponse.error(
           data?['message'] ?? 'Request failed with status ${response.statusCode}',
           code: data?['code'] ?? response.statusCode,
@@ -138,6 +148,10 @@ class ApiClient {
       // code === 0 表示成功，其他值表示失败
       final responseCode = data?['code'] as int?;
       if (responseCode != null && responseCode != 0) {
+        // 如果是401未授权错误，清除token
+        if (responseCode == 401) {
+          _clearToken();
+        }
         return ApiResponse.error(
           data?['message'] ?? 'Request failed with code $responseCode',
           code: responseCode,

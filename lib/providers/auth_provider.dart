@@ -28,9 +28,8 @@ class AuthProvider with ChangeNotifier {
   bool get isAuthenticated => _user != null;
 
   AuthProvider() {
-    // 只加载服务器配置，不自动加载用户信息
-    // 这样每次打开APP都会显示登录界面
-    _loadServerConfigs();
+    // 尝试恢复登录状态（内部会加载服务器配置）
+    _restoreLoginState();
   }
 
   Future<void> _loadServerConfigs() async {
@@ -47,6 +46,87 @@ class AuthProvider with ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  /// 恢复登录状态（从存储中加载用户信息和token）
+  Future<void> _restoreLoginState() async {
+    try {
+      // 加载服务器配置
+      await _loadServerConfigs();
+      
+      // 检查是否有激活的服务器配置和token
+      final activeConfig = serverConfig;
+      if (activeConfig == null || activeConfig.baseUrl.isEmpty || activeConfig.token == null) {
+        // 没有服务器配置或token，清除用户信息
+        _user = null;
+        notifyListeners();
+        return;
+      }
+
+      // 设置API客户端的baseUrl和token
+      ApiClient.setBaseUrl(activeConfig.baseUrl);
+      ApiClient.setToken(activeConfig.token);
+
+      // 从存储中加载用户信息
+      final savedUser = await Storage.getUser();
+      if (savedUser == null) {
+        // 没有保存的用户信息，清除token
+        _clearInvalidToken();
+        return;
+      }
+
+      // 验证token是否有效
+      final isValid = await _validateToken();
+      if (isValid) {
+        // Token有效，恢复用户状态
+        _user = savedUser;
+        notifyListeners();
+      } else {
+        // Token无效，清除登录状态
+        _clearInvalidToken();
+      }
+    } catch (e) {
+      // 恢复失败，清除登录状态
+      _clearInvalidToken();
+    }
+  }
+
+  /// 验证token是否有效
+  Future<bool> _validateToken() async {
+    try {
+      final userInfo = await UserService.getUserInfo();
+      return userInfo != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// 清除无效的token和用户信息
+  void _clearInvalidToken() {
+    _user = null;
+    final activeConfig = serverConfig;
+    if (activeConfig != null && activeConfig.baseUrl.isNotEmpty) {
+      // 清除激活服务器的token但保留服务器地址
+      _serverConfigs = _serverConfigs.map((config) {
+        if (config.baseUrl == activeConfig.baseUrl) {
+          return config.copyWith(
+            token: null,
+            lastUpdated: DateTime.now(),
+          );
+        }
+        return config;
+      }).toList();
+      Storage.saveServerConfigs(_serverConfigs);
+    }
+    ApiClient.setToken(null);
+    Storage.clearUser();
+    notifyListeners();
+  }
+
+  /// 公开方法：手动恢复登录状态（用于应用启动时）
+  Future<bool> restoreLoginState() async {
+    await _restoreLoginState();
+    return isAuthenticated;
   }
 
   /// 添加新服务器配置

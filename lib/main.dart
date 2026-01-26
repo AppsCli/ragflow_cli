@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
-      child: Consumer2<LocaleProvider, ThemeProvider>(
-        builder: (context, localeProvider, themeProvider, child) {
+      child: Consumer3<LocaleProvider, ThemeProvider, AuthProvider>(
+        builder: (context, localeProvider, themeProvider, authProvider, child) {
           return MaterialApp(
             title: 'RAGFlow',
             debugShowCheckedModeBanner: false,
@@ -57,9 +57,9 @@ class MyApp extends StatelessWidget {
             ],
             theme: themeProvider.themeData,
             darkTheme: themeProvider.darkThemeData,
-            // 始终显示登录界面，不自动登录
-            // 即使用户已保存，也需要重新登录
-            home: const LoginPage(),
+            // 根据登录状态决定显示登录页面还是主页
+            // 如果已登录（token有效），显示主页；否则显示登录页面
+            home: authProvider.isAuthenticated ? const HomePage() : const LoginPage(),
             routes: {
               '/login': (context) => const LoginPage(),
               '/home': (context) => const HomePage(),

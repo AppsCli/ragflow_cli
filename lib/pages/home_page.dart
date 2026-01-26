@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/auth_provider.dart';
 import '../services/user_service.dart';
 import '../services/api_client.dart';
 import 'knowledge_page.dart';
@@ -36,8 +38,10 @@ class _HomePageState extends State<HomePage> {
       // 检查是否为认证错误（401 HTTP状态码 或 code 401）
       // 如果响应不成功或 code 为 401，说明认证失败
       if (!response.success || response.code == 401) {
-        // 认证失败，跳转到登录页面
+        // Token失效，清除登录状态
         if (mounted) {
+          final authProvider = Provider.of<AuthProvider>(context, listen: false);
+          await authProvider.logout();
           Navigator.of(context).pushReplacementNamed('/login');
         }
         return false;
@@ -45,8 +49,10 @@ class _HomePageState extends State<HomePage> {
       
       // 检查响应数据是否存在
       if (response.data == null) {
-        // 数据为空，可能是其他错误，跳转到登录页面
+        // 数据为空，可能是其他错误，清除登录状态并跳转到登录页面
         if (mounted) {
+          final authProvider = Provider.of<AuthProvider>(context, listen: false);
+          await authProvider.logout();
           Navigator.of(context).pushReplacementNamed('/login');
         }
         return false;
@@ -55,8 +61,10 @@ class _HomePageState extends State<HomePage> {
       // 认证通过
       return true;
     } catch (e) {
-      // 请求异常，跳转到登录页面
+      // 请求异常，清除登录状态并跳转到登录页面
       if (mounted) {
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        await authProvider.logout();
         Navigator.of(context).pushReplacementNamed('/login');
       }
       return false;
