@@ -1,6 +1,6 @@
 {
-    "name": "ragflow_cli",
-    "short_name": "ragflow_cli",
+    "name": "RAGFlowCli",
+    "short_name": "RAGFlowCli",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#ffffff",
