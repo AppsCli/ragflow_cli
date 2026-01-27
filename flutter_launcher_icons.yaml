@@ -1,0 +1,24 @@
+flutter_launcher_icons:
+  android: true
+  ios: true
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#ffffff"
+    theme_color: "#000000"
+  windows:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icon/icon.png"
+  
+  # 图标源文件路径（建议使用 1024x1024 的 PNG 图片）
+  image_path: "assets/icon/icon.png"
+  
+  # 自适应图标配置（Android）- 如果图标有透明背景，可以设置背景色
+  adaptive_icon_background: "#ffffff"
+  
+  # 移除旧图标
+  remove_alpha_ios: true
