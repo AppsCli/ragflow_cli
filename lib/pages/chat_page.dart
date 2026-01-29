@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../models/dialog.dart' as models;
 import '../services/chat_service.dart';
 import 'dialog_detail_page.dart';
@@ -39,9 +39,8 @@ class _ChatPageState extends State<ChatPage> {
         _isLoading = false;
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.loadFailed(e.toString()))),
+          SnackBar(content: Text(Strings.loadFailed(e.toString()))),
         );
       }
     }
@@ -54,16 +53,15 @@ class _ChatPageState extends State<ChatPage> {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: Text(l10n.createNewDialog),
+          title: Text(Strings.createNewDialog),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: l10n.dialogName,
+                  labelText: Strings.dialogName,
                   border: const OutlineInputBorder(),
                 ),
               ),
@@ -71,7 +69,7 @@ class _ChatPageState extends State<ChatPage> {
               TextField(
                 controller: descriptionController,
                 decoration: InputDecoration(
-                  labelText: l10n.descriptionOptional,
+                  labelText: Strings.descriptionOptional,
                   border: const OutlineInputBorder(),
                 ),
                 maxLines: 3,
@@ -81,11 +79,11 @@ class _ChatPageState extends State<ChatPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.create),
+              child: Text(Strings.create),
             ),
           ],
         );
@@ -100,11 +98,9 @@ class _ChatPageState extends State<ChatPage> {
               ? null
               : descriptionController.text.trim(),
         );
-
-        final l10n = AppLocalizations.of(context)!;
         if (dialog != null && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.createSuccess)),
+            SnackBar(content: Text(Strings.createSuccess)),
           );
           _loadDialogs();
           
@@ -120,14 +116,13 @@ class _ChatPageState extends State<ChatPage> {
           );
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.createFailed)),
+            SnackBar(content: Text(Strings.createFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${l10n.createFailed}: $e')),
+            SnackBar(content: Text('${Strings.createFailed}: $e')),
           );
         }
       }
@@ -138,7 +133,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.chat),
+        title: Text(Strings.chat),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -150,7 +145,7 @@ class _ChatPageState extends State<ChatPage> {
           ? const Center(child: CircularProgressIndicator())
           : _dialogs.isEmpty
               ? Center(
-                  child: Text(AppLocalizations.of(context)!.noDialogs, style: const TextStyle(fontSize: 16)),
+                  child: Text(Strings.noDialogs, style: const TextStyle(fontSize: 16)),
                 )
               : RefreshIndicator(
                   onRefresh: _loadDialogs,
@@ -168,7 +163,7 @@ class _ChatPageState extends State<ChatPage> {
                           leading: _buildAvatar(dialog.icon),
                           title: Text(dialog.name),
                           subtitle: Text(
-                            dialog.description ?? AppLocalizations.of(context)!.noDescription,
+                            dialog.description ?? Strings.noDescription,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

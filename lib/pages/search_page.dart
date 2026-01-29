@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../models/knowledge_base.dart';
 import '../models/search_result.dart';
 import '../services/knowledge_service.dart';
@@ -60,9 +60,8 @@ class _SearchPageState extends State<SearchPage> {
         _isLoadingKb = false;
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.loadKnowledgeBaseFailed(e.toString()))),
+          SnackBar(content: Text(Strings.loadKnowledgeBaseFailed(e.toString()))),
         );
       }
     }
@@ -81,18 +80,17 @@ class _SearchPageState extends State<SearchPage> {
 
   /// 发送问题
   Future<void> _askQuestion() async {
-    final l10n = AppLocalizations.of(context)!;
     final question = _questionController.text.trim();
     if (question.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.enterQuestion)),
+        SnackBar(content: Text(Strings.enterQuestion)),
       );
       return;
     }
 
     if (_selectedKbIds.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.pleaseSelectAtLeastOneKnowledgeBase)),
+        SnackBar(content: Text(Strings.pleaseSelectAtLeastOneKnowledgeBase)),
       );
       return;
     }
@@ -187,10 +185,9 @@ class _SearchPageState extends State<SearchPage> {
         _isLoadingRelated = false;
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.askQuestionFailed(e.toString()))),
-        );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(Strings.askQuestionFailed(e.toString()))),
+          );
       }
     }
   }
@@ -205,7 +202,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.search),
+        title: Text(Strings.search),
       ),
       body: Column(
         children: [
@@ -219,7 +216,7 @@ class _SearchPageState extends State<SearchPage> {
                 Row(
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.selectKnowledgeBase,
+                      Strings.selectKnowledgeBase,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -229,7 +226,7 @@ class _SearchPageState extends State<SearchPage> {
                     TextButton.icon(
                       onPressed: _loadKnowledgeBases,
                       icon: const Icon(Icons.refresh, size: 18),
-                      label: Text(AppLocalizations.of(context)!.refresh),
+                      label: Text(Strings.refresh),
                     ),
                   ],
                 ),
@@ -238,7 +235,7 @@ class _SearchPageState extends State<SearchPage> {
                     ? const Center(child: CircularProgressIndicator())
                     : _knowledgeBases.isEmpty
                         ? Text(
-                            AppLocalizations.of(context)!.noKnowledgeBase,
+                            Strings.noKnowledgeBase,
                             style: const TextStyle(color: Colors.grey),
                           )
                         : Wrap(
@@ -266,7 +263,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: TextField(
                     controller: _questionController,
                     decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!.enterQuestion,
+                      hintText: Strings.enterQuestion,
                       border: const OutlineInputBorder(),
                     ),
                     maxLines: 3,
@@ -283,7 +280,7 @@ class _SearchPageState extends State<SearchPage> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.search),
-                  label: Text(AppLocalizations.of(context)!.ask),
+                  label: Text(Strings.ask),
                 ),
               ],
             ),
@@ -300,7 +297,7 @@ class _SearchPageState extends State<SearchPage> {
                         // 答案显示（使用 Markdown 渲染）
                         if (_currentAnswer.isNotEmpty) ...[
                           Text(
-                            AppLocalizations.of(context)!.answer,
+                            Strings.answer,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -345,7 +342,7 @@ class _SearchPageState extends State<SearchPage> {
                         // 相关文件
                         if (_relatedChunks.isNotEmpty) ...[
                           Text(
-                            AppLocalizations.of(context)!.relatedFiles,
+                            Strings.relatedFiles,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -367,7 +364,7 @@ class _SearchPageState extends State<SearchPage> {
                                   children: [
                                     if (chunk.similarity != null)
                                       Text(
-                                        AppLocalizations.of(context)!.similarity((chunk.similarity! * 100).toStringAsFixed(1)),
+                                        Strings.similarity((chunk.similarity! * 100).toStringAsFixed(1)),
                                         style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 12,
@@ -392,7 +389,7 @@ class _SearchPageState extends State<SearchPage> {
                           const Center(child: CircularProgressIndicator())
                         else if (_relatedQuestions.isNotEmpty) ...[
                           Text(
-                            AppLocalizations.of(context)!.relatedQuestions,
+                            Strings.relatedQuestions,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -415,7 +412,7 @@ class _SearchPageState extends State<SearchPage> {
                   )
                 : Center(
                     child: Text(
-                      AppLocalizations.of(context)!.pleaseSelectKnowledgeBaseAndEnterQuestion,
+                      Strings.pleaseSelectKnowledgeBaseAndEnterQuestion,
                       style: const TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../services/agent_service.dart';
 
 class AgentDetailPage extends StatefulWidget {
@@ -91,13 +91,12 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
       ).listen(
         (data) {
           if (data['error'] == true) {
-            final l10n = AppLocalizations.of(context)!;
             setState(() {
               _isSending = false;
               _streamingAnswer = '';
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.sendFailed(data['message'] ?? l10n.requestFailed))),
+              SnackBar(content: Text(Strings.sendFailed(data['message'] ?? Strings.requestFailed))),
             );
             return;
           }
@@ -107,10 +106,9 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
               _isSending = false;
               _streamingAnswer = '';
             });
-            final l10n = AppLocalizations.of(context)!;
-            final errorMessage = data['message'] as String? ?? l10n.requestFailed;
+            final errorMessage = data['message'] as String? ?? Strings.requestFailed;
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.sendFailed(errorMessage))),
+              SnackBar(content: Text(Strings.sendFailed(errorMessage))),
             );
             return;
           }
@@ -149,9 +147,8 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
             _isSending = false;
             _streamingAnswer = '';
           });
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.sendFailed(error.toString()))),
+            SnackBar(content: Text(Strings.sendFailed(error.toString()))),
           );
         },
       );
@@ -161,31 +158,28 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
         _streamingAnswer = '';
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.sendFailed(e.toString()))),
+          SnackBar(content: Text(Strings.sendFailed(e.toString()))),
         );
       }
     }
   }
 
   Future<void> _resetAgent() async {
-    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: Text(l10n.resetAgent),
-          content: Text(l10n.resetAgentConfirm),
+          title: Text(Strings.resetAgent),
+          content: Text(Strings.resetAgentConfirm),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.reset),
+              child: Text(Strings.reset),
             ),
           ],
         );
@@ -195,7 +189,6 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
     if (confirmed == true) {
       try {
         final success = await AgentService.resetAgent(widget.agentId);
-        final l10n = AppLocalizations.of(context)!;
         if (success && mounted) {
           setState(() {
             _messages.clear();
@@ -203,18 +196,17 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
             _streamingAnswer = '';
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.resetSuccess)),
+            SnackBar(content: Text(Strings.resetSuccess)),
           );
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.resetFailed)),
+            SnackBar(content: Text(Strings.resetFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${l10n.resetFailed}: $e')),
+            SnackBar(content: Text('${Strings.resetFailed}: $e')),
           );
         }
       }
@@ -242,7 +234,7 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _resetAgent,
-            tooltip: AppLocalizations.of(context)!.resetAgent,
+            tooltip: Strings.resetAgent,
           ),
         ],
       ),
@@ -279,7 +271,7 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                   const SizedBox(width: 8),
-                  Text(AppLocalizations.of(context)!.thinking),
+                  Text(Strings.thinking),
                 ],
               ),
             ),
@@ -295,7 +287,7 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                     child: TextField(
                       controller: _messageController,
                       decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.enterMessage,
+                        hintText: Strings.enterMessage,
                         border: const OutlineInputBorder(),
                       ),
                       maxLines: null,
@@ -321,10 +313,10 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              Text(AppLocalizations.of(context)!.stop, style: const TextStyle(color: Colors.white)),
+                              Text(Strings.stop, style: const TextStyle(color: Colors.white)),
                             ],
                           )
-                        : Text(AppLocalizations.of(context)!.send),
+                        : Text(Strings.send),
                   ),
                 ],
               ),
@@ -362,7 +354,7 @@ class _AgentDetailPageState extends State<AgentDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isUser ? AppLocalizations.of(context)!.you : 'Agent',
+                    isUser ? Strings.you : 'Agent',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: isUser ? Colors.blue[800] : Colors.grey[800],

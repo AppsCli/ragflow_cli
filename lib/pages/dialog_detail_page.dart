@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../models/dialog.dart';
 import '../services/chat_service.dart';
 
@@ -53,9 +53,8 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
         _isLoading = false;
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.loadConversationListFailed(e.toString()))),
+          SnackBar(content: Text(Strings.loadConversationListFailed(e.toString()))),
         );
       }
     }
@@ -70,35 +69,31 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
           _selectedConversation = conversation;
         });
       } else if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.getConversationInfoFailed)),
+          SnackBar(content: Text(Strings.getConversationInfoFailed)),
         );
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.getConversationInfoFailed}: $e')),
+          SnackBar(content: Text('${Strings.getConversationInfoFailed}: $e')),
         );
       }
     }
   }
 
   Future<void> _createConversation() async {
-    final l10n = AppLocalizations.of(context)!;
     final nameController = TextEditingController(text: 'New conversation');
 
     final result = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: Text(l10n.createNewConversation),
+          title: Text(Strings.createNewConversation),
           content: TextField(
             controller: nameController,
             decoration: InputDecoration(
-              labelText: l10n.conversationName,
+              labelText: Strings.conversationName,
               border: const OutlineInputBorder(),
             ),
             autofocus: true,
@@ -111,11 +106,11 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.create),
+              child: Text(Strings.create),
             ),
           ],
         );
@@ -138,24 +133,20 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
           setState(() {
             _selectedConversation = newConversation;
           });
-
-          final l10n = AppLocalizations.of(context)!;
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.createSuccess)),
+              SnackBar(content: Text(Strings.createSuccess)),
             );
           }
         } else if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.createFailed)),
+            SnackBar(content: Text(Strings.createFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${l10n.createFailed}: $e')),
+            SnackBar(content: Text('${Strings.createFailed}: $e')),
           );
         }
       }
@@ -182,13 +173,13 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
                 _isSidebarVisible = !_isSidebarVisible;
               });
             },
-            tooltip: _isSidebarVisible ? AppLocalizations.of(context)!.hideList : AppLocalizations.of(context)!.showList,
+            tooltip: _isSidebarVisible ? Strings.hideList : Strings.showList,
           ),
           // 刷新按钮
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadConversations,
-            tooltip: AppLocalizations.of(context)!.refreshConversationList,
+            tooltip: Strings.refreshConversationList,
           ),
         ],
       ),
@@ -217,7 +208,7 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
                           child: ElevatedButton.icon(
                             onPressed: _isLoading ? null : _createConversation,
                             icon: const Icon(Icons.add, size: 20),
-                            label: Text(AppLocalizations.of(context)!.createNewConversation),
+                            label: Text(Strings.createNewConversation),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                             ),
@@ -231,7 +222,7 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
                             ? const Center(child: CircularProgressIndicator())
                             : _conversations.isEmpty
                                 ? Center(
-                                    child: Text(AppLocalizations.of(context)!.noConversations, style: const TextStyle(fontSize: 16)),
+                                    child: Text(Strings.noConversations, style: const TextStyle(fontSize: 16)),
                                   )
                                 : ListView.builder(
                                     itemCount: _conversations.length,
@@ -271,7 +262,7 @@ class _DialogDetailPageState extends State<DialogDetailPage> {
                     dialogId: widget.dialogId,
                   )
                 : Center(
-                    child: Text(AppLocalizations.of(context)!.selectConversation, style: const TextStyle(fontSize: 16)),
+                    child: Text(Strings.selectConversation, style: const TextStyle(fontSize: 16)),
                   ),
           ),
         ],
@@ -424,13 +415,12 @@ class _ChatViewState extends State<ChatView> {
           // print('Received SSE data: $data');
           
           if (data['error'] == true) {
-            final l10n = AppLocalizations.of(context)!;
             setState(() {
               _isSending = false;
               _streamingAnswer = '';
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.sendFailed(data['message'] ?? l10n.requestFailed))),
+              SnackBar(content: Text(Strings.sendFailed(data['message'] ?? Strings.requestFailed))),
             );
             return;
           }
@@ -441,10 +431,9 @@ class _ChatViewState extends State<ChatView> {
               _isSending = false;
               _streamingAnswer = '';
             });
-            final l10n = AppLocalizations.of(context)!;
-            final errorMessage = data['message'] as String? ?? l10n.requestFailed;
+            final errorMessage = data['message'] as String? ?? Strings.requestFailed;
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.sendFailed(errorMessage))),
+              SnackBar(content: Text(Strings.sendFailed(errorMessage))),
             );
             return;
           }
@@ -500,9 +489,8 @@ class _ChatViewState extends State<ChatView> {
             _isSending = false;
             _streamingAnswer = '';
           });
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.sendFailed(error.toString()))),
+            SnackBar(content: Text(Strings.sendFailed(error.toString()))),
           );
         },
       );
@@ -512,9 +500,8 @@ class _ChatViewState extends State<ChatView> {
         _streamingAnswer = '';
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.sendFailed(e.toString()))),
+          SnackBar(content: Text(Strings.sendFailed(e.toString()))),
         );
       }
     }
@@ -568,7 +555,7 @@ class _ChatViewState extends State<ChatView> {
                 child: TextField(
                   controller: _messageController,
                   decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context)!.enterMessage,
+                    hintText: Strings.enterMessage,
                     border: const OutlineInputBorder(),
                   ),
                   maxLines: null,
@@ -594,10 +581,10 @@ class _ChatViewState extends State<ChatView> {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Text(AppLocalizations.of(context)!.stop, style: const TextStyle(color: Colors.white)),
+                          Text(Strings.stop, style: const TextStyle(color: Colors.white)),
                         ],
                       )
-                    : Text(AppLocalizations.of(context)!.send),
+                    : Text(Strings.send),
               ),
             ],
           ),

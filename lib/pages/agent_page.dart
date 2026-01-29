@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../services/agent_service.dart';
 import 'agent_detail_page.dart';
 
@@ -59,9 +59,8 @@ class _AgentPageState extends State<AgentPage> {
         _isLoading = false;
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.loadFailed(e.toString()))),
+          SnackBar(content: Text(Strings.loadFailed(e.toString()))),
         );
       }
     }
@@ -91,7 +90,7 @@ class _AgentPageState extends State<AgentPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)!.searchAgents,
+                hintText: Strings.searchAgents,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchKeywords.isNotEmpty
                     ? IconButton(
@@ -127,7 +126,7 @@ class _AgentPageState extends State<AgentPage> {
                 ? const Center(child: CircularProgressIndicator())
                 : _agents.isEmpty
                     ? Center(
-                        child: Text(AppLocalizations.of(context)!.noAgents, style: const TextStyle(fontSize: 16)),
+                        child: Text(Strings.noAgents, style: const TextStyle(fontSize: 16)),
                       )
                     : RefreshIndicator(
                         onRefresh: () => _loadAgents(),
@@ -143,9 +142,9 @@ class _AgentPageState extends State<AgentPage> {
                               ),
                               child: ListTile(
                                 leading: _buildAvatar(agent['avatar']),
-                                title: Text(agent['title'] ?? AppLocalizations.of(context)!.unnamed),
+                                title: Text(agent['title'] ?? Strings.unnamed),
                                 subtitle: Text(
-                                  agent['description'] ?? agent['title'] ?? AppLocalizations.of(context)!.noDescription,
+                                  agent['description'] ?? agent['title'] ?? Strings.noDescription,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -156,7 +155,7 @@ class _AgentPageState extends State<AgentPage> {
                                     MaterialPageRoute(
                                       builder: (_) => AgentDetailPage(
                                         agentId: agent['id'] ?? '',
-                                        agentName: agent['title'] ?? AppLocalizations.of(context)!.unnamed,
+                                        agentName: agent['title'] ?? Strings.unnamed,
                                       ),
                                     ),
                                   );
@@ -175,7 +174,7 @@ class _AgentPageState extends State<AgentPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.totalAgents(_total),
+                    Strings.totalAgents(_total),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(width: 16),
@@ -183,13 +182,13 @@ class _AgentPageState extends State<AgentPage> {
                     TextButton.icon(
                       onPressed: () => _loadAgents(page: _currentPage - 1),
                       icon: const Icon(Icons.arrow_back, size: 16),
-                      label: Text(AppLocalizations.of(context)!.previousPage),
+                      label: Text(Strings.previousPage),
                     ),
                   if ((_currentPage * _pageSize) < _total)
                     TextButton.icon(
                       onPressed: () => _loadAgents(page: _currentPage + 1),
                       icon: const Icon(Icons.arrow_forward, size: 16),
-                      label: Text(AppLocalizations.of(context)!.nextPage),
+                      label: Text(Strings.nextPage),
                     ),
                 ],
               ),

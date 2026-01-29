@@ -1,0 +1,52 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/iotserv/.ohos/config/default_ohos_9I7hvGhGI-B90AdgxU1QA7ww1blatEI9cJxKEfHAGOU=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001AB897F06FDCB5B49EB33C7B80AB0F35C025E2C78596AAB23F81C33BA6E60F4D2C2385C36E6A99",
+          "profile": "/Users/iotserv/.ohos/config/default_ohos_9I7hvGhGI-B90AdgxU1QA7ww1blatEI9cJxKEfHAGOU=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/iotserv/.ohos/config/default_ohos_9I7hvGhGI-B90AdgxU1QA7ww1blatEI9cJxKEfHAGOU=.p12",
+          "storePassword": "0000001AF94BF352C2226B28C7DB9B1A697EFA2F33162ED7EC888684CBA806446C85A587D5236111EE2B"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug"
+      },
+      {
+        "name": "profile"
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}

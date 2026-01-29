@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../providers/auth_provider.dart';
 import '../services/system_service.dart';
 import '../models/server_config.dart';
@@ -91,14 +91,11 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
   Future<void> _showAddServerDialog() async {
     _urlController.clear();
     _nameController.clear();
-    final l10n = AppLocalizations.of(context)!;
-
     final result = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: Text(l10n.addServer),
+          title: Text(Strings.addServer),
           content: Form(
             key: _formKey,
             child: Column(
@@ -107,8 +104,8 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: l10n.serverName,
-                    hintText: AppLocalizations.of(context)!.exampleProduction,
+                    labelText: Strings.serverName,
+                    hintText: Strings.exampleProduction,
                     border: const OutlineInputBorder(),
                     prefixIcon: const Icon(Icons.label),
                   ),
@@ -117,18 +114,18 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                 TextFormField(
                   controller: _urlController,
                   decoration: InputDecoration(
-                    labelText: l10n.serverAddress,
-                    hintText: l10n.exampleServerAddress,
+                    labelText: Strings.serverAddress,
+                    hintText: Strings.exampleServerAddress,
                     border: const OutlineInputBorder(),
                     prefixIcon: const Icon(Icons.cloud),
                   ),
                   keyboardType: TextInputType.url,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return l10n.serverAddressRequired;
+                      return Strings.serverAddressRequired;
                     }
                     if (!value.startsWith('http://') && !value.startsWith('https://')) {
-                      return l10n.serverAddressFormatError;
+                      return Strings.serverAddressFormatError;
                     }
                     return null;
                   },
@@ -139,7 +136,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -147,7 +144,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                   Navigator.pop(context, true);
                 }
               },
-              child: Text(l10n.addServer),
+              child: Text(Strings.addServer),
             ),
           ],
         );
@@ -166,13 +163,13 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
       if (mounted) {
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.serverAdded)),
+            SnackBar(content: Text(Strings.serverAdded)),
           );
           // 如果这是第一个服务器，可能需要重新加载系统信息
           _loadSystemInfo();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.addFailed)),
+            SnackBar(content: Text(Strings.addFailed)),
           );
         }
       }
@@ -181,8 +178,6 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
 
   Future<void> _handleActivate(ServerConfig config) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final l10n = AppLocalizations.of(context)!;
-    
     // 如果已经是激活的服务器，不需要操作
     if (config.isActive) {
       return;
@@ -192,19 +187,18 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         final serverName = config.name.isNotEmpty ? config.name : config.baseUrl;
         return AlertDialog(
-          title: Text(l10n.confirm),
-          content: Text(l10n.switchServerConfirm(serverName)),
+          title: Text(Strings.confirm),
+          content: Text(Strings.switchServerConfirm(serverName)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.confirm),
+              child: Text(Strings.confirm),
             ),
           ],
         );
@@ -231,32 +225,30 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.switchFailed)),
+          SnackBar(content: Text(Strings.switchFailed)),
         );
       }
     }
   }
 
   Future<void> _handleDelete(ServerConfig config) async {
-    final l10n = AppLocalizations.of(context)!;
     // 显示确认对话框
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         final serverName = config.name.isNotEmpty ? config.name : config.baseUrl;
         return AlertDialog(
-          title: Text(l10n.confirm),
-          content: Text(l10n.deleteServerConfirm(serverName)),
+          title: Text(Strings.confirm),
+          content: Text(Strings.deleteServerConfirm(serverName)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
               style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: Text(l10n.delete),
+              child: Text(Strings.delete),
             ),
           ],
         );
@@ -274,7 +266,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
     if (mounted) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.serverDeleted)),
+          SnackBar(content: Text(Strings.serverDeleted)),
         );
         
         // 如果删除的是激活的服务器，需要重新加载系统信息
@@ -283,7 +275,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.deleteFailed)),
+          SnackBar(content: Text(Strings.deleteFailed)),
         );
       }
     }
@@ -291,10 +283,9 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.serverSettings),
+        title: Text(Strings.serverSettings),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -307,8 +298,6 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                 Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {
                     final servers = authProvider.serverConfigs;
-                    final l10n = AppLocalizations.of(context)!;
-                    
                     if (servers.isEmpty) {
                       return Card(
                         child: Padding(
@@ -322,7 +311,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                l10n.noServerConfig,
+                                Strings.noServerConfig,
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey[600],
@@ -330,7 +319,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                l10n.addServerHint,
+                                Strings.addServerHint,
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey,
@@ -346,14 +335,14 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10n.serverList,
+                          Strings.serverList,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        ...servers.map((server) => _buildServerCard(server, l10n)),
+                        ...servers.map((server) => _buildServerCard(server)),
                       ],
                     );
                   },
@@ -363,7 +352,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                 ElevatedButton.icon(
                   onPressed: _isLoading ? null : _showAddServerDialog,
                   icon: const Icon(Icons.add),
-                  label: Text(l10n.addServer),
+                  label: Text(Strings.addServer),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
@@ -383,7 +372,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                             const Icon(Icons.info_outline),
                             const SizedBox(width: 8),
                             Text(
-                              l10n.systemVersion,
+                              Strings.systemVersion,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -400,7 +389,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                               TextButton.icon(
                                 onPressed: _loadSystemVersion,
                                 icon: const Icon(Icons.refresh, size: 16),
-                                label: Text(l10n.refresh),
+                                label: Text(Strings.refresh),
                               ),
                           ],
                         ),
@@ -432,7 +421,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                             const Icon(Icons.monitor_heart),
                             const SizedBox(width: 8),
                             Text(
-                              AppLocalizations.of(context)!.systemStatus,
+                              Strings.systemStatus,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -449,23 +438,23 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                               TextButton.icon(
                                 onPressed: _loadSystemStatus,
                                 icon: const Icon(Icons.refresh, size: 16),
-                                label: Text(AppLocalizations.of(context)!.refresh),
+                                label: Text(Strings.refresh),
                               ),
                           ],
                         ),
                         if (_systemStatus != null) ...[
                           const SizedBox(height: 16),
-                          _buildStatusItem(l10n.documentEngine, _systemStatus!.docEngine, l10n),
+                          _buildStatusItem(Strings.documentEngine, _systemStatus!.docEngine),
                           const SizedBox(height: 12),
-                          _buildStatusItem(l10n.storage, _systemStatus!.storage, l10n),
+                          _buildStatusItem(Strings.storage, _systemStatus!.storage),
                           const SizedBox(height: 12),
-                          _buildStatusItem(l10n.database, _systemStatus!.database, l10n),
+                          _buildStatusItem(Strings.database, _systemStatus!.database),
                           const SizedBox(height: 12),
-                          _buildStatusItem(l10n.redis, _systemStatus!.redis, l10n),
+                          _buildStatusItem(Strings.redis, _systemStatus!.redis),
                         ] else if (!_isLoadingStatus) ...[
                           const SizedBox(height: 8),
                           Text(
-                            l10n.cannotGetSystemStatus,
+                            Strings.cannotGetSystemStatus,
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ],
@@ -475,7 +464,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  l10n.serverAddressHint,
+                  Strings.serverAddressHint,
                   style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
                 const SizedBox(height: 32),
@@ -493,7 +482,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                             const Icon(Icons.vpn_key),
                             const SizedBox(width: 8),
                             Text(
-                              l10n.rsaPublicKeySettings,
+                              Strings.rsaPublicKeySettings,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -503,7 +492,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          l10n.rsaPublicKeyHint,
+                          Strings.rsaPublicKeyHint,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
@@ -519,7 +508,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                               children: [
                                 if (hasCustomKey) ...[
                                   Text(
-                                    l10n.currentRsaPublicKey,
+                                    Strings.currentRsaPublicKey,
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -546,7 +535,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                                   const SizedBox(height: 16),
                                 ] else ...[
                                   Text(
-                                    l10n.defaultRsaPublicKey,
+                                    Strings.defaultRsaPublicKey,
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -575,7 +564,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                                 ElevatedButton.icon(
                                   onPressed: () => _handleResetRsaPublicKey(context),
                                   icon: const Icon(Icons.restore),
-                                  label: Text(l10n.resetToDefault),
+                                  label: Text(Strings.resetToDefault),
                                   style: ElevatedButton.styleFrom(
                                     padding: const EdgeInsets.symmetric(vertical: 12),
                                   ),
@@ -597,21 +586,19 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
   }
 
   Future<void> _handleResetRsaPublicKey(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
-    
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(l10n.resetToDefault),
-        content: Text(l10n.resetToDefaultConfirm),
+        title: Text(Strings.resetToDefault),
+        content: Text(Strings.resetToDefaultConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.cancel),
+            child: Text(Strings.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.confirm),
+            child: Text(Strings.confirm),
           ),
         ],
       ),
@@ -622,7 +609,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         await Storage.removeRsaPublicKey();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.resetToDefaultSuccess)),
+            SnackBar(content: Text(Strings.resetToDefaultSuccess)),
           );
           // 刷新界面
           setState(() {});
@@ -630,14 +617,14 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${l10n.resetToDefaultFailed}: $e')),
+            SnackBar(content: Text('${Strings.resetToDefaultFailed}: $e')),
           );
         }
       }
     }
   }
 
-  Widget _buildServerCard(ServerConfig server, AppLocalizations l10n) {
+  Widget _buildServerCard(ServerConfig server) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: server.isActive ? 4 : 1,
@@ -693,7 +680,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                         const Icon(Icons.check_circle, size: 16, color: Colors.blue),
                         const SizedBox(width: 4),
                         Text(
-                          l10n.active,
+                          Strings.active,
                           style: const TextStyle(
                             color: Colors.blue,
                             fontSize: 12,
@@ -713,7 +700,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                   TextButton.icon(
                     onPressed: () => _handleActivate(server),
                     icon: const Icon(Icons.power_settings_new, size: 18),
-                    label: Text(l10n.activate),
+                    label: Text(Strings.activate),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.blue,
                     ),
@@ -723,7 +710,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
                   onPressed: () => _handleDelete(server),
                   icon: const Icon(Icons.delete_outline),
                   color: Colors.red,
-                  tooltip: l10n.delete,
+                  tooltip: Strings.delete,
                 ),
               ],
             ),
@@ -733,19 +720,19 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
     );
   }
 
-  Widget _buildStatusItem(String label, ComponentStatus? status, AppLocalizations l10n) {
+  Widget _buildStatusItem(String label, ComponentStatus? status) {
     if (status == null) {
       return Row(
         children: [
           Expanded(child: Text(label)),
-          Text(l10n.unknown, style: const TextStyle(color: Colors.grey)),
+          Text(Strings.unknown, style: const TextStyle(color: Colors.grey)),
         ],
       );
     }
 
     final isHealthy = status.isHealthy;
     final statusColor = isHealthy ? Colors.green : Colors.red;
-    final statusText = isHealthy ? l10n.normal : l10n.abnormal;
+    final statusText = isHealthy ? Strings.normal : Strings.abnormal;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -788,7 +775,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.elapsed != null) ...[
           const SizedBox(height: 4),
           Text(
-            l10n.responseTime(status.elapsed!),
+            Strings.responseTime(status.elapsed!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],
@@ -798,7 +785,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.type != null) ...[
           const SizedBox(height: 2),
           Text(
-            l10n.type(status.type!),
+            Strings.type(status.type!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],
@@ -808,7 +795,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.storage != null) ...[
           const SizedBox(height: 2),
           Text(
-            l10n.storageInfo(status.storage!),
+            Strings.storageInfo(status.storage!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],
@@ -818,7 +805,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.database != null) ...[
           const SizedBox(height: 2),
           Text(
-            l10n.databaseInfo(status.database!),
+            Strings.databaseInfo(status.database!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],
@@ -828,7 +815,7 @@ class _ServerConfigPageState extends State<ServerConfigPage> {
         if (status.error != null) ...[
           const SizedBox(height: 4),
           Text(
-            l10n.error(status.error!),
+            Strings.error(status.error!),
             style: TextStyle(
               fontSize: 12,
               color: Colors.red[700],

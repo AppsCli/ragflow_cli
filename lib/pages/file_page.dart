@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_picker_ohos/file_picker_ohos.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../services/file_service.dart';
 import 'file_detail_page.dart';
 
@@ -40,9 +40,8 @@ class _FilePageState extends State<FilePage> {
         _isLoading = false;
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.loadFailed(e.toString()))),
+          SnackBar(content: Text(Strings.loadFailed(e.toString()))),
         );
       }
     }
@@ -52,7 +51,7 @@ class _FilePageState extends State<FilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.fileManagement),
+        title: Text(Strings.fileManagement),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -64,7 +63,7 @@ class _FilePageState extends State<FilePage> {
           ? const Center(child: CircularProgressIndicator())
           : _files.isEmpty
               ? Center(
-                  child: Text(AppLocalizations.of(context)!.noFiles, style: const TextStyle(fontSize: 16)),
+                  child: Text(Strings.noFiles, style: const TextStyle(fontSize: 16)),
                 )
               : RefreshIndicator(
                   onRefresh: _loadFiles,
@@ -81,11 +80,11 @@ class _FilePageState extends State<FilePage> {
                         ),
                         child: ListTile(
                           leading: Icon(isFolder ? Icons.folder : Icons.insert_drive_file),
-                          title: Text(file['name'] ?? AppLocalizations.of(context)!.unnamed),
+                          title: Text(file['name'] ?? Strings.unnamed),
                           subtitle: isFolder
                               ? null
                               : Text(
-                                  '${AppLocalizations.of(context)!.size}: ${_formatFileSize(file['size'] ?? 0)}',
+                                  '${Strings.size}: ${_formatFileSize(file['size'] ?? 0)}',
                                 ),
                                 trailing: file['type'] == 'folder'
                                     ? const Icon(Icons.chevron_right)
@@ -108,7 +107,7 @@ class _FilePageState extends State<FilePage> {
                                               children: [
                                                 const Icon(Icons.preview, size: 20),
                                                 const SizedBox(width: 8),
-                                                Text(AppLocalizations.of(context)!.preview),
+                                                Text(Strings.preview),
                                               ],
                                             ),
                                           ),
@@ -118,7 +117,7 @@ class _FilePageState extends State<FilePage> {
                                               children: [
                                                 const Icon(Icons.download, size: 20),
                                                 const SizedBox(width: 8),
-                                                Text(AppLocalizations.of(context)!.download),
+                                                Text(Strings.download),
                                               ],
                                             ),
                                           ),
@@ -128,7 +127,7 @@ class _FilePageState extends State<FilePage> {
                                               children: [
                                                 const Icon(Icons.info, size: 20),
                                                 const SizedBox(width: 8),
-                                                Text(AppLocalizations.of(context)!.detail),
+                                                Text(Strings.detail),
                                               ],
                                             ),
                                           ),
@@ -138,7 +137,7 @@ class _FilePageState extends State<FilePage> {
                                               children: [
                                                 const Icon(Icons.delete, color: Colors.red, size: 20),
                                                 const SizedBox(width: 8),
-                                                Text(AppLocalizations.of(context)!.delete, style: const TextStyle(color: Colors.red)),
+                                                Text(Strings.delete, style: const TextStyle(color: Colors.red)),
                                               ],
                                             ),
                                           ),
@@ -169,7 +168,7 @@ class _FilePageState extends State<FilePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _uploadFile,
         child: const Icon(Icons.upload),
-        tooltip: AppLocalizations.of(context)!.uploadFile,
+        tooltip: Strings.uploadFile,
       ),
     );
   }
@@ -192,17 +191,15 @@ class _FilePageState extends State<FilePage> {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.cannotOpenPreview(previewUrl))),
+            SnackBar(content: Text(Strings.cannotOpenPreview(previewUrl))),
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.previewFailed(e.toString()))),
+          SnackBar(content: Text(Strings.previewFailed(e.toString()))),
         );
       }
     }
@@ -214,10 +211,9 @@ class _FilePageState extends State<FilePage> {
     if (fileId == null) return;
 
     try {
-      final l10n = AppLocalizations.of(context)!;
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.downloading)),
+          SnackBar(content: Text(Strings.downloading)),
         );
       }
 
@@ -225,7 +221,7 @@ class _FilePageState extends State<FilePage> {
       if (fileBytes == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.downloadFailed)),
+            SnackBar(content: Text(Strings.downloadFailed)),
           );
         }
         return;
@@ -239,14 +235,13 @@ class _FilePageState extends State<FilePage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.downloadSuccess(filePath))),
+          SnackBar(content: Text(Strings.downloadSuccess(filePath))),
         );
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.downloadFailed}: $e')),
+          SnackBar(content: Text('${Strings.downloadFailed}: $e')),
         );
       }
     }
@@ -254,25 +249,22 @@ class _FilePageState extends State<FilePage> {
 
   Future<void> _deleteFile(Map<String, dynamic> file) async {
     final fileId = file['id'] as String?;
-    final fileName = file['name'] as String? ?? AppLocalizations.of(context)!.unnamed;
+    final fileName = file['name'] as String? ?? Strings.unnamed;
     if (fileId == null) return;
-
-    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: Text(l10n.confirmDelete),
-          content: Text(l10n.confirmDeleteFile(fileName)),
+          title: Text(Strings.confirmDelete),
+          content: Text(Strings.confirmDeleteFile(fileName)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
+              child: Text(Strings.delete, style: const TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -281,23 +273,21 @@ class _FilePageState extends State<FilePage> {
 
     if (confirmed == true) {
       try {
-        final l10n = AppLocalizations.of(context)!;
         final success = await FileService.deleteFile([fileId]);
         if (success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.deleteSuccess)),
+            SnackBar(content: Text(Strings.deleteSuccess)),
           );
           _loadFiles(); // 刷新列表
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.deleteFailed)),
+            SnackBar(content: Text(Strings.deleteFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${l10n.deleteFailed}: $e')),
+            SnackBar(content: Text('${Strings.deleteFailed}: $e')),
           );
         }
       }
@@ -308,20 +298,20 @@ class _FilePageState extends State<FilePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(file['name'] ?? AppLocalizations.of(context)!.unnamed),
+        title: Text(file['name'] ?? Strings.unnamed),
         content: SingleChildScrollView(
           child: ListBody(
             children: [
-              Text('${AppLocalizations.of(context)!.id}: ${file['id']}'),
-              Text('${AppLocalizations.of(context)!.type}: ${file['type'] ?? AppLocalizations.of(context)!.unknown}'),
-              Text('${AppLocalizations.of(context)!.size}: ${_formatFileSize(file['size'] ?? 0)}'),
+              Text('${Strings.id}: ${file['id']}'),
+              Text('${Strings.type}: ${file['type'] ?? Strings.unknown}'),
+              Text('${Strings.size}: ${_formatFileSize(file['size'] ?? 0)}'),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.close),
+            child: Text(Strings.close),
           ),
         ],
       ),
@@ -336,10 +326,9 @@ class _FilePageState extends State<FilePage> {
       );
 
       if (result != null && result.files.isNotEmpty) {
-        final l10n = AppLocalizations.of(context)!;
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.uploading)),
+            SnackBar(content: Text(Strings.uploading)),
           );
         }
 
@@ -357,7 +346,7 @@ class _FilePageState extends State<FilePage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(allSuccess ? l10n.uploadSuccess : l10n.partialUploadFailed),
+              content: Text(allSuccess ? Strings.uploadSuccess : Strings.partialUploadFailed),
             ),
           );
           _loadFiles(); // 刷新列表
@@ -365,9 +354,8 @@ class _FilePageState extends State<FilePage> {
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.uploadFailed}: $e')),
+          SnackBar(content: Text('${Strings.uploadFailed}: $e')),
         );
       }
     }

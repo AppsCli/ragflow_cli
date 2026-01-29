@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_picker_ohos/file_picker_ohos.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../models/knowledge_base.dart';
 import '../models/document.dart';
 import '../models/search_result.dart';
@@ -59,13 +59,13 @@ class _KnowledgeDetailPageState extends State<KnowledgeDetailPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_knowledgeBase?.name ?? AppLocalizations.of(context)!.knowledgeBaseDetail),
+        title: Text(_knowledgeBase?.name ?? Strings.knowledgeBaseDetail),
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: AppLocalizations.of(context)!.dataset),
-            Tab(text: AppLocalizations.of(context)!.retrievalTest),
-            Tab(text: AppLocalizations.of(context)!.config),
+            Tab(text: Strings.dataset),
+            Tab(text: Strings.retrievalTest),
+            Tab(text: Strings.config),
           ],
         ),
       ),
@@ -192,31 +192,28 @@ class _DocumentListTabState extends State<DocumentListTab> {
         _isLoading = false;
       });
       if (mounted && !silent) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.loadDocumentsFailed(e.toString()))),
+          SnackBar(content: Text(Strings.loadDocumentsFailed(e.toString()))),
         );
       }
     }
   }
 
   Future<void> _deleteDocument(String id) async {
-    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: Text(l10n.confirmDelete),
-          content: Text(l10n.confirmDeleteDocument),
+          title: Text(Strings.confirmDelete),
+          content: Text(Strings.confirmDeleteDocument),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.delete),
+              child: Text(Strings.delete),
             ),
           ],
         );
@@ -224,16 +221,15 @@ class _DocumentListTabState extends State<DocumentListTab> {
     );
 
     if (confirmed == true) {
-      final l10n = AppLocalizations.of(context)!;
       final success = await DocumentService.deleteDocument(id);
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.deleteSuccess)),
+          SnackBar(content: Text(Strings.deleteSuccess)),
         );
         _loadDocuments();
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.deleteFailed)),
+          SnackBar(content: Text(Strings.deleteFailed)),
         );
       }
     }
@@ -251,7 +247,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
               child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.searchDocuments,
+              hintText: Strings.searchDocuments,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _searchKeywords.isNotEmpty
                   ? IconButton(
@@ -292,7 +288,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
               ? const Center(child: CircularProgressIndicator())
               : _documents.isEmpty
                   ? Center(
-                      child: Text(AppLocalizations.of(context)!.noDocuments, style: const TextStyle(fontSize: 16)),
+                      child: Text(Strings.noDocuments, style: const TextStyle(fontSize: 16)),
                     )
                   : RefreshIndicator(
                       onRefresh: _loadDocuments,
@@ -314,7 +310,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                 children: [
                                   Row(
                                     children: [
-                                      Text('${AppLocalizations.of(context)!.chunks}: ${doc.chunkNum} | ${AppLocalizations.of(context)!.tokens}: ${doc.tokenNum}'),
+                                      Text('${Strings.chunks}: ${doc.chunkNum} | ${Strings.tokens}: ${doc.tokenNum}'),
                                       const SizedBox(width: 8),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -334,7 +330,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                   ),
                                   if (doc.updateTime != null)
                                     Text(
-                                      '${AppLocalizations.of(context)!.update}: ${_formatDateTime(doc.updateTime!)}',
+                                      '${Strings.update}: ${_formatDateTime(doc.updateTime!)}',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -350,7 +346,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                       children: [
                                         const Icon(Icons.info, size: 20),
                                         const SizedBox(width: 8),
-                                        Text(AppLocalizations.of(context)!.detail),
+                                        Text(Strings.detail),
                                       ],
                                     ),
                                   ),
@@ -360,7 +356,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                       children: [
                                         const Icon(Icons.download, size: 20),
                                         const SizedBox(width: 8),
-                                        Text(AppLocalizations.of(context)!.download),
+                                        Text(Strings.download),
                                       ],
                                     ),
                                   ),
@@ -378,7 +374,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                         children: [
                                           const Icon(Icons.play_arrow, size: 20),
                                           const SizedBox(width: 8),
-                                          Text(AppLocalizations.of(context)!.parse),
+                                          Text(Strings.parse),
                                         ],
                                       ),
                                     ),
@@ -390,7 +386,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                         children: [
                                           const Icon(Icons.stop, size: 20, color: Colors.orange),
                                           const SizedBox(width: 8),
-                                          Text(AppLocalizations.of(context)!.cancelParse, style: const TextStyle(color: Colors.orange)),
+                                          Text(Strings.cancelParse, style: const TextStyle(color: Colors.orange)),
                                         ],
                                       ),
                                     ),
@@ -400,7 +396,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                       children: [
                                         const Icon(Icons.delete, size: 20, color: Colors.red),
                                         const SizedBox(width: 8),
-                                        Text(AppLocalizations.of(context)!.deleteDocument, style: const TextStyle(color: Colors.red)),
+                                        Text(Strings.deleteDocument, style: const TextStyle(color: Colors.red)),
                                       ],
                                     ),
                                   ),
@@ -436,7 +432,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  AppLocalizations.of(context)!.totalDocuments(_total),
+                  Strings.totalDocuments(_total),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(width: 16),
@@ -449,7 +445,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                       _loadDocuments();
                     },
                     icon: const Icon(Icons.arrow_back, size: 16),
-                    label: Text(AppLocalizations.of(context)!.previousPage),
+                    label: Text(Strings.previousPage),
                   ),
                 if ((_currentPage * _pageSize) < _total)
                   TextButton.icon(
@@ -460,7 +456,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
                       _loadDocuments();
                     },
                     icon: const Icon(Icons.arrow_forward, size: 16),
-                    label: Text(AppLocalizations.of(context)!.nextPage),
+                    label: Text(Strings.nextPage),
                   ),
               ],
             ),
@@ -474,7 +470,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
           child: FloatingActionButton(
             onPressed: _uploadDocument,
             child: const Icon(Icons.upload),
-            tooltip: AppLocalizations.of(context)!.uploadFile,
+            tooltip: Strings.uploadFile,
           ),
         ),
       ],
@@ -491,25 +487,25 @@ class _DocumentListTabState extends State<DocumentListTab> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('${AppLocalizations.of(context)!.id}: ${doc.id}'),
-              Text('${AppLocalizations.of(context)!.suffix}: ${doc.suffix}'),
-              Text('${AppLocalizations.of(context)!.size}: ${_formatFileSize(doc.size)}'),
-              Text('${AppLocalizations.of(context)!.chunkCount}: ${doc.chunkNum}'),
-              Text('${AppLocalizations.of(context)!.tokenCount}: ${doc.tokenNum}'),
-              Text('${AppLocalizations.of(context)!.status}: ${_getStatusText(doc.run ?? doc.status)}'),
+              Text('${Strings.id}: ${doc.id}'),
+              Text('${Strings.suffix}: ${doc.suffix}'),
+              Text('${Strings.size}: ${_formatFileSize(doc.size)}'),
+              Text('${Strings.chunkCount}: ${doc.chunkNum}'),
+              Text('${Strings.tokenCount}: ${doc.tokenNum}'),
+              Text('${Strings.status}: ${_getStatusText(doc.run ?? doc.status)}'),
               if (doc.description != null)
-                Text('${AppLocalizations.of(context)!.description}: ${doc.description}'),
+                Text('${Strings.description}: ${doc.description}'),
               if (doc.createTime != null)
-                Text('${AppLocalizations.of(context)!.createTime}: ${_formatDateTime(doc.createTime!)}'),
+                Text('${Strings.createTime}: ${_formatDateTime(doc.createTime!)}'),
               if (doc.updateTime != null)
-                Text('${AppLocalizations.of(context)!.updateTime}: ${_formatDateTime(doc.updateTime!)}'),
+                Text('${Strings.updateTime}: ${_formatDateTime(doc.updateTime!)}'),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.close),
+            child: Text(Strings.close),
           ),
         ],
       ),
@@ -517,24 +513,23 @@ class _DocumentListTabState extends State<DocumentListTab> {
   }
 
   String _getStatusText(String? status) {
-    final l10n = AppLocalizations.of(context)!;
-    if (status == null) return l10n.unknown;
+    if (status == null) return Strings.unknown;
     switch (status) {
       case '0':
       case 'UNSTART':
-        return l10n.notStarted;
+        return Strings.notStarted;
       case '1':
       case 'RUNNING':
-        return l10n.parsing;
+        return Strings.parsing;
       case '2':
       case 'CANCEL':
-        return l10n.cancelled;
+        return Strings.cancelled;
       case '3':
       case 'DONE':
-        return l10n.completed;
+        return Strings.completed;
       case '4':
       case 'FAIL':
-        return l10n.failed;
+        return Strings.failed;
       default:
         return status;
     }
@@ -565,10 +560,9 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
   Future<void> _downloadDocument(Document doc) async {
     try {
-      final l10n = AppLocalizations.of(context)!;
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.downloading)),
+          SnackBar(content: Text(Strings.downloading)),
         );
       }
 
@@ -576,7 +570,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
       if (fileBytes == null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.downloadFailed)),
+            SnackBar(content: Text(Strings.downloadFailed)),
           );
         }
         return;
@@ -591,14 +585,13 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.downloadSuccess(filePath))),
+          SnackBar(content: Text(Strings.downloadSuccess(filePath))),
         );
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.downloadFailed}: $e')),
+          SnackBar(content: Text('${Strings.downloadFailed}: $e')),
         );
       }
     }
@@ -606,10 +599,9 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
   Future<void> _parseDocument(Document doc) async {
     try {
-      final l10n = AppLocalizations.of(context)!;
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.startingParse)),
+          SnackBar(content: Text(Strings.startingParse)),
         );
       }
 
@@ -621,41 +613,38 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.parseStarted)),
+          SnackBar(content: Text(Strings.parseStarted)),
         );
         _loadDocuments(); // 刷新列表
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.startParseFailed)),
+          SnackBar(content: Text(Strings.startParseFailed)),
         );
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.startParseFailed}: $e')),
+          SnackBar(content: Text('${Strings.startParseFailed}: $e')),
         );
       }
     }
   }
 
   Future<void> _cancelParseDocument(Document doc) async {
-    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: Text(l10n.confirmCancel),
-          content: Text(l10n.confirmCancelParse(doc.name)),
+          title: Text(Strings.confirmCancel),
+          content: Text(Strings.confirmCancelParse(doc.name)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text(l10n.confirm, style: const TextStyle(color: Colors.orange)),
+              child: Text(Strings.confirm, style: const TextStyle(color: Colors.orange)),
             ),
           ],
         );
@@ -664,10 +653,9 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
     if (confirmed == true) {
       try {
-        final l10n = AppLocalizations.of(context)!;
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.cancellingParse)),
+            SnackBar(content: Text(Strings.cancellingParse)),
           );
         }
 
@@ -679,19 +667,18 @@ class _DocumentListTabState extends State<DocumentListTab> {
 
         if (success && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.parseCancelled)),
+            SnackBar(content: Text(Strings.parseCancelled)),
           );
           _loadDocuments(); // 刷新列表
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.cancelParseFailed)),
+            SnackBar(content: Text(Strings.cancelParseFailed)),
           );
         }
       } catch (e) {
         if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${l10n.cancelParseFailed}: $e')),
+            SnackBar(content: Text('${Strings.cancelParseFailed}: $e')),
           );
         }
       }
@@ -706,10 +693,9 @@ class _DocumentListTabState extends State<DocumentListTab> {
       );
 
       if (result != null && result.files.isNotEmpty) {
-        final l10n = AppLocalizations.of(context)!;
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.uploading)),
+            SnackBar(content: Text(Strings.uploading)),
           );
         }
 
@@ -731,7 +717,7 @@ class _DocumentListTabState extends State<DocumentListTab> {
         if (mounted) {
           if (allSuccess && uploadedDocIds.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.uploadSuccess)),
+              SnackBar(content: Text(Strings.uploadSuccess)),
             );
             // 自动启动解析
             await DocumentService.runDocument(
@@ -742,21 +728,20 @@ class _DocumentListTabState extends State<DocumentListTab> {
             _loadDocuments(); // 刷新列表
           } else if (uploadedDocIds.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.partialUploadFailed)),
+              SnackBar(content: Text(Strings.partialUploadFailed)),
             );
             _loadDocuments(); // 刷新列表
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.uploadFailed)),
+              SnackBar(content: Text(Strings.uploadFailed)),
             );
           }
         }
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.uploadFailed}: $e')),
+          SnackBar(content: Text('${Strings.uploadFailed}: $e')),
         );
       }
     }
@@ -797,11 +782,10 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
   }
 
   Future<void> _testRetrieval() async {
-    final l10n = AppLocalizations.of(context)!;
     final question = _questionController.text.trim();
     if (question.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.enterQuestion)),
+        SnackBar(content: Text(Strings.enterQuestion)),
       );
       return;
     }
@@ -832,9 +816,8 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
         _isLoading = false;
       });
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.retrievalTestFailed(e.toString()))),
+          SnackBar(content: Text(Strings.retrievalTestFailed(e.toString()))),
         );
       }
     }
@@ -853,7 +836,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
                 child: TextField(
                   controller: _questionController,
                   decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context)!.enterQuestionForRetrieval,
+                    hintText: Strings.enterQuestionForRetrieval,
                     border: const OutlineInputBorder(),
                   ),
                   maxLines: 3,
@@ -870,7 +853,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.search),
-                label: Text(AppLocalizations.of(context)!.test),
+                label: Text(Strings.test),
               ),
             ],
           ),
@@ -880,7 +863,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
           child: _chunks.isEmpty
               ? Center(
                   child: Text(
-                    _isLoading ? AppLocalizations.of(context)!.retrieving : AppLocalizations.of(context)!.enterQuestionForRetrievalTest,
+                    _isLoading ? Strings.retrieving : Strings.enterQuestionForRetrievalTest,
                     style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   ),
                 )
@@ -890,7 +873,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.retrievalResults(_total),
+                        Strings.retrievalResults(_total),
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -912,7 +895,7 @@ class _RetrievalTestTabState extends State<RetrievalTestTab> {
                               children: [
                                 if (chunk.similarity != null)
                                   Text(
-                                    AppLocalizations.of(context)!.similarity((chunk.similarity! * 100).toStringAsFixed(1)),
+                                    Strings.similarity((chunk.similarity! * 100).toStringAsFixed(1)),
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                       fontSize: 12,
@@ -1105,20 +1088,19 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
       final ImageSource? source = await showDialog<ImageSource>(
         context: context,
         builder: (context) {
-          final l10n = AppLocalizations.of(context)!;
           return AlertDialog(
-            title: Text(l10n.selectImageSource),
+            title: Text(Strings.selectImageSource),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
                   leading: const Icon(Icons.photo_library),
-                  title: Text(l10n.selectFromGallery),
+                  title: Text(Strings.selectFromGallery),
                   onTap: () => Navigator.pop(context, ImageSource.gallery),
                 ),
                 ListTile(
                   leading: const Icon(Icons.camera_alt),
-                  title: Text(l10n.takePhoto),
+                  title: Text(Strings.takePhoto),
                   onTap: () => Navigator.pop(context, ImageSource.camera),
                 ),
               ],
@@ -1149,9 +1131,8 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
         }
       } catch (e) {
         if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.selectImageFailed(e.toString()))),
+            SnackBar(content: Text(Strings.selectImageFailed(e.toString()))),
           );
         }
         return;
@@ -1163,11 +1144,10 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           final bytes = await file.readAsBytes();
           
           // 检查文件大小（限制为 4MB）
-          final l10n = AppLocalizations.of(context)!;
           if (bytes.length > 4 * 1024 * 1024) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.imageTooLarge)),
+                SnackBar(content: Text(Strings.imageTooLarge)),
               );
             }
             return;
@@ -1185,23 +1165,21 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
               _avatarBase64 = dataUrl;
             });
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.imageSelected)),
+              SnackBar(content: Text(Strings.imageSelected)),
             );
           }
         } else {
           if (mounted) {
-            final l10n = AppLocalizations.of(context)!;
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.fileNotExists)),
+              SnackBar(content: Text(Strings.fileNotExists)),
             );
           }
         }
       }
     } catch (e, stackTrace) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.selectImageFailed(e.toString()))),
+          SnackBar(content: Text(Strings.selectImageFailed(e.toString()))),
         );
       }
       // 打印详细错误信息用于调试
@@ -1256,24 +1234,21 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
         parserConfig: parserConfig,
         pagerank: _pagerank,
       );
-
-      final l10n = AppLocalizations.of(context)!;
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.saveSuccess)),
+          SnackBar(content: Text(Strings.saveSuccess)),
         );
         // 重新加载知识库信息
         _loadKnowledgeBase();
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.saveFailed)),
+          SnackBar(content: Text(Strings.saveFailed)),
         );
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.saveFailed}: $e')),
+          SnackBar(content: Text('${Strings.saveFailed}: $e')),
         );
       }
     } finally {
@@ -1299,16 +1274,16 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // 基本信息
-            _buildSectionTitle(AppLocalizations.of(context)!.basicInfo),
+            _buildSectionTitle(Strings.basicInfo),
             TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
-                labelText: '${AppLocalizations.of(context)!.knowledgeBaseName} *',
+                labelText: '${Strings.knowledgeBaseName} *',
                 border: const OutlineInputBorder(),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return AppLocalizations.of(context)!.knowledgeBaseNameRequired;
+                  return Strings.knowledgeBaseNameRequired;
                 }
                 return null;
               },
@@ -1320,7 +1295,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             TextFormField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.description,
+                labelText: Strings.description,
                 border: const OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -1334,7 +1309,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 24),
             
             // 解析配置
-            _buildSectionTitle(AppLocalizations.of(context)!.parseConfig),
+            _buildSectionTitle(Strings.parseConfig),
             // 解析器（切片方法）
             _buildParserSelector(),
             const SizedBox(height: 16),
@@ -1345,9 +1320,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             TextFormField(
               controller: _chunkTokenNumController,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.suggestedChunkSize,
+                labelText: Strings.suggestedChunkSize,
                 border: const OutlineInputBorder(),
-                helperText: AppLocalizations.of(context)!.chunkSizeHelper,
+                helperText: Strings.chunkSizeHelper,
               ),
               keyboardType: TextInputType.number,
             ),
@@ -1356,9 +1331,9 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             TextFormField(
               controller: _delimiterController,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.textDelimiter,
+                labelText: Strings.textDelimiter,
                 border: const OutlineInputBorder(),
-                helperText: AppLocalizations.of(context)!.delimiterHelper,
+                helperText: Strings.delimiterHelper,
               ),
             ),
             const SizedBox(height: 16),
@@ -1370,14 +1345,14 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 24),
             
             // 高级选项
-            _buildSectionTitle(AppLocalizations.of(context)!.advancedOptions),
+            _buildSectionTitle(Strings.advancedOptions),
             // 自动关键词提取
             TextFormField(
               controller: _autoKeywordsController,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.autoKeywordsCount,
+                labelText: Strings.autoKeywordsCount,
                 border: const OutlineInputBorder(),
-                helperText: AppLocalizations.of(context)!.autoKeywordsHelper,
+                helperText: Strings.autoKeywordsHelper,
               ),
               keyboardType: TextInputType.number,
             ),
@@ -1386,17 +1361,17 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             TextFormField(
               controller: _autoQuestionsController,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.autoQuestionsCount,
+                labelText: Strings.autoQuestionsCount,
                 border: const OutlineInputBorder(),
-                helperText: AppLocalizations.of(context)!.autoQuestionsHelper,
+                helperText: Strings.autoQuestionsHelper,
               ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
             // 表格转HTML
             SwitchListTile(
-              title: Text(AppLocalizations.of(context)!.tableToHtml),
-              subtitle: Text(AppLocalizations.of(context)!.tableToHtmlSubtitle),
+              title: Text(Strings.tableToHtml),
+              subtitle: Text(Strings.tableToHtmlSubtitle),
               value: _html4excel,
               onChanged: (value) {
                 setState(() {
@@ -1407,8 +1382,8 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 16),
             // 使用召回增强 RAPTOR 策略
             SwitchListTile(
-              title: Text(AppLocalizations.of(context)!.useRaptor),
-              subtitle: Text(AppLocalizations.of(context)!.useRaptorSubtitle),
+              title: Text(Strings.useRaptor),
+              subtitle: Text(Strings.useRaptorSubtitle),
               value: _useRaptor,
               onChanged: (value) {
                 setState(() {
@@ -1419,8 +1394,8 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             const SizedBox(height: 16),
             // 提取知识图谱
             SwitchListTile(
-              title: Text(AppLocalizations.of(context)!.extractKnowledgeGraph),
-              subtitle: Text(AppLocalizations.of(context)!.extractKnowledgeGraphSubtitle),
+              title: Text(Strings.extractKnowledgeGraph),
+              subtitle: Text(Strings.extractKnowledgeGraphSubtitle),
               value: _useGraphrag,
               onChanged: (value) {
                 setState(() {
@@ -1440,7 +1415,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.save),
-              label: Text(AppLocalizations.of(context)!.saveConfig),
+              label: Text(Strings.saveConfig),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
@@ -1469,7 +1444,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.knowledgeBaseImage,
+          Strings.knowledgeBaseImage,
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -1502,7 +1477,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
             ElevatedButton.icon(
               onPressed: _pickAvatar,
               icon: const Icon(Icons.upload),
-              label: Text(AppLocalizations.of(context)!.uploadImage),
+              label: Text(Strings.uploadImage),
             ),
             if (_avatarBase64 != null && _avatarBase64!.isNotEmpty) ...[
               const SizedBox(width: 8),
@@ -1512,7 +1487,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
                     _avatarBase64 = null;
                   });
                 },
-                child: Text(AppLocalizations.of(context)!.clear),
+                child: Text(Strings.clear),
               ),
             ],
           ],
@@ -1549,12 +1524,11 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   }
 
   Widget _buildPermissionSelector() {
-    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.permission,
+          Strings.permission,
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -1564,8 +1538,8 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
               value: type,
               label: Text(
                 switch (type) {
-                  PermissionType.me => l10n.permissionOnlyMe,
-                  PermissionType.team => l10n.permissionTeam,
+                  PermissionType.me => Strings.permissionOnlyMe,
+                  PermissionType.team => Strings.permissionTeam,
                 },
               ),
             );
@@ -1582,11 +1556,10 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   }
 
   Widget _buildLanguageSelector() {
-    final l10n = AppLocalizations.of(context)!;
     return DropdownButtonFormField<LanguageType>(
       value: _language,
       decoration: InputDecoration(
-        labelText: l10n.documentLanguage,
+        labelText: Strings.documentLanguage,
         border: const OutlineInputBorder(),
       ),
       items: LanguageType.values.map((type) {
@@ -1594,8 +1567,8 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           value: type,
           child: Text(
             switch (type) {
-              LanguageType.chinese => l10n.languageChinese,
-              LanguageType.english => l10n.languageEnglish,
+              LanguageType.chinese => Strings.languageChinese,
+              LanguageType.english => Strings.languageEnglish,
             },
           ),
         );
@@ -1611,34 +1584,33 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
   }
 
   Widget _buildParserSelector() {
-    final l10n = AppLocalizations.of(context)!;
     return DropdownButtonFormField<DocumentParserType>(
       value: _parserId,
       decoration: InputDecoration(
-        labelText: l10n.sliceMethod,
+        labelText: Strings.sliceMethod,
         border: const OutlineInputBorder(),
-        helperText: l10n.sliceMethodHelper,
+        helperText: Strings.sliceMethodHelper,
       ),
       items: DocumentParserType.values.map((type) {
         return DropdownMenuItem<DocumentParserType>(
           value: type,
           child: Text(
             switch (type) {
-              DocumentParserType.naive => l10n.parserNaive,
-              DocumentParserType.qa => l10n.parserQa,
-              DocumentParserType.resume => l10n.parserResume,
-              DocumentParserType.manual => l10n.parserManual,
-              DocumentParserType.table => l10n.parserTable,
-              DocumentParserType.paper => l10n.parserPaper,
-              DocumentParserType.book => l10n.parserBook,
-              DocumentParserType.laws => l10n.parserLaws,
-              DocumentParserType.presentation => l10n.parserPresentation,
-              DocumentParserType.picture => l10n.parserPicture,
-              DocumentParserType.one => l10n.parserOne,
-              DocumentParserType.audio => l10n.parserAudio,
-              DocumentParserType.email => l10n.parserEmail,
-              DocumentParserType.tag => l10n.parserTag,
-              DocumentParserType.knowledgeGraph => l10n.parserKnowledgeGraph,
+              DocumentParserType.naive => Strings.parserNaive,
+              DocumentParserType.qa => Strings.parserQa,
+              DocumentParserType.resume => Strings.parserResume,
+              DocumentParserType.manual => Strings.parserManual,
+              DocumentParserType.table => Strings.parserTable,
+              DocumentParserType.paper => Strings.parserPaper,
+              DocumentParserType.book => Strings.parserBook,
+              DocumentParserType.laws => Strings.parserLaws,
+              DocumentParserType.presentation => Strings.parserPresentation,
+              DocumentParserType.picture => Strings.parserPicture,
+              DocumentParserType.one => Strings.parserOne,
+              DocumentParserType.audio => Strings.parserAudio,
+              DocumentParserType.email => Strings.parserEmail,
+              DocumentParserType.tag => Strings.parserTag,
+              DocumentParserType.knowledgeGraph => Strings.parserKnowledgeGraph,
             },
           ),
         );
@@ -1666,11 +1638,11 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
         DropdownButtonFormField<String>(
           value: validSelectedValue,
           decoration: InputDecoration(
-            labelText: AppLocalizations.of(context)!.embeddingModel,
+            labelText: Strings.embeddingModel,
             border: const OutlineInputBorder(),
             helperText: _currentKb?.chunkNum != null && _currentKb!.chunkNum > 0
-                ? AppLocalizations.of(context)!.embeddingModelWarning
-                : AppLocalizations.of(context)!.embeddingModelHelper,
+                ? Strings.embeddingModelWarning
+                : Strings.embeddingModelHelper,
             suffixIcon: _isLoadingModels
                 ? const SizedBox(
                     width: 16,
@@ -1712,7 +1684,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(
-              AppLocalizations.of(context)!.noModelsAvailable,
+              Strings.noModelsAvailable,
               style: const TextStyle(color: Colors.grey, fontSize: 12),
             ),
           ),
@@ -1724,13 +1696,13 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
     return DropdownButtonFormField<String>(
       value: _layoutRecognize,
       decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.layoutRecognition,
+        labelText: Strings.layoutRecognition,
         border: const OutlineInputBorder(),
-        helperText: AppLocalizations.of(context)!.layoutRecognitionHelper,
+        helperText: Strings.layoutRecognitionHelper,
       ),
       items: [
         const DropdownMenuItem(value: 'DeepDOC', child: Text('DeepDOC')),
-        DropdownMenuItem(value: 'Plain Text', child: Text(AppLocalizations.of(context)!.plainText)),
+        DropdownMenuItem(value: 'Plain Text', child: Text(Strings.plainText)),
       ],
       onChanged: (value) {
         if (value != null) {
@@ -1747,7 +1719,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.pageRank,
+          Strings.pageRank,
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -1778,7 +1750,7 @@ class _KnowledgeConfigTabState extends State<KnowledgeConfigTab> {
           ],
         ),
         Text(
-          AppLocalizations.of(context)!.pageRankHelper,
+          Strings.pageRankHelper,
           style: const TextStyle(fontSize: 12, color: Colors.grey),
         ),
       ],

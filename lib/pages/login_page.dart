@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../providers/auth_provider.dart';
 import '../utils/storage.dart';
 import '../utils/rsa_encrypt.dart';
 import 'server_config_page.dart';
-import 'language_settings_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -54,12 +53,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _saveRsaPublicKey() async {
-    final l10n = AppLocalizations.of(context)!;
     final publicKey = _rsaPublicKeyController.text.trim();
     
     if (publicKey.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.rsaPublicKeyRequired)),
+        SnackBar(content: Text(Strings.rsaPublicKeyRequired)),
       );
       return;
     }
@@ -67,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
     // 验证公钥格式（简单检查是否包含 BEGIN PUBLIC KEY）
     if (!publicKey.contains('BEGIN PUBLIC KEY') || !publicKey.contains('END PUBLIC KEY')) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.rsaPublicKeyInvalid)),
+        SnackBar(content: Text(Strings.rsaPublicKeyInvalid)),
       );
       return;
     }
@@ -80,13 +78,13 @@ class _LoginPageState extends State<LoginPage> {
       await Storage.saveRsaPublicKey(publicKey);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.rsaPublicKeySaved)),
+          SnackBar(content: Text(Strings.rsaPublicKeySaved)),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.rsaPublicKeySaveFailed}: $e')),
+          SnackBar(content: Text('${Strings.rsaPublicKeySaveFailed}: $e')),
         );
       }
     } finally {
@@ -99,21 +97,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _resetToDefaultRsaPublicKey() async {
-    final l10n = AppLocalizations.of(context)!;
-    
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(l10n.resetToDefault),
-        content: Text(l10n.resetToDefaultConfirm),
+        title: Text(Strings.resetToDefault),
+        content: Text(Strings.resetToDefaultConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.cancel),
+            child: Text(Strings.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.confirm),
+            child: Text(Strings.confirm),
           ),
         ],
       ),
@@ -131,13 +127,13 @@ class _LoginPageState extends State<LoginPage> {
         });
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.resetToDefaultSuccess)),
+            SnackBar(content: Text(Strings.resetToDefaultSuccess)),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${l10n.resetToDefaultFailed}: $e')),
+            SnackBar(content: Text('${Strings.resetToDefaultFailed}: $e')),
           );
         }
       } finally {
@@ -172,8 +168,7 @@ class _LoginPageState extends State<LoginPage> {
       if (success) {
         Navigator.of(context).pushReplacementNamed('/home');
       } else {
-        final l10n = AppLocalizations.of(context)!;
-        final errorMessage = authProvider.lastLoginError ?? l10n.loginFailed;
+        final errorMessage = authProvider.lastLoginError ?? Strings.loginFailed;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(errorMessage),
@@ -185,16 +180,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showServerConfigDialog() {
-    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(l10n.configureServerAddress),
-        content: Text(l10n.pleaseConfigureServer),
+        title: Text(Strings.configureServerAddress),
+        content: Text(Strings.pleaseConfigureServer),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
+            child: Text(Strings.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -204,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(builder: (_) => const ServerConfigPage()),
               );
             },
-            child: Text(l10n.goToSettings),
+            child: Text(Strings.goToSettings),
           ),
         ],
       ),
@@ -213,24 +207,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.language),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const LanguageSettingsPage()),
-              );
-            },
-            tooltip: l10n.languageSettings,
-          ),
-        ],
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -242,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    l10n.appTitle,
+                    Strings.appTitle,
                     style: const TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
@@ -253,17 +233,17 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                      labelText: l10n.email,
+                      labelText: Strings.email,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.email),
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return l10n.emailRequired;
+                        return Strings.emailRequired;
                       }
                       if (!value.contains('@')) {
-                        return l10n.invalidEmail;
+                        return Strings.invalidEmail;
                       }
                       return null;
                     },
@@ -272,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      labelText: l10n.password,
+                      labelText: Strings.password,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
@@ -289,7 +269,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: _obscurePassword,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return l10n.passwordRequired;
+                        return Strings.passwordRequired;
                       }
                       return null;
                     },
@@ -306,14 +286,14 @@ class _LoginPageState extends State<LoginPage> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : Text(l10n.login, style: const TextStyle(fontSize: 16)),
+                        : Text(Strings.login, style: const TextStyle(fontSize: 16)),
                   ),
                   const SizedBox(height: 16),
                   // RSA 公钥设置（可展开/折叠）
                   ExpansionTile(
                     title: Text(_showRsaPublicKeySettings 
-                        ? l10n.hideRsaPublicKeySettings 
-                        : l10n.showRsaPublicKeySettings),
+                        ? Strings.hideRsaPublicKeySettings 
+                        : Strings.showRsaPublicKeySettings),
                     leading: const Icon(Icons.vpn_key),
                     initiallyExpanded: false,
                     onExpansionChanged: (expanded) {
@@ -328,7 +308,7 @@ class _LoginPageState extends State<LoginPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
-                              l10n.rsaPublicKeyHint,
+                              Strings.rsaPublicKeyHint,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey[600],
@@ -338,9 +318,9 @@ class _LoginPageState extends State<LoginPage> {
                             TextFormField(
                               controller: _rsaPublicKeyController,
                               decoration: InputDecoration(
-                                labelText: l10n.rsaPublicKey,
+                                labelText: Strings.rsaPublicKey,
                                 border: const OutlineInputBorder(),
-                                hintText: l10n.rsaPublicKeyHint,
+                                hintText: Strings.rsaPublicKeyHint,
                               ),
                               maxLines: 5,
                               enabled: !_isLoadingRsaKey,
@@ -352,7 +332,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: OutlinedButton.icon(
                                     onPressed: _isLoadingRsaKey ? null : _resetToDefaultRsaPublicKey,
                                     icon: const Icon(Icons.restore),
-                                    label: Text(l10n.resetToDefault),
+                                    label: Text(Strings.resetToDefault),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -366,7 +346,7 @@ class _LoginPageState extends State<LoginPage> {
                                             child: CircularProgressIndicator(strokeWidth: 2),
                                           )
                                         : const Icon(Icons.save),
-                                    label: Text(l10n.save),
+                                    label: Text(Strings.save),
                                   ),
                                 ),
                               ],
@@ -385,12 +365,12 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                     icon: const Icon(Icons.settings),
-                    label: Text(l10n.setServerAddress),
+                    label: Text(Strings.setServerAddress),
                   ),
                   if (authProvider.serverConfig != null) ...[
                     const SizedBox(height: 8),
                     Text(
-                      l10n.currentServer(authProvider.serverConfig!.baseUrl),
+                      Strings.currentServer(authProvider.serverConfig!.baseUrl),
                       style: Theme.of(context).textTheme.bodySmall,
                       textAlign: TextAlign.center,
                     ),

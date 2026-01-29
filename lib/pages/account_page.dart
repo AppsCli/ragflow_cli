@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../providers/auth_provider.dart';
 import '../services/user_service.dart';
 import 'server_config_page.dart';
-import 'language_settings_page.dart';
 import 'theme_settings_page.dart';
 
 class AccountPage extends StatefulWidget {
@@ -19,13 +18,12 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.user;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.account),
+        title: Text(Strings.account),
       ),
       body: ListView(
         children: [
@@ -65,7 +63,7 @@ class _AccountPageState extends State<AccountPage> {
           ],
           ListTile(
             leading: const Icon(Icons.settings),
-            title: Text(l10n.serverSettings),
+            title: Text(Strings.serverSettings),
             subtitle: authProvider.serverConfig != null
                 ? Text(authProvider.serverConfig!.baseUrl)
                 : null,
@@ -79,20 +77,8 @@ class _AccountPageState extends State<AccountPage> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.language),
-            title: Text(l10n.language),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const LanguageSettingsPage()),
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
             leading: const Icon(Icons.palette),
-            title: Text(l10n.theme),
+            title: Text(Strings.theme),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               Navigator.push(
@@ -104,7 +90,7 @@ class _AccountPageState extends State<AccountPage> {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.lock),
-            title: Text(l10n.changePassword),
+            title: Text(Strings.changePassword),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               _showChangePasswordDialog(context);
@@ -113,23 +99,22 @@ class _AccountPageState extends State<AccountPage> {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
-            title: Text(l10n.logout, style: const TextStyle(color: Colors.red)),
+            title: Text(Strings.logout, style: const TextStyle(color: Colors.red)),
             onTap: () async {
               final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (context) {
-                  final l10n = AppLocalizations.of(context)!;
                   return AlertDialog(
-                    title: Text(l10n.confirmLogout),
-                    content: Text(l10n.confirmLogout),
+                    title: Text(Strings.confirmLogout),
+                    content: Text(Strings.confirmLogout),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context, false),
-                        child: Text(l10n.cancel),
+                        child: Text(Strings.cancel),
                       ),
                       TextButton(
                         onPressed: () => Navigator.pop(context, true),
-                        child: Text(l10n.logout),
+                        child: Text(Strings.logout),
                       ),
                     ],
                   );
@@ -150,7 +135,6 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   void _showChangePasswordDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final oldPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
@@ -164,7 +148,7 @@ class _AccountPageState extends State<AccountPage> {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: Text(l10n.changePassword),
+          title: Text(Strings.changePassword),
           content: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -174,7 +158,7 @@ class _AccountPageState extends State<AccountPage> {
                   TextFormField(
                     controller: oldPasswordController,
                     decoration: InputDecoration(
-                      labelText: l10n.currentPassword,
+                      labelText: Strings.currentPassword,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
@@ -194,7 +178,7 @@ class _AccountPageState extends State<AccountPage> {
                     enabled: !isChanging,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return l10n.passwordRequired;
+                        return Strings.passwordRequired;
                       }
                       return null;
                     },
@@ -203,7 +187,7 @@ class _AccountPageState extends State<AccountPage> {
                   TextFormField(
                     controller: newPasswordController,
                     decoration: InputDecoration(
-                      labelText: l10n.newPassword,
+                      labelText: Strings.newPassword,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
@@ -223,10 +207,10 @@ class _AccountPageState extends State<AccountPage> {
                     enabled: !isChanging,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return l10n.newPasswordRequired;
+                        return Strings.newPasswordRequired;
                       }
                       if (value.length < 8) {
-                        return l10n.passwordTooShort;
+                        return Strings.passwordTooShort;
                       }
                       return null;
                     },
@@ -235,7 +219,7 @@ class _AccountPageState extends State<AccountPage> {
                   TextFormField(
                     controller: confirmPasswordController,
                     decoration: InputDecoration(
-                      labelText: l10n.confirmNewPassword,
+                      labelText: Strings.confirmNewPassword,
                       border: const OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
@@ -255,10 +239,10 @@ class _AccountPageState extends State<AccountPage> {
                     enabled: !isChanging,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return l10n.confirmPasswordRequired;
+                        return Strings.confirmPasswordRequired;
                       }
                       if (value != newPasswordController.text) {
-                        return l10n.passwordsDoNotMatch;
+                        return Strings.passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -274,7 +258,7 @@ class _AccountPageState extends State<AccountPage> {
                   : () {
                       Navigator.pop(dialogContext);
                     },
-              child: Text(l10n.cancel),
+              child: Text(Strings.cancel),
             ),
             TextButton(
               onPressed: isChanging
@@ -300,8 +284,8 @@ class _AccountPageState extends State<AccountPage> {
                             SnackBar(
                               content: Text(
                                 success
-                                    ? l10n.passwordChanged
-                                    : l10n.passwordChangeFailed,
+                                    ? Strings.passwordChanged
+                                    : Strings.passwordChangeFailed,
                               ),
                               backgroundColor: success
                                   ? Colors.green
@@ -316,7 +300,7 @@ class _AccountPageState extends State<AccountPage> {
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('${l10n.passwordChangeFailed}: $e'),
+                              content: Text('${Strings.passwordChangeFailed}: $e'),
                               backgroundColor: Colors.red,
                             ),
                           );
@@ -329,7 +313,7 @@ class _AccountPageState extends State<AccountPage> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : Text(l10n.confirm),
+                  : Text(Strings.confirm),
             ),
           ],
         ),

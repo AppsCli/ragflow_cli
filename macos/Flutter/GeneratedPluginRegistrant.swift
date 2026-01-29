@@ -5,7 +5,7 @@
 import FlutterMacOS
 import Foundation
 
-import file_picker
+import file_picker_ohos
 import file_selector_macos
 import path_provider_foundation
 import shared_preferences_foundation

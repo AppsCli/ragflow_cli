@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../providers/theme_provider.dart';
 
 class ThemeSettingsPage extends StatelessWidget {
@@ -8,12 +8,11 @@ class ThemeSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.themeSettings),
+        title: Text(Strings.themeSettings),
       ),
       body: ListView(
         children: [
@@ -88,28 +87,27 @@ class ThemeSettingsPage extends StatelessWidget {
   }
 
   String _getLocalizedSchemeName(BuildContext context, ColorSchemeType scheme) {
-    final l10n = AppLocalizations.of(context)!;
     switch (scheme) {
       case ColorSchemeType.blue:
-        return l10n.colorSchemeBlue;
+        return Strings.colorSchemeBlue;
       case ColorSchemeType.green:
-        return l10n.colorSchemeGreen;
+        return Strings.colorSchemeGreen;
       case ColorSchemeType.purple:
-        return l10n.colorSchemePurple;
+        return Strings.colorSchemePurple;
       case ColorSchemeType.orange:
-        return l10n.colorSchemeOrange;
+        return Strings.colorSchemeOrange;
       case ColorSchemeType.red:
-        return l10n.colorSchemeRed;
+        return Strings.colorSchemeRed;
       case ColorSchemeType.teal:
-        return l10n.colorSchemeTeal;
+        return Strings.colorSchemeTeal;
       case ColorSchemeType.pink:
-        return l10n.colorSchemePink;
+        return Strings.colorSchemePink;
       case ColorSchemeType.indigo:
-        return l10n.colorSchemeIndigo;
+        return Strings.colorSchemeIndigo;
       case ColorSchemeType.brown:
-        return l10n.colorSchemeBrown;
+        return Strings.colorSchemeBrown;
       case ColorSchemeType.cyan:
-        return l10n.colorSchemeCyan;
+        return Strings.colorSchemeCyan;
     }
   }
 }

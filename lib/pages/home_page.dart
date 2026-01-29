@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../l10n/app_localizations.dart';
+import '../strings.dart';
 import '../providers/auth_provider.dart';
 import '../services/user_service.dart';
 import '../services/api_client.dart';
@@ -73,7 +73,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -95,27 +94,27 @@ class _HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.library_books),
-            label: l10n.knowledgeBase,
+            label: Strings.knowledgeBase,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.chat),
-            label: l10n.chat,
+            label: Strings.chat,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.search),
-            label: l10n.search,
+            label: Strings.search,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.smart_toy),
-            label: l10n.agent,
+            label: Strings.agent,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.folder),
-            label: l10n.file,
+            label: Strings.file,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.person),
-            label: l10n.account,
+            label: Strings.account,
           ),
         ],
       ),
