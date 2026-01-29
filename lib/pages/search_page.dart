@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import '../l10n/app_localizations.dart';
 import '../models/knowledge_base.dart';
 import '../models/search_result.dart';
@@ -105,28 +106,66 @@ class _SearchPageState extends State<SearchPage> {
 
     try {
       // 1. 获取答案（SSE流式）
+      // 参考 dialog_detail_page.dart 的实现，SSE 流式响应中每一行都是完整的答案，直接替换而不是累加
       await ConversationService.askQuestion(
         question: question,
         kbIds: _selectedKbIds.toList(),
         onUpdate: (answer) {
           setState(() {
-            _currentAnswer = answer.answer;
+            // SSE 流式响应中，每一行都是完整的答案，直接替换而不是累加
+            // 参考 dialog_detail_page.dart 第 464-468 行
+            final completeAnswer = answer.answer;
+            if (completeAnswer != null) {
+              _currentAnswer = completeAnswer; // 直接替换为完整答案
+            }
+            
+            // 根据后端实现，只有 final=true 或 reference 不为空时才更新 reference
+            // 流式传输过程中，中间消息的 reference 为空，只有最后一条消息包含完整的 reference
+            if (answer.reference != null && answer.reference!.isNotEmpty) {
+              // reference 格式：{"chunks": [...], "doc_aggs": [...]}
+              final chunksList = answer.reference!['chunks'] as List<dynamic>?;
+              if (chunksList != null && chunksList.isNotEmpty) {
+                final chunks = chunksList
+                    .map((chunk) {
+                      try {
+                        return RetrievalChunk.fromJson(chunk as Map<String, dynamic>);
+                      } catch (e) {
+                        return null;
+                      }
+                    })
+                    .whereType<RetrievalChunk>()
+                    .toList();
+                
+                if (chunks.isNotEmpty) {
+                  _relatedChunks = chunks;
+                }
+              }
+            }
           });
         },
       );
 
-      // 2. 获取相关文件
-      final retrievalResult = await ChunkService.retrievalTest(
-        kbIds: _selectedKbIds.toList(),
-        question: question,
-        page: 1,
-        size: 10,
-        highlight: true,
-      );
+      // 2. 获取相关文件（如果 SSE 没有返回 reference，则使用 retrievalTest）
+      // 注意：根据后端实现，SSE 流式传输的最后一条消息会包含完整的 reference
+      // 如果已经通过 SSE 获取到了 chunks，则不需要再次调用 retrievalTest
+      if (_relatedChunks.isEmpty) {
+        try {
+          final retrievalResult = await ChunkService.retrievalTest(
+            kbIds: _selectedKbIds.toList(),
+            question: question,
+            page: 1,
+            size: 10,
+            highlight: true,
+          );
 
-      setState(() {
-        _relatedChunks = retrievalResult.chunks;
-      });
+          setState(() {
+            _relatedChunks = retrievalResult.chunks;
+          });
+        } catch (e) {
+          // 如果 retrievalTest 失败，不影响主流程
+          print('获取相关文件失败: $e');
+        }
+      }
 
       // 3. 获取相关问题
       setState(() {
@@ -258,7 +297,7 @@ class _SearchPageState extends State<SearchPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 答案显示
+                        // 答案显示（使用 Markdown 渲染）
                         if (_currentAnswer.isNotEmpty) ...[
                           Text(
                             AppLocalizations.of(context)!.answer,
@@ -276,9 +315,28 @@ class _SearchPageState extends State<SearchPage> {
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: Colors.blue[200]!),
                             ),
-                            child: SelectableText(
-                              _currentAnswer,
-                              style: const TextStyle(fontSize: 16),
+                            child: MarkdownBody(
+                              data: _currentAnswer,
+                              styleSheet: MarkdownStyleSheet(
+                                p: const TextStyle(fontSize: 16),
+                                h1: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                h2: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                h3: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                code: TextStyle(
+                                  fontSize: 14,
+                                  backgroundColor: Colors.grey[300],
+                                  fontFamily: 'monospace',
+                                ),
+                                codeblockDecoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                blockquote: TextStyle(
+                                  fontSize: 16,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 24),

@@ -10,6 +10,7 @@ class ConversationService {
 
   /// 发送问题并获取答案（SSE流式）
   /// 使用流式接收答案，每次更新时调用 onUpdate 回调
+  /// 参考 chat_service.dart 和 ragflow/web 的实现方式
   static Future<void> askQuestion({
     required String question,
     required List<String> kbIds,
@@ -41,37 +42,87 @@ class ConversationService {
 
       if (streamedResponse.statusCode >= 200 &&
           streamedResponse.statusCode < 300) {
-        await for (final line in streamedResponse.stream
-            .transform(utf8.decoder)
-            .transform(const LineSplitter())) {
-          if (line.trim().isEmpty) continue;
+        // 使用 buffer 来处理可能不完整的 SSE 事件
+        String buffer = '';
+        await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
+          buffer += chunk;
+          
+          // 处理完整的 SSE 事件（以 \n\n 分隔）
+          while (buffer.contains('\n\n')) {
+            final index = buffer.indexOf('\n\n');
+            final event = buffer.substring(0, index);
+            buffer = buffer.substring(index + 2); // 跳过 \n\n
+            
+            if (event.trim().isEmpty) continue;
 
-          // SSE 格式: "data: {...}"
-          if (line.startsWith('data: ')) {
-            final dataStr = line.substring(6); // 跳过 "data: "
-            try {
-              final data = jsonDecode(dataStr) as Map<String, dynamic>;
+            // SSE 格式: "data: {...}" 或 "data:{...}"
+            // 可能有多行，需要找到所有 "data:" 开头的行
+            final lines = event.split('\n');
+            for (final line in lines) {
+              final trimmedLine = line.trim();
+              if (trimmedLine.isEmpty) continue;
               
-              // 检查是否完成
-              if (data['data'] == true) {
-                // 流式传输完成
-                break;
-              }
+              if (trimmedLine.startsWith('data:')) {
+                // 处理 "data: " 或 "data:" 两种情况
+                final dataStr = trimmedLine.startsWith('data: ')
+                    ? trimmedLine.substring(6) // 跳过 "data: "
+                    : trimmedLine.substring(5); // 跳过 "data:"
+                
+                try {
+                  final data = jsonDecode(dataStr) as Map<String, dynamic>;
+                  
+                  // 检查是否完成（data: {"code": 0, "message": "", "data": true}）
+                  final dataField = data['data'];
+                  if (dataField == true && dataField is bool) {
+                    // 流式传输完成
+                    return;
+                  }
 
-              // 检查是否有错误
-              if (data['code'] != null && data['code'] != 0) {
-                throw Exception(data['message'] ?? '请求失败');
-              }
+                  // 检查是否有错误
+                  if (data['code'] != null && data['code'] != 0) {
+                    throw Exception(data['message'] ?? '请求失败');
+                  }
 
-              // 解析答案数据
-              final answerData = data['data'] as Map<String, dynamic>?;
-              if (answerData != null) {
-                final answer = SearchAnswer.fromJson(answerData);
-                onUpdate(answer);
+                  // 解析答案数据
+                  final answerData = data['data'] as Map<String, dynamic>?;
+                  if (answerData != null) {
+                    final answer = SearchAnswer.fromJson(answerData);
+                    onUpdate(answer);
+                  }
+                } catch (e) {
+                  // 忽略解析错误，继续处理下一行
+                  continue;
+                }
               }
-            } catch (e) {
-              // 忽略解析错误，继续处理下一行
-              continue;
+            }
+          }
+        }
+        
+        // 处理剩余的 buffer（如果有完整的数据行）
+        if (buffer.trim().isNotEmpty) {
+          final lines = buffer.split('\n');
+          for (final line in lines) {
+            final trimmedLine = line.trim();
+            if (trimmedLine.isEmpty) continue;
+            if (trimmedLine.startsWith('data:')) {
+              final dataStr = trimmedLine.startsWith('data: ')
+                  ? trimmedLine.substring(6)
+                  : trimmedLine.substring(5);
+              try {
+                final data = jsonDecode(dataStr) as Map<String, dynamic>;
+                final dataField = data['data'];
+                // 如果不是完成标记，则处理数据
+                if (dataField != true) {
+                  final answerData = data['data'] as Map<String, dynamic>?;
+                  if (answerData != null) {
+                    final answer = SearchAnswer.fromJson(answerData);
+                    onUpdate(answer);
+                  }
+                }
+              } catch (e) {
+                // 忽略解析错误
+                continue;
+              }
             }
           }
         }

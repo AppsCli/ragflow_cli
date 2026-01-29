@@ -1,22 +1,23 @@
 /// 搜索结果中的答案
 class SearchAnswer {
   final String answer;
-  final List<Map<String, dynamic>> reference;
+  final Map<String, dynamic>? reference; // 改为 Map，因为后端返回的是对象，不是数组
   final bool? done;
+  final bool? final_; // 后端返回 final 字段表示是否完成
 
   SearchAnswer({
     required this.answer,
-    required this.reference,
+    this.reference,
     this.done,
+    this.final_,
   });
 
   factory SearchAnswer.fromJson(Map<String, dynamic> json) {
     return SearchAnswer(
       answer: json['answer'] ?? '',
-      reference: (json['reference'] as List<dynamic>?)
-              ?.cast<Map<String, dynamic>>() ??
-          [],
+      reference: json['reference'] as Map<String, dynamic>?,
       done: json['done'],
+      final_: json['final'] as bool?,
     );
   }
 }
