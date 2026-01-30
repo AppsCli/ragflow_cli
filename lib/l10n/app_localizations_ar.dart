@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appTitle => 'RAGFlow';
+  String get appTitle => 'RAGFlowCli';
 
   @override
   String get login => 'تسجيل الدخول';

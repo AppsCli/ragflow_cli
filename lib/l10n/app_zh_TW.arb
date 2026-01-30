@@ -1,6 +1,6 @@
 {
   "@@locale": "zh_TW",
-  "appTitle": "RAGFlow",
+  "appTitle": "RAGFlowCli",
   "login": "登入",
   "email": "郵箱",
   "password": "密碼",

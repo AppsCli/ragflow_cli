@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'RAGFlow';
+  String get appTitle => 'RAGFlowCli';
 
   @override
   String get login => 'Login';

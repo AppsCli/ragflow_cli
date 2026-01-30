@@ -1,6 +1,6 @@
 {
   "@@locale": "ja",
-  "appTitle": "RAGFlow",
+  "appTitle": "RAGFlowCli",
   "@appTitle": {
     "description": "The application title"
   },

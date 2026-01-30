@@ -9,7 +9,7 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => 'RAGFlow';
+  String get appTitle => 'RAGFlowCli';
 
   @override
   String get login => '登录';
@@ -1054,7 +1054,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   AppLocalizationsZhTw() : super('zh_TW');
 
   @override
-  String get appTitle => 'RAGFlow';
+  String get appTitle => 'RAGFlowCli';
 
   @override
   String get login => '登入';
