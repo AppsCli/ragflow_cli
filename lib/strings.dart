@@ -1,7 +1,7 @@
 /// 应用字符串常量（中文）
 class Strings {
   // 应用标题
-  static const String appTitle = 'RAGFlow';
+  static const String appTitle = 'RAGFlowCli';
   
   // 登录相关
   static const String login = '登录';

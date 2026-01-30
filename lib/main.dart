@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       child: Consumer2<ThemeProvider, AuthProvider>(
         builder: (context, themeProvider, authProvider, child) {
           return MaterialApp(
-            title: 'RAGFlow',
+            title: 'RAGFlowCli',
             debugShowCheckedModeBanner: false,
             // 固定使用中文
             locale: const Locale('zh'),
