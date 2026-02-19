@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import '../l10n/app_localizations.dart';
 import '../services/file_service.dart';
 import '../services/api_client.dart';
+import 'pdf_preview_page.dart';
 
 class FileDetailPage extends StatefulWidget {
   final String? parentId;
@@ -188,19 +189,47 @@ class _FileDetailPageState extends State<FileDetailPage> {
     }
   }
 
+  static bool _isPdfFileName(String fileName) {
+    if (fileName.isEmpty) return false;
+    final ext = fileName.contains('.') ? fileName.split('.').last.toLowerCase() : '';
+    return ext == 'pdf';
+  }
+
   Future<void> _previewFile(Map<String, dynamic> file) async {
     final fileId = file['id'] as String?;
     final fileName = file['name'] as String? ?? '';
     if (fileId == null) return;
 
+    final l10n = AppLocalizations.of(context)!;
+
     try {
+      // PDF：通过下载链接用 pdfrx 内嵌预览
+      if (_isPdfFileName(fileName)) {
+        final downloadUrl = FileService.getFileDownloadUrl(fileId);
+        final token = ApiClient.getToken();
+        final headers = token != null && token.isNotEmpty
+            ? <String, String>{'Authorization': token}
+            : null;
+        if (!mounted) return;
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => PdfPreviewPage(
+              downloadUrl: downloadUrl,
+              headers: headers,
+              title: fileName.isEmpty ? l10n.preview : fileName,
+            ),
+          ),
+        );
+        return;
+      }
+
+      // 非 PDF：使用预览 URL 外链打开
       final previewUrl = FileService.getFilePreviewUrl(fileId, fileName);
       final uri = Uri.parse(previewUrl);
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         if (mounted) {
-          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.cannotOpenPreview(previewUrl))),
           );
@@ -208,7 +237,6 @@ class _FileDetailPageState extends State<FileDetailPage> {
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.previewFailed(e.toString()))),
         );
@@ -606,8 +634,8 @@ class _FileDetailPageState extends State<FileDetailPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _uploadFile,
-        child: const Icon(Icons.upload),
         tooltip: AppLocalizations.of(context)!.uploadFile,
+        child: const Icon(Icons.upload),
       ),
     );
   }

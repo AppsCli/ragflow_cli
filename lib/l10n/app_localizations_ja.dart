@@ -928,6 +928,9 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get previewPdfOnly => 'Only PDF files can be previewed';
+
+  @override
   String confirmDeleteFile(String name) {
     return '「$name」を削除しますか？';
   }

@@ -456,6 +456,7 @@
       }
     }
   },
+  "previewPdfOnly": "Only PDF files can be previewed",
   "confirmDeleteFile": "Are you sure you want to delete \"{name}\"?",
   "@confirmDeleteFile": {
     "placeholders": {

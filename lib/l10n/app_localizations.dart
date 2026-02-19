@@ -1867,6 +1867,12 @@ abstract class AppLocalizations {
   /// **'Preview failed: {error}'**
   String previewFailed(String error);
 
+  /// No description provided for @previewPdfOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only PDF files can be previewed'**
+  String get previewPdfOnly;
+
   /// No description provided for @confirmDeleteFile.
   ///
   /// In en, this message translates to:

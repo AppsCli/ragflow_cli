@@ -149,7 +149,13 @@ class FileService {
     }
   }
 
-  /// 获取文件预览URL
+  /// 获取文件下载链接（用于内嵌预览，需带 Authorization header）
+  /// [fileId] - 文件ID
+  static String getFileDownloadUrl(String fileId) {
+    return '${ApiClient.baseUrl}$getFileEndpoint/$fileId';
+  }
+
+  /// 获取文件预览URL（外链打开用）
   /// [fileId] - 文件ID（也是 document ID）
   /// [fileName] - 文件名（用于提取扩展名）
   static String getFilePreviewUrl(String fileId, String fileName) {

@@ -67,6 +67,8 @@ dependencies:
   
   # Markdown rendering for chat messages
   flutter_markdown_plus: ^1.0.7
+  # PDF 内嵌预览（PdfViewer.uri 支持 headers 认证）
+  pdfrx: ^2.1.5
 
 dev_dependencies:
   flutter_test:

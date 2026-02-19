@@ -926,6 +926,9 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get previewPdfOnly => '当前仅支持 PDF 文件预览';
+
+  @override
   String confirmDeleteFile(String name) {
     return '确定要删除 \"$name\" 吗？';
   }
