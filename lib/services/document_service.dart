@@ -62,9 +62,14 @@ class DocumentService {
     return null;
   }
 
-  /// 获取文档下载 URL
+  /// 获取文档下载 URL（/v1/document/download/<id>，用于保存到本地）
   static String getDownloadUrl(String documentId) {
     return '${ApiClient.baseUrl}$documentDownloadEndpoint/$documentId';
+  }
+
+  /// 获取文档内容 URL（/v1/document/get/<id>，与 RAGFlow 前端预览一致，返回文件流）
+  static String getDocumentGetUrl(String documentId) {
+    return '${ApiClient.baseUrl}$documentDetailEndpoint/$documentId';
   }
 
   /// 上传文档到知识库

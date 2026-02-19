@@ -12,7 +12,9 @@ import '../models/document.dart';
 import '../models/search_result.dart';
 import '../services/knowledge_service.dart';
 import '../services/document_service.dart';
+import '../services/api_client.dart';
 import '../services/chunk_service.dart';
+import 'pdf_preview_page.dart';
 import '../services/llm_service.dart';
 import '../constants/knowledge.dart';
 
@@ -355,6 +357,16 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                     ),
                                   ),
                                   PopupMenuItem(
+                                    value: 'preview',
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.preview, size: 20),
+                                        const SizedBox(width: 8),
+                                        Text(AppLocalizations.of(context)!.preview),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
                                     value: 'download',
                                     child: Row(
                                       children: [
@@ -408,6 +420,8 @@ class _DocumentListTabState extends State<DocumentListTab> {
                                 onSelected: (value) {
                                   if (value == 'detail') {
                                     _showDocumentDetail(doc);
+                                  } else if (value == 'preview') {
+                                    _previewDocument(doc);
                                   } else if (value == 'download') {
                                     _downloadDocument(doc);
                                   } else if (value == 'parse') {
@@ -561,6 +575,39 @@ class _DocumentListTabState extends State<DocumentListTab> {
       default:
         return Colors.grey;
     }
+  }
+
+  /// 判断是否为 PDF（suffix 可能为 "pdf"、".pdf" 或空则从 name 推断）
+  bool _isPdfDocument(Document doc) {
+    final suffix = (doc.suffix).trim().toLowerCase().replaceFirst(RegExp(r'^\.'), '');
+    if (suffix == 'pdf') return true;
+    if (doc.name.trim().toLowerCase().endsWith('.pdf')) return true;
+    return false;
+  }
+
+  void _previewDocument(Document doc) {
+    if (!_isPdfDocument(doc)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.previewPdfOnly)),
+      );
+      return;
+    }
+    final l10n = AppLocalizations.of(context)!;
+    // 与 RAGFlow 前端一致：使用 /v1/document/get/<doc_id> 进行预览（PdfViewer.uri）
+    final previewUrl = DocumentService.getDocumentGetUrl(doc.id);
+    final token = ApiClient.getToken();
+    final headers = token != null && token.isNotEmpty
+        ? <String, String>{'Authorization': token}
+        : null;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PdfPreviewPage(
+          downloadUrl: previewUrl,
+          headers: headers,
+          title: doc.name.isEmpty ? l10n.preview : doc.name,
+        ),
+      ),
+    );
   }
 
   Future<void> _downloadDocument(Document doc) async {
