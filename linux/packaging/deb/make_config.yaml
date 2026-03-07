@@ -1,0 +1,48 @@
+# DEB 打包配置 - flutter_app_packager 所需
+# 参考: https://www.debian.org/doc/debian-policy/
+
+display_name: RAGFlow CLI
+
+# Debian 包名，需全小写，可用 - 和 +
+package_name: ragflow-cli
+
+maintainer:
+  name: OpenIoTHub Cloud
+  email: support@openiothub.cloud
+
+# 优先级: required, important, standard, optional, extra
+priority: optional
+
+# 分类: x11 表示 X11 应用
+section: x11
+
+# 安装后大小（KB），Flutter 应用约 25MB
+installed_size: 25600
+
+# 运行时依赖 - Flutter Linux 桌面应用通常需要
+dependencies:
+  - libgtk-3-0 (>= 3.10)
+  - libx11-6
+  - libglib2.0-0 (>= 2.56)
+  - libblkid1
+
+essential: false
+
+# 应用图标路径（相对于项目根目录）
+icon: assets/images/logos/ragflow_cli_logo.png
+
+keywords:
+  - RAGFlow
+  - RAG
+  - Knowledge Base
+  - Document
+  - Client
+
+generic_name: RAGFlow Client
+
+categories:
+  - Office
+  - Utility
+  - Network
+
+startup_notify: true
