@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.8.1
@@ -88,6 +88,9 @@ dev_dependencies:
   # App icon generator
   flutter_launcher_icons: ^0.13.1
 
+  # Windows MSIX packaging for Microsoft Store
+  msix: ^3.16.8
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -102,6 +105,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icon/
+    - assets/images/logos/
   
   # Generate localization files
   generate: true
@@ -131,3 +135,22 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Microsoft Store 发布配置 (Package identity 需与 Partner Center 一致)
+# PFN: 38916OpenIoTHubCloud.RAGFlowCli_n13avf7sg128e
+# Package SID: S-1-15-2-415926162-1023681445-149591487-979447387-1660873301-1514360599-2248275565
+# Store ID: 9NKGQBBMKRVM
+msix_config:
+  display_name: RAGFlow CLI
+  # Package/Identity/Name
+  identity_name: 38916OpenIoTHubCloud.RAGFlowCli
+  # Package/Identity/Publisher
+  publisher: CN=5F64CEA2-463E-41A3-AE89-6979242A61DF
+  # Package/Properties/PublisherDisplayName
+  publisher_display_name: OpenIoTHub Cloud
+  logo_path: .\assets\images\logos\ragflow_cli_logo.png
+  start_menu_icon_path: .\assets\images\logos\ragflow_cli_logo.png
+  tile_icon_path: .\assets\images\logos\ragflow_cli_logo.png
+  icons_background_color: transparent
+  capabilities: internetClient
+  store: true

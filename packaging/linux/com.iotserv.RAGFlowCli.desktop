@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=RAGFlow CLI
+Name[zh_CN]=RAGFlow 客户端
+Comment=RAGFlow client desktop app
+Comment[zh_CN]=RAGFlow 客户端桌面版
+Categories=Network;
+
+Icon=com.iotserv.RAGFlowCli
+Exec=ragflow_cli
+Terminal=false
+StartupWMClass=ragflow_cli

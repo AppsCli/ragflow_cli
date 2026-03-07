@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.iotserv.RAGFlowCli</id>
+  <name>RAGFlow CLI</name>
+  <summary>RAGFlow client desktop application</summary>
+  <developer_name>iotserv</developer_name>
+  <url type="homepage">https://github.com/infiniflow/ragflow</url>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  <description>
+    <p>RAGFlow CLI - RAGFlow client desktop application for document management and knowledge base.</p>
+  </description>
+  <launchable type="desktop-id">com.iotserv.RAGFlowCli.desktop</launchable>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="1.0.1" date="2025-01-01" />
+  </releases>
+</component>

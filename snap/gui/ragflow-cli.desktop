@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=RAGFlow CLI
+Name[zh_CN]=RAGFlow 客户端
+Comment=RAGFlow client desktop application
+Comment[zh_CN]=RAGFlow 客户端桌面版
+Exec=ragflow_cli
+Icon=${SNAP}/meta/gui/ragflow-cli.png
+Terminal=false
+Type=Application
+Categories=Network;
