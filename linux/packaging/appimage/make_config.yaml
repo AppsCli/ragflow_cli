@@ -1,0 +1,23 @@
+# AppImage 打包配置 - flutter_app_packager 所需
+# 参考: https://appimage.org/
+
+display_name: RAGFlow CLI
+
+# 应用图标路径（相对于项目根目录，必填）
+icon: assets/images/logos/ragflow_cli_logo.png
+
+keywords:
+  - RAGFlow
+  - RAG
+  - Knowledge Base
+  - Document
+  - Client
+
+generic_name: RAGFlow Client
+
+categories:
+  - Office
+  - Utility
+  - Network
+
+startup_notify: true

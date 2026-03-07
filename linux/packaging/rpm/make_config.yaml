@@ -1,0 +1,47 @@
+# RPM 打包配置 - flutter_app_packager 所需
+# 参考: https://docs.fedoraproject.org/en-US/packaging-guidelines/
+
+display_name: RAGFlow CLI
+
+# 应用图标路径（相对于项目根目录）
+icon: assets/images/logos/ragflow_cli_logo.png
+
+# RPM 包摘要（用于 Summary 字段）
+summary: RAGFlow client
+
+# 包分组，参考: https://fedoraproject.org/wiki/Packaging:GroupTag
+group: Unspecified
+
+# 维护者信息
+vendor: OpenIoTHub Cloud
+packager: OpenIoTHub Cloud
+packagerEmail: support@openiothub.cloud
+
+# 许可证
+license: MIT
+
+# 项目 URL
+url: https://github.com/OpenIoTHub/ragflow_cli
+
+# 运行时依赖 - Flutter Linux 桌面应用通常需要（RPM 包名格式）
+requires:
+  - gtk3 >= 3.10
+  - libX11
+  - glib2 >= 2.56
+  - util-linux
+
+keywords:
+  - RAGFlow
+  - RAG
+  - Knowledge Base
+  - Document
+  - Client
+
+generic_name: RAGFlow Client
+
+categories:
+  - Office
+  - Utility
+  - Network
+
+startup_notify: true
