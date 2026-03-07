@@ -6,12 +6,27 @@ class Assets {
   Assets._();
 
   static const $AssetsIconGen icon = $AssetsIconGen();
+  static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
 class $AssetsIconGen {
   const $AssetsIconGen();
 
   final AssetGenImage icon = const AssetGenImage('assets/icon/icon.png');
+}
+
+class $AssetsImagesGen {
+  const $AssetsImagesGen();
+
+  final $AssetsLogosGen logos = const $AssetsLogosGen();
+}
+
+class $AssetsLogosGen {
+  const $AssetsLogosGen();
+
+  final AssetGenImage ragflowCliLogo = const AssetGenImage(
+    'assets/images/logos/ragflow_cli_logo.png',
+  );
 }
 
 class AssetGenImage {

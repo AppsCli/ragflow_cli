@@ -141,7 +141,7 @@ flutter:
 # Package SID: S-1-15-2-415926162-1023681445-149591487-979447387-1660873301-1514360599-2248275565
 # Store ID: 9NKGQBBMKRVM
 msix_config:
-  display_name: RAGFlow CLI
+  display_name: RAGFlowCli
   # Package/Identity/Name
   identity_name: 38916OpenIoTHubCloud.RAGFlowCli
   # Package/Identity/Publisher
