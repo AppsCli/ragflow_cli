@@ -55,6 +55,11 @@ jobs:
           files: |
             ./build/app/outputs/bundle/release/app-release.aab
           body_path: ./.github/doc/DownloadDescription.md
+      - name: Upload AAB for Google Play
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: ./build/app/outputs/bundle/release/app-release.aab
 
   ios:
     name: iOS
@@ -134,6 +139,89 @@ jobs:
             dist/**/**/*.AppImage
           body_path: ./.github/doc/DownloadDescription.md
 
+  snap-store:
+    name: Snap Store
+    runs-on: ubuntu-latest
+    if: ${{ secrets.SNAPCRAFT_TOKEN != '' }}
+    env:
+      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set snap version from tag
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          sed -i "s/^version: .*/version: $VERSION/" snap/snapcraft.yaml
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.32.8
+      - name: Install build deps and Snapcraft
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev patchelf libfuse2
+          sudo snap install snapcraft --classic
+      - name: Setup LXD
+        uses: canonical/setup-lxd@main
+        with:
+          channel: latest/stable
+      - name: Build snap
+        run: |
+          flutter config --enable-linux-desktop
+          flutter config --no-enable-android
+          flutter pub get
+          snapcraft
+      - name: Push to Snap Store
+        run: snapcraft upload --release=stable ragflow-cli_*.snap
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+
+  google-play:
+    name: Google Play
+    runs-on: ubuntu-latest
+    needs: android
+    if: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-release-aab
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          packageName: cloud.iothub.ragflow_cli
+          releaseFiles: app-release.aab
+          track: internal
+          status: completed
+
+  microsoft-store:
+    name: Microsoft Store
+    runs-on: ubuntu-latest
+    needs: windows
+    if: ${{ secrets.MICROSOFT_STORE_TENANT_ID != '' && secrets.MICROSOFT_STORE_CLIENT_ID != '' && secrets.MICROSOFT_STORE_CLIENT_SECRET != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Store Credentials
+        uses: microsoft/store-submission@v1
+        with:
+          command: configure
+          type: win32
+          seller-id: ${{ secrets.MICROSOFT_STORE_SELLER_ID }}
+          product-id: ${{ secrets.MICROSOFT_STORE_PRODUCT_ID }}
+          tenant-id: ${{ secrets.MICROSOFT_STORE_TENANT_ID }}
+          client-id: ${{ secrets.MICROSOFT_STORE_CLIENT_ID }}
+          client-secret: ${{ secrets.MICROSOFT_STORE_CLIENT_SECRET }}
+      - name: Update Draft Submission
+        id: update
+        uses: microsoft/store-submission@v1
+        with:
+          command: update
+          product-update: '{"packages":[{"packageUrl":"https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/ragflow_cli.msix","languages":["en"],"architectures":["x64"],"isSilentInstall":false}]}'
+      - name: Publish Submission
+        uses: microsoft/store-submission@v1
+        with:
+          command: publish
+
   macos:
     name: MacOS
     runs-on: macos-latest
@@ -159,6 +247,117 @@ jobs:
           files: |
             ./ragflow_cli.dmg
           body_path: ./.github/doc/DownloadDescription.md
+
+  ios-store:
+    name: iOS (App Store / TestFlight)
+    runs-on: macos-latest
+    if: ${{ secrets.APPSTORE_ISSUER_ID != '' && secrets.APPSTORE_API_KEY_ID != '' && secrets.APPSTORE_API_PRIVATE_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.32.8
+      - run: flutter config --no-enable-android
+      - run: flutter pub get
+      - name: Import signing certificate and build IPA
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.APPLE_SIGNING_CERTIFICATE }}
+          P12_PASSWORD: ${{ secrets.APPLE_SIGNING_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
+        run: |
+          # 若无签名相关 secret 则只做无签名构建并跳过上传
+          if [ -z "$BUILD_CERTIFICATE_BASE64" ] || [ -z "$BUILD_PROVISION_PROFILE_BASE64" ]; then
+            flutter build ipa --release --no-codesign
+            echo "Skipping TestFlight upload (no signing secrets)."
+            exit 0
+          fi
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          flutter build ipa --release
+      - name: Upload to TestFlight
+        if: ${{ secrets.APPLE_SIGNING_CERTIFICATE != '' }}
+        uses: Apple-Actions/upload-testflight-build@v1
+        with:
+          app-path: build/ios/ipa/ragflow_cli.ipa
+          app-type: ios
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+  macos-store:
+    name: macOS (Mac App Store / TestFlight)
+    runs-on: macos-latest
+    if: ${{ secrets.APPSTORE_ISSUER_ID != '' && secrets.APPSTORE_API_KEY_ID != '' && secrets.APPSTORE_API_PRIVATE_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.32.8
+      - run: flutter config --enable-macos-desktop
+      - run: flutter config --no-enable-android
+      - run: flutter pub get
+      - name: Import signing certificate and build macOS app
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.APPLE_SIGNING_CERTIFICATE_MAC }}
+          P12_PASSWORD: ${{ secrets.APPLE_SIGNING_CERTIFICATE_PASSWORD_MAC }}
+          KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD_MAC }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_MAC }}
+        run: |
+          if [ -z "$BUILD_CERTIFICATE_BASE64" ] || [ -z "$BUILD_PROVISION_PROFILE_BASE64" ]; then
+            flutter build macos --release
+            echo "Skipping Mac App Store upload (no signing secrets)."
+            exit 0
+          fi
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          flutter build macos --release
+      - name: Create macOS app package for upload
+        if: ${{ secrets.APPLE_SIGNING_CERTIFICATE_MAC != '' }}
+        run: |
+          cd build/macos/Build/Products/Release
+          productbuild --component RAGFlowCli.app /Applications RAGFlowCli.pkg || true
+      - name: Upload macOS to TestFlight
+        if: ${{ secrets.APPLE_SIGNING_CERTIFICATE_MAC != '' }}
+        uses: Apple-Actions/upload-testflight-build@v1
+        with:
+          app-path: build/macos/Build/Products/Release/RAGFlowCli.app
+          app-type: macos
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
 
   windows:
     name: Windows

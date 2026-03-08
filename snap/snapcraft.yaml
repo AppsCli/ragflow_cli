@@ -16,6 +16,7 @@ apps:
       - network-bind
 parts:
   ragflow-cli:
-    source: .
+    # Flutter 项目根目录（snapcraft 从仓库根目录执行时，.. 指向仓库根）
+    source: ..
     plugin: flutter
     flutter-target: lib/main.dart
