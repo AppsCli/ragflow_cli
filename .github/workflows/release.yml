@@ -201,26 +201,30 @@ jobs:
     if: ${{ secrets.MICROSOFT_STORE_TENANT_ID != '' && secrets.MICROSOFT_STORE_CLIENT_ID != '' && secrets.MICROSOFT_STORE_CLIENT_SECRET != '' }}
     steps:
       - uses: actions/checkout@v4
+      - name: Set up MSStore CLI
+        uses: microsoft/microsoft-store-apppublisher@v1.4
       - name: Configure Store Credentials
-        uses: microsoft/store-submission@v1
-        with:
-          command: configure
-          type: win32
-          seller-id: ${{ secrets.MICROSOFT_STORE_SELLER_ID }}
-          product-id: ${{ secrets.MICROSOFT_STORE_PRODUCT_ID }}
-          tenant-id: ${{ secrets.MICROSOFT_STORE_TENANT_ID }}
-          client-id: ${{ secrets.MICROSOFT_STORE_CLIENT_ID }}
-          client-secret: ${{ secrets.MICROSOFT_STORE_CLIENT_SECRET }}
+        env:
+          STORE_SELLER_ID: ${{ secrets.MICROSOFT_STORE_SELLER_ID }}
+          STORE_TENANT_ID: ${{ secrets.MICROSOFT_STORE_TENANT_ID }}
+          STORE_CLIENT_ID: ${{ secrets.MICROSOFT_STORE_CLIENT_ID }}
+          STORE_CLIENT_SECRET: ${{ secrets.MICROSOFT_STORE_CLIENT_SECRET }}
+        run: >-
+          msstore reconfigure
+          --tenantId "$STORE_TENANT_ID"
+          --sellerId "$STORE_SELLER_ID"
+          --clientId "$STORE_CLIENT_ID"
+          --clientSecret "$STORE_CLIENT_SECRET"
       - name: Update Draft Submission
         id: update
-        uses: microsoft/store-submission@v1
-        with:
-          command: update
-          product-update: '{"packages":[{"packageUrl":"https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/ragflow_cli.msix","languages":["en"],"architectures":["x64"],"isSilentInstall":false}]}'
+        env:
+          STORE_PRODUCT_ID: ${{ secrets.MICROSOFT_STORE_PRODUCT_ID }}
+          PRODUCT_UPDATE: '{"packages":[{"packageUrl":"https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/ragflow_cli.msix","languages":["en"],"architectures":["x64"],"isSilentInstall":false}]}'
+        run: msstore submission update "$STORE_PRODUCT_ID" "$PRODUCT_UPDATE"
       - name: Publish Submission
-        uses: microsoft/store-submission@v1
-        with:
-          command: publish
+        env:
+          STORE_PRODUCT_ID: ${{ secrets.MICROSOFT_STORE_PRODUCT_ID }}
+        run: msstore submission publish "$STORE_PRODUCT_ID"
 
   macos:
     name: MacOS
